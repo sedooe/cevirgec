@@ -10,6 +10,7 @@ import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 import tr from '../utils/Translation';
 import './Dashboard.scss';
+import { Card, Dropdown, Grid, Icon, Menu } from 'semantic-ui-react';
 
 
 export default class Dashboard extends Component {
@@ -18,128 +19,169 @@ export default class Dashboard extends Component {
     let user = JSON.parse(window.localStorage.getItem("user")) || {username: 'username', fullname: 'User'};
     // FIXME: hardcoded object is needed for development, we won't need it later.
 
+    const trigger = (
+      <span>
+        <Icon name='user' />
+        {tr('Hello, ', user.fullname)}
+      </span>
+    );
+
     return (
       <DocumentTitle title={tr('Cevirgec › Dashboard')}>
         <div>
 
-          <div className="ui text menu" style={{marginTop: 0, marginBottom: 5}}>
-            <div className="ui simple right dropdown item">
-              <i className="user icon"></i>
-              {user.username}
-              <i className="dropdown icon"></i>
-              <div className="menu" style={{marginTop: -2}}>
-                <Link to="/user/profile" className="item">
-                  <i className="user icon"></i>
-                  {user.fullname}
-                </Link>
-                <Link to="/user/profile" query={{menuLink: 'edit'}} className="item">
-                  <i className="edit icon"></i>
-                  <span>Update Info</span>
-                </Link>
-                <Link to="/user/profile" query={{menuLink: 'account-settings'}} className="item">
-                  <i className="setting icon"></i>
-                  <span>Account Settings</span>
-                </Link>
-                <Link to="" query={{menuLink: 'sync'}} onClick={this.sync} className="item">
-                <i className="refresh icon"></i>
-                <span>Sync My Data</span>
-                </Link>
-                <Link to="" query={{menuLink: 'logout'}} onClick={this.logout} className="item">
-                  <i className="sign out icon"></i>
-                  <span>Logout</span>
-                </Link>
-              </div>
-            </div>
-          </div>
+          <Menu text={true}>
+            <Menu.Item position='right'>
+              <Dropdown trigger={trigger}>
+                <Dropdown.Menu style={{marginLeft: "-72px"}}>
+                  <Dropdown.Item disabled>
+                    Signed in as <strong>Bob Smith</strong>
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>
+                    <Link to="/user/profile" className="item">
+                      <Icon name="user" />
+                      {user.fullname}
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link to="/user/profile" query={{menuLink: 'edit'}} className="item">
+                      <Icon name="edit" />
+                      <span>Update Info</span>
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link to="/user/profile" query={{menuLink: 'account-settings'}} className="item">
+                      <Icon name="setting" />
+                      <span>Account Settings</span>
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link to="" query={{menuLink: 'sync'}} onClick={this.sync} className="item">
+                      <Icon name="refresh" />
+                      <span>Sync My Data</span>
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>
+                    <Link to="" query={{menuLink: 'logout'}} onClick={this.logout} className="item">
+                      <Icon name="sign" />
+                      <span>Logout</span>
+                    </Link>
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item>Settings</Dropdown.Item>
+                  <Dropdown.Item>Sign Out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
+          </Menu>
 
-          <dashboard className="ui four column grid">
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/dictionaries" className="content">
-                  <i className="book icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Dictionaries')}</a>
-                </div>
-              </div>
-            </div>
+          <dashboard>
+            <Grid columns={4}>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/dictionaries" className="content">
+                    <Icon name="book" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Dictionaries')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/study" className="content">
-                  <i className="student icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Study')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/study" className="content">
+                    <Icon name="student" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Study')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/quiz" className="content">
-                  <i className="file text outline icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Quiz')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/quiz" className="content">
+                    <Icon name="file" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Quiz')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/online-sources" className="content">
-                  <i className="browser icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Online Dictionaries')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/online-sources" className="content">
+                    <Icon name="browser" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Online Sources')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/market" className="content">
-                  <i className="shop icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Market')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/market" className="content">
+                    <Icon name="shop" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Market')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/settings" className="content">
-                  <i className="settings icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Settings')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/settings" className="content">
+                    <Icon name="settings" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Settings')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/user" className="content">
-                  <i className="user icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('User')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/user" className="content">
+                    <Icon name="user" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('User')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
 
-            <div className="column center aligned">
-              <div className="ui fluid card">
-                <Link to="/help" className="content">
-                  <i className="help icon"></i>
-                </Link>
-                <div className="content">
-                  <a className="header">{tr('Help')}</a>
-                </div>
-              </div>
-            </div>
+              <Grid.Column textAlign="center">
+                <Card>
+                  <Link to="/help" className="content">
+                    <Icon name="help" />
+                  </Link>
+                  <Card.Content>
+                    <Card.Header>
+                      {tr('Help')}
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              </Grid.Column>
+            </Grid>
           </dashboard>
 
         </div>
