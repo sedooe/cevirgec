@@ -19,7 +19,9 @@
     "package-all": "npm run package -- --all",
     "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\"",
-    "cleanup": "mop -v"
+    "cleanup": "mop -v",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -114,7 +116,8 @@
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-merge": "^0.14.1",
-    "webpack-validator": "^2.2.9"
+    "webpack-validator": "^2.2.9",
+    "@kadira/storybook": "^2.21.0"
   },
   "dependencies": {
     "css-modules-require-hook": "^4.0.5",
