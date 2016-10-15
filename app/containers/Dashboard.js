@@ -22,20 +22,20 @@ export default class Dashboard extends Component {
     const trigger = (
       <span>
         <Icon name='user' />
-        {tr('Hello, ', user.fullname)}
+        {tr('Hello, ', user.username)}
       </span>
     );
 
     return (
       <DocumentTitle title={tr('Cevirgec › Dashboard')}>
-        <div>
+        <div className="child-1st-no-top-margin">
 
           <Menu text={true}>
             <Menu.Item position='right'>
               <Dropdown trigger={trigger}>
-                <Dropdown.Menu style={{marginLeft: "-72px"}}>
+                <Dropdown.Menu style={{margin: "10px 0 0 -40px"}}>
                   <Dropdown.Item disabled>
-                    Signed in as <strong>Bob Smith</strong>
+                    Signed in as <strong>{user.fullname}</strong>
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item>
@@ -68,9 +68,6 @@ export default class Dashboard extends Component {
                       <span>Logout</span>
                     </Link>
                   </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item>Settings</Dropdown.Item>
-                  <Dropdown.Item>Sign Out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </Menu.Item>

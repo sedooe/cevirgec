@@ -6,11 +6,12 @@ export default class App extends Component {
     children: PropTypes.element.isRequired
   };
 
+  //this div will have id="data-reactroot"
   render() {
     return (
-      <div>
+      <main>
         {this.props.children}
-      </div>
+      </main>
     );
   }
 }

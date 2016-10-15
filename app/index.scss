@@ -15,11 +15,10 @@ main {
 	padding: $main-padding;
 }
 
-/*Menu icons position defaults to left*/
-.ui.vertical.menu .item > i.icon {
-    width: 1.18em;
-    float: left;
-    margin: 0em 0.5em 0em 0em;
+.child-1st-no-top-margin {
+	&>*{
+		margin-top: 0 !important;
+	}
 }
 
 // Utils
