@@ -43,14 +43,14 @@ export default validate(merge(baseConfig, {
           'css-loader?sourceMap'
         ]
       },
-
       {
         test: /^((?!\.global).)*\.css$/,
         loaders: [
           'style-loader',
           'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
         ]
-      }
+      },
+      { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.ttf$|\.eot$|\.woff$|\.woff2$|\.png$/i, loader: "file-loader" }
     ]
   },
 

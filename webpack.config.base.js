@@ -12,9 +12,12 @@ export default validate({
       loaders: ['babel-loader'],
       exclude: /node_modules/
     }, {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
+      }, {
       test: /\.json$/,
       loader: 'json-loader'
-    }]
+    },]
   },
 
   output: {
