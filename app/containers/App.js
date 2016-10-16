@@ -1,5 +1,6 @@
 // @flow
 import React, { Component, PropTypes } from 'react';
+import Breadcrumbs from 'react-breadcrumbs';
 
 export default class App extends Component {
   static propTypes = {
@@ -10,6 +11,11 @@ export default class App extends Component {
   render() {
     return (
       <main>
+        <Breadcrumbs
+          excludes={['Dashboard']}
+          routes={this.props.routes}
+          params={this.props.params}
+        />
         {this.props.children}
       </main>
     );
