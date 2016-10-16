@@ -8,8 +8,8 @@ import Dashboard from './containers/Dashboard';
 
 
 export default (
-  <Route path="/" component={App}>
+  <Route name="Dashboard" path="/" component={App}>
     <IndexRoute component={Dashboard} />
-    <Route path="/counter" component={CounterPage} />
+    <Route name="Counter" path="/counter" component={CounterPage} />
   </Route>
 );
