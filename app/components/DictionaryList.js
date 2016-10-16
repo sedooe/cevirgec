@@ -17,7 +17,7 @@ const DictionaryList = ({dictionaries, onEdit}) => (
             <Popup trigger={<Button icon='trash' />} content={tr('Delete')}/>
           </List.Content>
           <List.Content floated='left'>
-            <Checkbox toggle />
+            <Checkbox toggle checked={dictionary.active} />
           </List.Content>
 
           <List.Content>

@@ -299,7 +299,7 @@ const DictionaryModal = ({open, dictionary, onHide}) => (
         </div>
         <Form.Field>
           <label>In use</label>
-          <Checkbox toggle />
+          <Checkbox toggle checked={dictionary.active} />
         </Form.Field>
         <div className="ui error message"></div>
       </Form>

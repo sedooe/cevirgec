@@ -6,6 +6,7 @@
 'use strict';
 
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 import tr from '../utils/Translation';
@@ -14,29 +15,9 @@ import DictionaryList from '../components/DictionaryList';
 import DictionaryModal from '../components/DictionaryModal';
 import { Button, List, Popup } from 'semantic-ui-react';
 
-export default class Dashboard extends Component {
+class Dictionaries extends Component {
 
   state = {
-    dictionaries: {
-      1: {
-        id: 1,
-        name: "deneme",
-        sourceLanguage: "af",
-        targetLanguage: "tr",
-        context: "sport",
-        numberOfDefinitions: "9",
-        active: true
-      },
-      2: {
-        id: 2,
-        name: "sozluk",
-        sourceLanguage: "za",
-        targetLanguage: "tr",
-        context: "technology",
-        numberOfDefinitions: "90",
-        active: true
-      }
-    },
     currentDictionary: {},
     dictionaryModalOpen: false
   }
@@ -66,7 +47,7 @@ export default class Dashboard extends Component {
             </div>
 
             <div className="ui grey segment">
-              <DictionaryList dictionaries={this.state.dictionaries} onEdit={this.openDictionaryModal.bind(this)} />
+              <DictionaryList dictionaries={this.props.dictionaries} onEdit={this.openDictionaryModal.bind(this)} />
             </div>
           </div>
 
@@ -76,3 +57,9 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  dictionaries: state.dictionary
+})
+
+export default connect(mapStateToProps)(Dictionaries)
