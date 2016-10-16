@@ -58,8 +58,10 @@ class Dictionaries extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  dictionaries: state.dictionary
-})
+function mapStateToProps (state) {
+  return {
+    dictionaries: state.dictionary    
+  }
+}
 
 export default connect(mapStateToProps)(Dictionaries)

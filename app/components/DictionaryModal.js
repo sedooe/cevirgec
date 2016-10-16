@@ -299,16 +299,16 @@ const DictionaryModal = ({open, dictionary, onHide}) => (
         </div>
         <Form.Field>
           <label>In use</label>
-          <Checkbox toggle checked={dictionary.active} />
+          <Checkbox toggle defaultChecked={dictionary.active} />
         </Form.Field>
         <div className="ui error message"></div>
       </Form>
       <Modal.Actions>
         <Button color='black' onClick={onHide}>
-          <Icon name='remove' /> No
+          <Icon name='remove' /> Cancel
         </Button>
         <Button positive onClick={onHide}>
-          <Icon name='checkmark' /> Yes
+          <Icon name='checkmark' /> Save
         </Button>
       </Modal.Actions>
     </Modal.Content>

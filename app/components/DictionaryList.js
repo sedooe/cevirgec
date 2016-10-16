@@ -5,7 +5,7 @@ import tr from '../utils/Translation';
 
 const DictionaryList = ({dictionaries, onEdit}) => (
   <List divided relaxed>
-    {Object.getOwnPropertyNames(dictionaries).map(function (key) {
+    {Object.getOwnPropertyNames(dictionaries).map((key) => {
       let dictionary = dictionaries[key];
       return (
         <List.Item key={'dictionary-' + key}>
@@ -17,7 +17,7 @@ const DictionaryList = ({dictionaries, onEdit}) => (
             <Popup trigger={<Button icon='trash' />} content={tr('Delete')}/>
           </List.Content>
           <List.Content floated='left'>
-            <Checkbox toggle checked={dictionary.active} />
+            <Checkbox toggle defaultChecked={dictionary.active} />
           </List.Content>
 
           <List.Content>
