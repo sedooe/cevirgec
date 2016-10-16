@@ -11,11 +11,16 @@ export default class App extends Component {
   render() {
     return (
       <main>
-        <Breadcrumbs
-          excludes={['Dashboard']}
-          routes={this.props.routes}
-          params={this.props.params}
-        />
+
+        {(
+          this.props.location.pathname == "/" ?
+          null :
+          <Breadcrumbs
+            routes={this.props.routes}
+            params={this.props.params}
+          />
+        )}
+
         {this.props.children}
       </main>
     );
