@@ -1,8 +1,11 @@
 import React from 'react';
 import { storiesOf, action, linkTo } from '@kadira/storybook';
-import Modal from './Modal';
+import DictionaryList from './DictionaryList';
 import Button from './Button';
 import Welcome from './Welcome';
+import tr from '../app/utils/Translation';
+import { Form, Checkbox } from 'semantic-ui-react';
+import DictionaryModal from './DictionaryModal';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -14,7 +17,12 @@ storiesOf('Button', module)
     <Button onClick={action('clicked')}>Hello Button</Button>
   ));
 
-storiesOf('Modal', module)
+storiesOf('DictionaryList', module)
   .add('deneme', () => (
-    <Modal>Haydaaa</Modal>
+    <DictionaryList/>
+  ));
+
+storiesOf('DictionaryModal', module)
+  .add('deneme', () => (
+    <DictionaryModal/>
   ));

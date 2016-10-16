@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Confirm, Header, Image, Modal, Icon } from 'semantic-ui-react'
+import { Button, Image, Modal, Icon } from 'semantic-ui-react'
 import tr from '../app/utils/Translation';
 
 class ModalModalExample extends Component {
