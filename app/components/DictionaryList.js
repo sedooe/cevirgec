@@ -3,7 +3,7 @@ import { Button, Checkbox, List, Popup } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
 import tr from '../utils/Translation';
 
-const DictionaryList = ({dictionaries, onEdit}) => (
+const DictionaryList = ({dictionaries, onEdit, onDelete}) => (
   <List divided relaxed>
     {Object.getOwnPropertyNames(dictionaries).map((key) => {
       let dictionary = dictionaries[key];
@@ -14,10 +14,10 @@ const DictionaryList = ({dictionaries, onEdit}) => (
             <Popup trigger={<Button icon='print' />} content={tr('Print')}/>
             <Popup trigger={<Button icon='unhide' />} content={tr('View dictionary content')}/>
             <Popup trigger={<Button icon='edit' onClick={() => onEdit(dictionary)} />} content={tr('Edit')}/>
-            <Popup trigger={<Button icon='trash' />} content={tr('Delete')}/>
+            <Popup trigger={<Button icon='trash' onClick={() => onDelete(dictionary)} />} content={tr('Delete')}/>
           </List.Content>
           <List.Content floated='left'>
-            <Checkbox toggle defaultChecked={dictionary.active} />
+            <Checkbox toggle checked={dictionary.active} />
           </List.Content>
 
           <List.Content>

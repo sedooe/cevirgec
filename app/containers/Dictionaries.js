@@ -7,12 +7,14 @@
 
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 import tr from '../utils/Translation';
 import './Dashboard.scss';
 import DictionaryList from '../components/DictionaryList';
 import DictionaryModal from '../components/DictionaryModal';
+import * as DictionaryActions from '../actions/dictionary';
 import { Button, List, Popup } from 'semantic-ui-react';
 
 class Dictionaries extends Component {
@@ -36,6 +38,22 @@ class Dictionaries extends Component {
     });
   }
 
+  saveDictionary(dictionary) {
+    this.hideDictionaryModal();   
+    
+    if (dictionary.id) {
+      this.props.actions.editDictionary(dictionary);
+    } else {
+      this.props.actions.createDictionary(dictionary);      
+    }
+  }
+
+  deleteDictionary(dictionary) {
+    if (confirm(`Are you sure to delete dictionary "${dictionary.name}"?`)) {
+      this.props.actions.deleteDictionary(dictionary.dictionaryId);      
+    }
+  }
+
   render() {
     return (
       <DocumentTitle title={tr('Cevirgec › Dictionaries')}>
@@ -47,21 +65,36 @@ class Dictionaries extends Component {
             </div>
 
             <div className="ui grey segment">
-              <DictionaryList dictionaries={this.props.dictionaries} onEdit={this.openDictionaryModal.bind(this)} />
+              <DictionaryList 
+                dictionaries={this.props.dictionaries} 
+                onEdit={this.openDictionaryModal.bind(this)}
+                onDelete={this.deleteDictionary.bind(this)} 
+              />
             </div>
           </div>
 
-          <DictionaryModal open={this.state.dictionaryModalOpen} onHide={this.hideDictionaryModal.bind(this)} dictionary={this.state.currentDictionary}/>
+          <DictionaryModal 
+            open={this.state.dictionaryModalOpen} 
+            onHide={this.hideDictionaryModal.bind(this)}
+            onSave={this.saveDictionary.bind(this)}
+            dictionary={this.state.currentDictionary}
+          />
         </div>
       </DocumentTitle>
     );
   }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return {
     dictionaries: state.dictionary    
   }
 }
 
-export default connect(mapStateToProps)(Dictionaries)
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(DictionaryActions, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dictionaries)

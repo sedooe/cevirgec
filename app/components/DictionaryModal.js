@@ -255,25 +255,28 @@ const contexts = [
   { text: 'Sport', value: 'sport' },
 ];
 
-const DictionaryModal = ({open, dictionary, onHide}) => (
+const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
   <Modal open={open}>
     <Modal.Header>
       {dictionary.id ? tr('Edit Dictionary') : tr('New Dictionary')}
     </Modal.Header>
     <Modal.Content>
-      <Form>
+      <Form onSubmit={(e, serializedForm) => {
+        e.preventDefault();
+        onSave(serializedForm);
+      }}>
         <input type="hidden" name="id" value={dictionary.id} />
         <Form.Field>
           <label>Name</label>
-          <input placeholder="Name" defaultValue={dictionary.name} />
+          <input placeholder="Name" name="name" defaultValue={dictionary.name} />
         </Form.Field>
         <Form.Field>
           <label>Description</label>
-          <input placeholder="Description" defaultValue={dictionary.description} />
+          <input placeholder="Description" name="description" defaultValue={dictionary.description} />
         </Form.Field>
         <Form.Field>
           <label>Context</label>
-          <Form.Dropdown selection
+          <Form.Dropdown selection name="context"
             options={contexts}
             placeholder="Choose a context"
             defaultValue={dictionary.context}
@@ -282,7 +285,7 @@ const DictionaryModal = ({open, dictionary, onHide}) => (
         <div className="two fields">
           <Form.Field>
             <label>{tr('Source Language')}</label>
-            <Form.Dropdown selection
+            <Form.Dropdown selection name="sourceLanguage"
               options={contexts}
               placeholder="Choose a language"
               defaultValue={dictionary.sourceLanguage}
@@ -290,7 +293,7 @@ const DictionaryModal = ({open, dictionary, onHide}) => (
           </Form.Field>
           <Form.Field>
             <label>{tr('Target Language')}</label>
-            <Form.Dropdown selection
+            <Form.Dropdown selection name="targetLanguage"
               options={contexts}
               placeholder="Choose a language"
               defaultValue={dictionary.targetLanguage}
@@ -299,18 +302,18 @@ const DictionaryModal = ({open, dictionary, onHide}) => (
         </div>
         <Form.Field>
           <label>In use</label>
-          <Checkbox toggle defaultChecked={dictionary.active} />
+          <Checkbox toggle name="active" defaultChecked={dictionary.active} />
         </Form.Field>
         <div className="ui error message"></div>
+        <Modal.Actions>
+          <Button type='button' color='black' onClick={onHide}>
+            <Icon name='remove' /> Cancel
+          </Button>
+          <Button positive type='submit'>
+            <Icon name='checkmark' /> Save
+          </Button>
+        </Modal.Actions>
       </Form>
-      <Modal.Actions>
-        <Button color='black' onClick={onHide}>
-          <Icon name='remove' /> Cancel
-        </Button>
-        <Button positive onClick={onHide}>
-          <Icon name='checkmark' /> Save
-        </Button>
-      </Modal.Actions>
     </Modal.Content>
   </Modal>
 )

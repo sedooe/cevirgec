@@ -24,15 +24,19 @@ let dictionaries = {
 
 export default function dictionary(state: Object = dictionaries, action: Object) {
   switch (action.type) {
-    case CREATE_DICTIONARY:
-    case EDIT_DICTIONARY:
-      let id = action.data.id;
-      return Object.assign({}, state, {
-        id: action.data
-      })
+    case CREATE_DICTIONARY: {
+      let mergedOne = {};
+      mergedOne[Object.keys(state).length + 1] = action.dictionary;
+      return Object.assign({}, state, mergedOne);
+    }
+    case EDIT_DICTIONARY: {
+      let mergedOne = {};
+      mergedOne[action.dictionary.id] = action.dictionary;
+      return Object.assign({}, state, mergedOne);
+    }
     case DELETE_DICTIONARY:
       let newState = Object.assign({}, state);
-      delete newState[action.data];
+      delete newState[action.dictionaryId];
       return newState;
     default:
       return state;
