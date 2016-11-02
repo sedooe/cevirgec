@@ -37,7 +37,7 @@ export default class Dashboard extends Component {
                   <Dropdown.Item disabled>
                     Signed in as <strong>{user.fullname}</strong>
                   </Dropdown.Item>
-                  <Dropdown.Divider />
+                  <Dropdown.Divider style={{margin: 0}} />
                   <Dropdown.Item>
                     <Link to="/user/profile" className="item">
                       <Icon name="user" />
@@ -64,7 +64,7 @@ export default class Dashboard extends Component {
                   </Dropdown.Item>
                   <Dropdown.Item>
                     <Link to="" query={{menuLink: 'logout'}} onClick={this.logout} className="item">
-                      <Icon name="sign" />
+                      <Icon name="sign out" />
                       <span>Logout</span>
                     </Link>
                   </Dropdown.Item>
