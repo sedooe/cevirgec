@@ -50,8 +50,12 @@ class Dictionaries extends Component {
 
   deleteDictionary(dictionary) {
     if (confirm(`Are you sure to delete dictionary "${dictionary.name}"?`)) {
-      this.props.actions.deleteDictionary(dictionary.dictionaryId);      
+      this.props.actions.deleteDictionary(dictionary.id);      
     }
+  }
+
+  handleCheckboxChange(dictionaryId) {
+    this.props.actions.changeActivenessOfDictionary(dictionaryId);
   }
 
   render() {
@@ -68,7 +72,8 @@ class Dictionaries extends Component {
               <DictionaryList 
                 dictionaries={this.props.dictionaries} 
                 onEdit={this.openDictionaryModal.bind(this)}
-                onDelete={this.deleteDictionary.bind(this)} 
+                onDelete={this.deleteDictionary.bind(this)}
+                onCheckboxChange={this.handleCheckboxChange.bind(this)}
               />
             </div>
           </div>

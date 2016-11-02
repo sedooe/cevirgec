@@ -1,5 +1,10 @@
 // @flow
-import { CREATE_DICTIONARY, EDIT_DICTIONARY, DELETE_DICTIONARY } from '../actions/dictionary';
+import { 
+  CREATE_DICTIONARY,
+  EDIT_DICTIONARY,
+  DELETE_DICTIONARY,
+  CHANGE_ACTIVENESS_OF_DICTIONARY
+ } from '../actions/dictionary';
 
 let dictionaries = {
   1: {
@@ -25,19 +30,27 @@ let dictionaries = {
 export default function dictionary(state: Object = dictionaries, action: Object) {
   switch (action.type) {
     case CREATE_DICTIONARY: {
-      let mergedOne = {};
-      mergedOne[Object.keys(state).length + 1] = action.dictionary;
-      return Object.assign({}, state, mergedOne);
+      const id = Object.keys(state).length + 1;
+      action.dictionary.id = id;
+      return Object.assign({}, state, {
+        [id]: action.dictionary
+      });
     }
     case EDIT_DICTIONARY: {
-      let mergedOne = {};
-      mergedOne[action.dictionary.id] = action.dictionary;
-      return Object.assign({}, state, mergedOne);
+      const id = action.dictionary.id;
+      return Object.assign({}, state, {
+        [id]: action.dictionary
+      });
     }
-    case DELETE_DICTIONARY:
-      let newState = Object.assign({}, state);
+    case CHANGE_ACTIVENESS_OF_DICTIONARY: {
+      const id = action.dictionaryId;
+      return {...state, [id]: {...state[id], active: !state[id].active}};
+    }
+    case DELETE_DICTIONARY: {
+      const newState = Object.assign({}, state);
       delete newState[action.dictionaryId];
       return newState;
+    }
     default:
       return state;
   }

@@ -246,7 +246,7 @@ const languages = [
     {value: "zw", text: <span><i className="zw flag"></i>Zimbabwe</span>}];
 
 const contexts = [
-  { text: 'No Context', value: null },
+  { text: 'No Context', value: 'none' },
   { text: 'Politics', value: 'politics' },
   { text: 'Technology', value: 'technology' },
   { text: 'Science', value: 'science' },
@@ -278,8 +278,7 @@ const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
           <label>Context</label>
           <Form.Dropdown selection name="context"
             options={contexts}
-            placeholder="Choose a context"
-            defaultValue={dictionary.context}
+            defaultValue={dictionary.context || 'none'}
            />
         </Form.Field>
         <div className="two fields">
@@ -302,7 +301,7 @@ const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
         </div>
         <Form.Field>
           <label>In use</label>
-          <Checkbox toggle name="active" defaultChecked={dictionary.active} />
+          <Checkbox toggle name="active" defaultChecked={dictionary.active || false} />
         </Form.Field>
         <div className="ui error message"></div>
         <Modal.Actions>
