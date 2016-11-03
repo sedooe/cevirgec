@@ -3,19 +3,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
-
+// @flow
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
-import { Link } from 'react-router';
 import tr from '../utils/Translation';
-import './Dashboard.scss';
 import DictionaryList from '../components/DictionaryList';
 import DictionaryModal from '../components/DictionaryModal';
 import * as DictionaryActions from '../actions/dictionary';
-import { Button, List, Popup } from 'semantic-ui-react';
+import { Button, Popup } from 'semantic-ui-react';
 
 class Dictionaries extends Component {
 
@@ -29,7 +26,7 @@ class Dictionaries extends Component {
     dictionaryModalOpen: false
   }
 
-  openDictionaryModal = dictionary => {
+  openDictionaryModal = (dictionary: Object) => {
     this.setState({
       dictionaryModalOpen: true,
       currentDictionary: dictionary
@@ -44,23 +41,23 @@ class Dictionaries extends Component {
   }
 
   saveDictionary = dictionary => {
-    this.hideDictionaryModal();   
+    this.hideDictionaryModal();
 
     if (dictionary.id) {
       this.props.actions.editDictionary(dictionary);
     } else {
-      this.props.actions.createDictionary(dictionary);      
+      this.props.actions.createDictionary(dictionary);
     }
   }
 
   deleteDictionary = dictionary => {
     if (confirm(`Are you sure to delete dictionary "${dictionary.name}"?`)) {
-      this.props.actions.deleteDictionary(dictionary.id);      
+      this.props.actions.deleteDictionary(dictionary.id);
     }
   }
 
   handleCheckboxToggle = dictionaryId => {
-    this.props.actions.changeActivenessOfDictionary(dictionaryId);    
+    this.props.actions.changeActivenessOfDictionary(dictionaryId);
   }
 
   render() {
@@ -70,12 +67,12 @@ class Dictionaries extends Component {
           <div className="ui segments">
             <div className="ui clearing segment">
               <h3 className="ui left floated header">{tr('Dictionaries')}</h3>
-              <Popup trigger={<Button primary floated='right' icon='add circle' onClick={this.openDictionaryModal.bind(this, {})} />} content={tr('Add new dictionary')}/>
+              <Popup trigger={<Button primary floated="right" icon="add circle" onClick={this.openDictionaryModal.bind(this, {})} />} content={tr('Add new dictionary')} />
             </div>
 
             <div className="ui grey segment">
-              <DictionaryList 
-                dictionaries={this.props.dictionaries} 
+              <DictionaryList
+                dictionaries={this.props.dictionaries}
                 onEdit={this.openDictionaryModal}
                 onDelete={this.deleteDictionary}
                 onCheckboxToggle={this.handleCheckboxToggle}
@@ -83,8 +80,8 @@ class Dictionaries extends Component {
             </div>
           </div>
 
-          <DictionaryModal 
-            open={this.state.dictionaryModalOpen} 
+          <DictionaryModal
+            open={this.state.dictionaryModalOpen}
             onHide={this.hideDictionaryModal}
             onSave={this.saveDictionary}
             dictionary={this.state.currentDictionary}

@@ -2,8 +2,8 @@
 import * as actions from '../actions/constants';
 
 let dictionaries = {
-  1: {
-    id: 1,
+  "1": {
+    id: "1",
     name: "deneme",
     sourceLanguage: "af",
     targetLanguage: "tr",
@@ -11,8 +11,8 @@ let dictionaries = {
     numberOfDefinitions: "9",
     active: true
   },
-  2: {
-    id: 2,
+  "2": {
+    id: "2",
     name: "sozluk",
     sourceLanguage: "za",
     targetLanguage: "tr",
@@ -25,7 +25,7 @@ let dictionaries = {
 export default function dictionary(state: Object = dictionaries, action: Object) {
   switch (action.type) {
     case actions.CREATE_DICTIONARY: {
-      const id = Object.keys(state).length + 1;
+      const id = (Object.keys(state).length + 1).toString();
       action.dictionary.id = id;
       return Object.assign({}, state, {
         [id]: action.dictionary

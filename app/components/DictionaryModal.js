@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import { Button, Checkbox, Form, Icon, Modal } from 'semantic-ui-react'
+// @flow
+import React, { PropTypes } from 'react';
+import { Button, Checkbox, Form, Icon, Modal } from 'semantic-ui-react';
 import tr from '../utils/Translation';
 
 const languages = [
@@ -255,32 +256,39 @@ const contexts = [
   { text: 'Sport', value: 'sport' },
 ];
 
-const propFunctionProxy = (prop, event, serializedForm) => {
+const propFunctionProxy = (prop: Function, event, serializedForm) => {
   event.preventDefault();
   prop(serializedForm);
 }
 
-const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
-  <Modal open={open}>
+type Props = {
+  open: boolean,
+  onHide: Function,
+  onSave: Function,
+  dictionary: Object
+}
+
+const DictionaryModal = (props: Props) => (
+  <Modal open={props.open}>
     <Modal.Header>
-      {dictionary.id ? tr('Edit Dictionary') : tr('New Dictionary')}
+      {props.dictionary.id ? tr('Edit Dictionary') : tr('New Dictionary')}
     </Modal.Header>
     <Modal.Content>
-      <Form onSubmit={propFunctionProxy.bind(null, onSave)}>
-        <input type="hidden" name="id" value={dictionary.id} />
+      <Form onSubmit={propFunctionProxy.bind(null, props.onSave)}>
+        <input type="hidden" name="id" value={props.dictionary.id} />
         <Form.Field>
           <label>Name</label>
-          <input placeholder="Name" name="name" defaultValue={dictionary.name} />
+          <input placeholder="Name" name="name" defaultValue={props.dictionary.name} />
         </Form.Field>
         <Form.Field>
           <label>Description</label>
-          <input placeholder="Description" name="description" defaultValue={dictionary.description} />
+          <input placeholder="Description" name="description" defaultValue={props.dictionary.description} />
         </Form.Field>
         <Form.Field>
           <label>Context</label>
           <Form.Dropdown selection name="context"
             options={contexts}
-            defaultValue={dictionary.context || 'none'}
+            defaultValue={props.dictionary.context || 'none'}
            />
         </Form.Field>
         <div className="two fields">
@@ -289,7 +297,7 @@ const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
             <Form.Dropdown selection name="sourceLanguage"
               options={contexts}
               placeholder="Choose a language"
-              defaultValue={dictionary.sourceLanguage}
+              defaultValue={props.dictionary.sourceLanguage}
             />
           </Form.Field>
           <Form.Field>
@@ -297,17 +305,17 @@ const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
             <Form.Dropdown selection name="targetLanguage"
               options={contexts}
               placeholder="Choose a language"
-              defaultValue={dictionary.targetLanguage}
+              defaultValue={props.dictionary.targetLanguage}
             />
           </Form.Field>
         </div>
         <Form.Field>
           <label>In use</label>
-          <Checkbox toggle name="active" defaultChecked={dictionary.active || false} />
+          <Checkbox toggle name="active" defaultChecked={props.dictionary.active || false} />
         </Form.Field>
         <div className="ui error message"></div>
         <Modal.Actions>
-          <Button type='button' color='black' onClick={onHide}>
+          <Button type='button' color='black' onClick={props.onHide}>
             <Icon name='remove' /> Cancel
           </Button>
           <Button positive type='submit'>
@@ -321,8 +329,9 @@ const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
 
 DictionaryModal.propTypes = {
   open: PropTypes.bool.isRequired,
-  dictionary: PropTypes.object.isRequired,
-  onHide: PropTypes.func.isRequired
+  onHide: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,  
+  dictionary: PropTypes.object.isRequired
 };
 
 export default DictionaryModal
