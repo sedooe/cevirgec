@@ -61,10 +61,8 @@ export default class Dashboard extends Component {
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="" query={{menuLink: 'logout'}} onClick={this.logout} className="item">
-                      <Icon name="sign out" />
                     <Link to="" query={{ menuLink: 'logout' }} onClick={this.logout} className="item">
-                      <Icon name="sign" />
+                      <Icon name="sign out" />
                       <span>Logout</span>
                     </Link>
                   </Dropdown.Item>
