@@ -5,7 +5,7 @@
 
 'use strict';
 
-import React, {Component} from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
@@ -19,28 +19,33 @@ import { Button, List, Popup } from 'semantic-ui-react';
 
 class Dictionaries extends Component {
 
+  static propTypes = {
+    dictionaries: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
+  }
+
   state = {
     currentDictionary: {},
     dictionaryModalOpen: false
   }
 
-  openDictionaryModal(dictionary) {
+  openDictionaryModal = dictionary => {
     this.setState({
       dictionaryModalOpen: true,
       currentDictionary: dictionary
     });
   }
 
-  hideDictionaryModal() {
+  hideDictionaryModal = () => {
     this.setState({
       dictionaryModalOpen: false,
       currentDictionary: {}
     });
   }
 
-  saveDictionary(dictionary) {
+  saveDictionary = dictionary => {
     this.hideDictionaryModal();   
-    
+
     if (dictionary.id) {
       this.props.actions.editDictionary(dictionary);
     } else {
@@ -48,14 +53,14 @@ class Dictionaries extends Component {
     }
   }
 
-  deleteDictionary(dictionary) {
+  deleteDictionary = dictionary => {
     if (confirm(`Are you sure to delete dictionary "${dictionary.name}"?`)) {
       this.props.actions.deleteDictionary(dictionary.id);      
     }
   }
 
-  handleCheckboxChange(dictionaryId) {
-    this.props.actions.changeActivenessOfDictionary(dictionaryId);
+  handleCheckboxToggle = dictionaryId => {
+    this.props.actions.changeActivenessOfDictionary(dictionaryId);    
   }
 
   render() {
@@ -71,17 +76,17 @@ class Dictionaries extends Component {
             <div className="ui grey segment">
               <DictionaryList 
                 dictionaries={this.props.dictionaries} 
-                onEdit={this.openDictionaryModal.bind(this)}
-                onDelete={this.deleteDictionary.bind(this)}
-                onCheckboxChange={this.handleCheckboxChange.bind(this)}
+                onEdit={this.openDictionaryModal}
+                onDelete={this.deleteDictionary}
+                onCheckboxToggle={this.handleCheckboxToggle}
               />
             </div>
           </div>
 
           <DictionaryModal 
             open={this.state.dictionaryModalOpen} 
-            onHide={this.hideDictionaryModal.bind(this)}
-            onSave={this.saveDictionary.bind(this)}
+            onHide={this.hideDictionaryModal}
+            onSave={this.saveDictionary}
             dictionary={this.state.currentDictionary}
           />
         </div>
@@ -90,16 +95,12 @@ class Dictionaries extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    dictionaries: state.dictionary    
-  }
-}
+const mapStateToProps = state => ({
+  dictionaries: state.dictionary
+})
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(DictionaryActions, dispatch)
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(DictionaryActions, dispatch)
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dictionaries)

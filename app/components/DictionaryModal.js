@@ -255,16 +255,18 @@ const contexts = [
   { text: 'Sport', value: 'sport' },
 ];
 
+const propFunctionProxy = (prop, event, serializedForm) => {
+  event.preventDefault();
+  prop(serializedForm);
+}
+
 const DictionaryModal = ({open, onHide, onSave, dictionary}) => (
   <Modal open={open}>
     <Modal.Header>
       {dictionary.id ? tr('Edit Dictionary') : tr('New Dictionary')}
     </Modal.Header>
     <Modal.Content>
-      <Form onSubmit={(e, serializedForm) => {
-        e.preventDefault();
-        onSave(serializedForm);
-      }}>
+      <Form onSubmit={propFunctionProxy.bind(null, onSave)}>
         <input type="hidden" name="id" value={dictionary.id} />
         <Form.Field>
           <label>Name</label>

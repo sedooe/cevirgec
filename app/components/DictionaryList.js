@@ -3,7 +3,11 @@ import { Button, Checkbox, List, Popup } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
 import tr from '../utils/Translation';
 
-const DictionaryList = ({dictionaries, onEdit, onDelete, onCheckboxChange}) => (
+const propFunctionProxy = (prop, dictionary) => {
+  prop(dictionary);
+}
+
+const DictionaryList = ({dictionaries, onEdit, onDelete, onCheckboxToggle}) => (
   <List divided relaxed>
     {Object.getOwnPropertyNames(dictionaries).map((key) => {
       let dictionary = dictionaries[key];
@@ -13,11 +17,11 @@ const DictionaryList = ({dictionaries, onEdit, onDelete, onCheckboxChange}) => (
             <Popup  trigger={<Button icon='add' />} content={tr('Add a new word to this dictionary')}/>
             <Popup trigger={<Button icon='print' />} content={tr('Print')}/>
             <Popup trigger={<Button icon='unhide' />} content={tr('View dictionary content')}/>
-            <Popup trigger={<Button icon='edit' onClick={() => onEdit(dictionary)} />} content={tr('Edit')}/>
-            <Popup trigger={<Button icon='trash' onClick={() => onDelete(dictionary)} />} content={tr('Delete')}/>
+            <Popup trigger={<Button icon='edit' onClick={propFunctionProxy.bind(null, onEdit, dictionary)} />} content={tr('Edit')}/>
+            <Popup trigger={<Button icon='trash' onClick={propFunctionProxy.bind(null, onDelete, dictionary)} />} content={tr('Delete')}/>
           </List.Content>
           <List.Content floated='left'>
-            <Checkbox toggle checked={dictionary.active} onChange={() => onCheckboxChange(dictionary.id)} />
+            <Checkbox toggle checked={dictionary.active} onChange={propFunctionProxy.bind(null, onCheckboxToggle, dictionary.id)} />
           </List.Content>
 
           <List.Content>
@@ -32,7 +36,9 @@ const DictionaryList = ({dictionaries, onEdit, onDelete, onCheckboxChange}) => (
 
 DictionaryList.propTypes = {
   dictionaries: PropTypes.object.isRequired,
-  onEdit: PropTypes.func.isRequired
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onCheckboxToggle: PropTypes.func.isRequired
 };
 
 export default DictionaryList
