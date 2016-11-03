@@ -17,11 +17,18 @@ export default validate(merge(baseConfig, {
 
   devtool: 'source-map',
 
-  entry: [
-    `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
-    'babel-polyfill',
-    './app/index'
-  ],
+  entry: {
+    app: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      'babel-polyfill',
+      './app/index'
+    ],
+    add_definition_popup: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      'babel-polyfill',
+      './app/add_definition_popup'
+    ]
+  },
 
   output: {
     publicPath: `http://localhost:${port}/dist/`

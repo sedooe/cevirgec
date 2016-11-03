@@ -11,10 +11,18 @@ import baseConfig from './webpack.config.base';
 const config = validate(merge(baseConfig, {
   devtool: 'cheap-module-source-map',
 
-  entry: [
-    'babel-polyfill',
-    './app/index'
-  ],
+  entry: {
+    app: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      'babel-polyfill',
+      './app/index'
+    ],
+    add_definition_popup: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      'babel-polyfill',
+      './app/add_definition_popup'
+    ]
+  },
 
   output: {
     publicPath: '../dist/'
