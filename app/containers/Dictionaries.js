@@ -3,58 +3,60 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
-
-import React, {Component} from 'react';
+// @flow
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
-import { Link } from 'react-router';
 import tr from '../utils/Translation';
-import './Dashboard.scss';
 import DictionaryList from '../components/DictionaryList';
 import DictionaryModal from '../components/DictionaryModal';
 import * as DictionaryActions from '../actions/dictionary';
-import { Button, List, Popup } from 'semantic-ui-react';
+import { Button, Popup } from 'semantic-ui-react';
 
 class Dictionaries extends Component {
+
+  static propTypes = {
+    dictionaries: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
+  }
 
   state = {
     currentDictionary: {},
     dictionaryModalOpen: false
   }
 
-  openDictionaryModal(dictionary) {
+  openDictionaryModal = (dictionary: Object) => {
     this.setState({
       dictionaryModalOpen: true,
       currentDictionary: dictionary
     });
   }
 
-  hideDictionaryModal() {
+  hideDictionaryModal = () => {
     this.setState({
       dictionaryModalOpen: false,
       currentDictionary: {}
     });
   }
 
-  saveDictionary(dictionary) {
-    this.hideDictionaryModal();   
-    
+  saveDictionary = dictionary => {
+    this.hideDictionaryModal();
+
     if (dictionary.id) {
       this.props.actions.editDictionary(dictionary);
     } else {
-      this.props.actions.createDictionary(dictionary);      
+      this.props.actions.createDictionary(dictionary);
     }
   }
 
-  deleteDictionary(dictionary) {
+  deleteDictionary = dictionary => {
     if (confirm(`Are you sure to delete dictionary "${dictionary.name}"?`)) {
-      this.props.actions.deleteDictionary(dictionary.id);      
+      this.props.actions.deleteDictionary(dictionary.id);
     }
   }
 
-  handleCheckboxChange(dictionaryId) {
+  handleCheckboxToggle = dictionaryId => {
     this.props.actions.changeActivenessOfDictionary(dictionaryId);
   }
 
@@ -65,23 +67,23 @@ class Dictionaries extends Component {
           <div className="ui segments">
             <div className="ui clearing segment">
               <h3 className="ui left floated header">{tr('Dictionaries')}</h3>
-              <Popup trigger={<Button primary floated='right' icon='add circle' onClick={this.openDictionaryModal.bind(this, {})} />} content={tr('Add new dictionary')}/>
+              <Popup trigger={<Button primary floated="right" icon="add circle" onClick={this.openDictionaryModal.bind(this, {})} />} content={tr('Add new dictionary')} />
             </div>
 
             <div className="ui grey segment">
-              <DictionaryList 
-                dictionaries={this.props.dictionaries} 
-                onEdit={this.openDictionaryModal.bind(this)}
-                onDelete={this.deleteDictionary.bind(this)}
-                onCheckboxChange={this.handleCheckboxChange.bind(this)}
+              <DictionaryList
+                dictionaries={this.props.dictionaries}
+                onEdit={this.openDictionaryModal}
+                onDelete={this.deleteDictionary}
+                onCheckboxToggle={this.handleCheckboxToggle}
               />
             </div>
           </div>
 
-          <DictionaryModal 
-            open={this.state.dictionaryModalOpen} 
-            onHide={this.hideDictionaryModal.bind(this)}
-            onSave={this.saveDictionary.bind(this)}
+          <DictionaryModal
+            open={this.state.dictionaryModalOpen}
+            onHide={this.hideDictionaryModal}
+            onSave={this.saveDictionary}
             dictionary={this.state.currentDictionary}
           />
         </div>
@@ -90,16 +92,12 @@ class Dictionaries extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    dictionaries: state.dictionary    
-  }
-}
+const mapStateToProps = state => ({
+  dictionaries: state.dictionary
+})
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(DictionaryActions, dispatch)
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(DictionaryActions, dispatch)
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dictionaries)

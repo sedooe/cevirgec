@@ -1,42 +1,30 @@
 // @flow
+import * as actions from './constants'
 
-export const CREATE_DICTIONARY = 'CREATE_DICTIONARY';
-export const EDIT_DICTIONARY = 'EDIT_DICTIONARY';
-export const DELETE_DICTIONARY = 'DELETE_DICTIONARY';
-export const CHANGE_ACTIVENESS_OF_DICTIONARY = 'CHANGE_ACTIVENESS_OF_DICTIONARY';
+export const createDictionary = (dictionary: Object) => ({
+  type: actions.CREATE_DICTIONARY,
+  dictionary
+})
 
-export function createDictionary(dictionary) {
-  return {
-    type: CREATE_DICTIONARY,
-    dictionary
-  };
-}
+export const editDictionary = (dictionary: Object) => ({
+  type: actions.EDIT_DICTIONARY,
+  dictionary
+})
 
-export function editDictionary(dictionary) {
-  return {
-    type: EDIT_DICTIONARY,
-    dictionary
-  };
-}
+export const deleteDictionary = (dictionaryId: number) => ({
+  type: actions.DELETE_DICTIONARY,
+  dictionaryId
+})
 
-export function deleteDictionary(dictionaryId) {
-  return {
-    type: DELETE_DICTIONARY,
-    dictionaryId
-  };
-}
+export const changeActivenessOfDictionary = (dictionaryId: number) => ({
+  type: actions.CHANGE_ACTIVENESS_OF_DICTIONARY,
+  dictionaryId
+})
 
-export function changeActivenessOfDictionary(dictionaryId) {
-  return {
-    type: CHANGE_ACTIVENESS_OF_DICTIONARY,
-    dictionaryId
-  }
-}
-
-export function incrementAsync(delay: number = 1000) {
-  return (dispatch: Function) => {
-    setTimeout(() => {
-      dispatch(increment());
-    }, delay);
-  };
-}
+// export function incrementAsync(delay: number = 1000) {
+//   return (dispatch: Function) => {
+//     setTimeout(() => {
+//       dispatch(increment());
+//     }, delay);
+//   };
+// }

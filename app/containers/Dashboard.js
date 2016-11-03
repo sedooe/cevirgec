@@ -3,9 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
-
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 import tr from '../utils/Translation';
@@ -16,12 +14,12 @@ import { Card, Dropdown, Grid, Icon, Menu } from 'semantic-ui-react';
 export default class Dashboard extends Component {
 
   render() {
-    let user = JSON.parse(window.localStorage.getItem("user")) || {username: 'username', fullname: 'User'};
+    const user = JSON.parse(window.localStorage.getItem('user')) || { username: 'username', fullname: 'User' };
     // FIXME: hardcoded object is needed for development, we won't need it later.
 
     const trigger = (
       <span>
-        <Icon name='user' />
+        <Icon name="user" />
         {tr('Hello, ', user.username)}
       </span>
     );
@@ -30,10 +28,10 @@ export default class Dashboard extends Component {
       <DocumentTitle title={tr('Cevirgec › Dashboard')}>
         <div className="child-1st-no-top-margin">
 
-          <Menu text={true}>
-            <Menu.Item position='right'>
+          <Menu text>
+            <Menu.Item position="right">
               <Dropdown trigger={trigger}>
-                <Dropdown.Menu style={{margin: "10px 0 0 -40px"}}>
+                <Dropdown.Menu style={{ margin: '10px 0 0 -40px' }}>
                   <Dropdown.Item disabled>
                     Signed in as <strong>{user.fullname}</strong>
                   </Dropdown.Item>
@@ -45,19 +43,19 @@ export default class Dashboard extends Component {
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="/user/profile" query={{menuLink: 'edit'}} className="item">
+                    <Link to="/user/profile" query={{ menuLink: 'edit' }} className="item">
                       <Icon name="edit" />
                       <span>Update Info</span>
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="/user/profile" query={{menuLink: 'account-settings'}} className="item">
+                    <Link to="/user/profile" query={{ menuLink: 'account-settings' }} className="item">
                       <Icon name="setting" />
                       <span>Account Settings</span>
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="" query={{menuLink: 'sync'}} onClick={this.sync} className="item">
+                    <Link to="" query={{ menuLink: 'sync' }} onClick={this.sync} className="item">
                       <Icon name="refresh" />
                       <span>Sync My Data</span>
                     </Link>
@@ -65,6 +63,8 @@ export default class Dashboard extends Component {
                   <Dropdown.Item>
                     <Link to="" query={{menuLink: 'logout'}} onClick={this.logout} className="item">
                       <Icon name="sign out" />
+                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.logout} className="item">
+                      <Icon name="sign" />
                       <span>Logout</span>
                     </Link>
                   </Dropdown.Item>

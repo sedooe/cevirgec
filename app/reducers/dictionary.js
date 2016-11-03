@@ -1,14 +1,9 @@
 // @flow
-import { 
-  CREATE_DICTIONARY,
-  EDIT_DICTIONARY,
-  DELETE_DICTIONARY,
-  CHANGE_ACTIVENESS_OF_DICTIONARY
- } from '../actions/dictionary';
+import * as actions from '../actions/constants';
 
 let dictionaries = {
-  1: {
-    id: 1,
+  "1": {
+    id: "1",
     name: "deneme",
     sourceLanguage: "af",
     targetLanguage: "tr",
@@ -16,8 +11,8 @@ let dictionaries = {
     numberOfDefinitions: "9",
     active: true
   },
-  2: {
-    id: 2,
+  "2": {
+    id: "2",
     name: "sozluk",
     sourceLanguage: "za",
     targetLanguage: "tr",
@@ -29,24 +24,24 @@ let dictionaries = {
 
 export default function dictionary(state: Object = dictionaries, action: Object) {
   switch (action.type) {
-    case CREATE_DICTIONARY: {
-      const id = Object.keys(state).length + 1;
+    case actions.CREATE_DICTIONARY: {
+      const id = (Object.keys(state).length + 1).toString();
       action.dictionary.id = id;
       return Object.assign({}, state, {
         [id]: action.dictionary
       });
     }
-    case EDIT_DICTIONARY: {
+    case actions.EDIT_DICTIONARY: {
       const id = action.dictionary.id;
       return Object.assign({}, state, {
         [id]: action.dictionary
       });
     }
-    case CHANGE_ACTIVENESS_OF_DICTIONARY: {
+    case actions.CHANGE_ACTIVENESS_OF_DICTIONARY: {
       const id = action.dictionaryId;
       return {...state, [id]: {...state[id], active: !state[id].active}};
     }
-    case DELETE_DICTIONARY: {
+    case actions.DELETE_DICTIONARY: {
       const newState = Object.assign({}, state);
       delete newState[action.dictionaryId];
       return newState;
