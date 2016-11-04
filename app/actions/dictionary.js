@@ -1,10 +1,16 @@
 // @flow
-import * as actions from './constants'
+import * as actions from './constants';
+const ipc = require('electron').ipcRenderer;
 
-export const createDictionary = (dictionary: Object) => ({
-  type: actions.CREATE_DICTIONARY,
+const requestCreateDictionary = (dictionary: Object) => ({
+  type: actions.REQUEST_CREATE_DICTIONARY,
   dictionary
 })
+
+export const createDictionary = (dictionary: Object) => (dispatch: Function) => {
+  dispatch(requestCreateDictionary(dictionary));
+  ipc.send(actions.CREATE_DICTIONARY, dictionary);
+}
 
 export const editDictionary = (dictionary: Object) => ({
   type: actions.EDIT_DICTIONARY,

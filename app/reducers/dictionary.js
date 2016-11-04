@@ -22,29 +22,31 @@ let dictionaries = {
   }
 };
 
-export default function dictionary(state: Object = dictionaries, action: Object) {
+export default function dictionary(state: Object = {isFetching: false, dictionaries: dictionaries}, action: Object) {
   switch (action.type) {
-    case actions.CREATE_DICTIONARY: {
-      const id = (Object.keys(state).length + 1).toString();
+    case actions.REQUEST_CREATE_DICTIONARY: {
+      const id = (Object.keys(state.dictionaries).length + 1).toString();
       action.dictionary.id = id;
-      return Object.assign({}, state, {
-        [id]: action.dictionary
-      });
+      return {...state, dictionaries: {...state.dictionaries, [id]: action.dictionary}}
+      //return {...state, isFetching: true}
+    }
+    case actions.DICTIONARY_CREATED: {
+      const id = (Object.keys(state.dictionaries).length + 1).toString();
+      action.dictionary.id = id;
+      return {...state, dictionaries: {...state.dictionaries, [id]: action.dictionary}}
     }
     case actions.EDIT_DICTIONARY: {
       const id = action.dictionary.id;
-      return Object.assign({}, state, {
-        [id]: action.dictionary
-      });
+      return {...state, dictionaries: {...state.dictionaries, [id]: action.dictionary}}
     }
     case actions.CHANGE_ACTIVENESS_OF_DICTIONARY: {
       const id = action.dictionaryId;
-      return {...state, [id]: {...state[id], active: !state[id].active}};
+      return {...state, dictionaries: {...state.dictionaries, [id]: {...state.dictionaries[id], active: !state.dictionaries[id].active}}}
     }
     case actions.DELETE_DICTIONARY: {
-      const newState = Object.assign({}, state);
+      const newState = Object.assign({}, state.dictionaries);
       delete newState[action.dictionaryId];
-      return newState;
+      return Object.assign({}, {dictionaries: newState}, {isFetching: state.isFetching});
     }
     default:
       return state;
