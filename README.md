@@ -48,3 +48,20 @@ or run two servers with one command
 
 
 Solution: http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
+
+# Boiler Plate Repo
+
+https://github.com/chentsulin/electron-react-boilerplate
+
+We forked at https://github.com/chentsulin/electron-react-boilerplate/tree/84e04776701c5fd71b8bac876899d1c9cfdb5b20.
+
+# License
+
+You can use this program free of charge.
+
+Cevirgec  Copyright (C) 2015  Kod Gemisi Ltd. <foss@kodgemisi.com>
+This program comes with ABSOLUTELY NO WARRANTY; for details type see LICENSE file.
+This is free software, and you are welcome to redistribute it
+under certain conditions; see LICENSE file for details.
+
+GNU GPL v3 https://www.gnu.org/licenses/gpl-3.0.en.html

@@ -1,0 +1,217 @@
+exports[`DictionaryList Component DictionaryList renders correctly [snapshots] renders correctly with data 1`] = `
+<div
+  className="ui divided relaxed list">
+  <div
+    className="item"
+    data-value={undefined}>
+    <div
+      className="right floated content">
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="add icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="print icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="unhide icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="edit icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="trash icon" />
+         
+      </button>
+    </div>
+    <div
+      className="left floated content">
+      <div
+        className="ui checked fitted toggle checkbox"
+        onChange={[Function]}
+        onClick={[Function]}>
+        <input
+          checked={true}
+          className="hidden"
+          name={undefined}
+          readOnly={true}
+          tabIndex={0}
+          type="checkbox"
+          value={undefined} />
+        <label />
+      </div>
+    </div>
+    <div
+      className="content">
+      <div
+        className="header">
+        deneme
+      </div>
+      <div
+        className="description">
+        af
+        => 
+        tr
+        | 
+        9
+        definitions
+      </div>
+    </div>
+  </div>
+  <div
+    className="item"
+    data-value={undefined}>
+    <div
+      className="right floated content">
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="add icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="print icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="unhide icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="edit icon" />
+         
+      </button>
+      <button
+        className="ui icon button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onMouseLeave={[Function]}
+        onMouseOver={[Function]}
+        tabIndex={undefined}>
+        <i
+          className="trash icon" />
+         
+      </button>
+    </div>
+    <div
+      className="left floated content">
+      <div
+        className="ui fitted toggle checkbox"
+        onChange={[Function]}
+        onClick={[Function]}>
+        <input
+          checked={false}
+          className="hidden"
+          name={undefined}
+          readOnly={true}
+          tabIndex={0}
+          type="checkbox"
+          value={undefined} />
+        <label />
+      </div>
+    </div>
+    <div
+      className="content">
+      <div
+        className="header">
+        sozluk
+      </div>
+      <div
+        className="description">
+        za
+        => 
+        tr
+        | 
+        90
+        definitions
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`DictionaryList Component DictionaryList renders correctly [snapshots] shows empty message with no data 1`] = `
+<div
+  className="ui icon message">
+  <i
+    className="info icon" />
+  <div
+    className="content">
+    There is no dictionary yet.
+  </div>
+</div>
+`;
