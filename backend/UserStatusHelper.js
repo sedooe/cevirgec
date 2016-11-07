@@ -25,8 +25,14 @@ class UserStatusHelper {
     userStatus = jetpack.read(userStatusFilePath, 'json');
   }
 
+  // deprecated
   getUserStatus() {
+    debug('_____DEPRECATED_____: getUserStatus() use finer grained methods like isAuthenticated()')
     return userStatus;
+  }
+
+  isAuthenticated() {
+    return userStatus.loggedIn == true;
   }
 
   setUserStatus(status) {

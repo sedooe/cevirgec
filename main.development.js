@@ -44,10 +44,7 @@ app.on('ready', async () => {
 
   applicationHelper.initializeApp();
 
-  // if (userStatusHelper.getUserStatus().loggedIn) {
-  //   shortcutHelper.registerGlobalShortcuts();
-  //   sync.start(userStatus);
-  // }
+  shortcutHelper.registerGlobalShortcuts();
 
   clipboardEventEmitter.initialize();
   clipboardEventEmitter.onChange(applicationHelper.clipboardChangeHandler);

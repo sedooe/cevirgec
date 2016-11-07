@@ -18,12 +18,6 @@ const OPEN_MAIN_PAGE = 'OPEN_MAIN_PAGE';
 const OPEN_REGISTER_PAGE = 'OPEN_REGISTER_PAGE';
 const OPEN_LOGIN_PAGE = 'OPEN_LOGIN_PAGE';
 
-let menuURL = {
-  OPEN_MAIN_PAGE: '#',
-  OPEN_REGISTER_PAGE: '#/user/register',
-  OPEN_LOGIN_PAGE: '#/user/login'
-}
-
 let mainWindow = null;
 let mainWindowState;
 
@@ -46,7 +40,7 @@ let contextWindow = null;
 //   openNewDefinitionWindowForDictionary(data);
 // });
 
-function openDashboardWindow(page) {
+function openDashboardWindow() {
 
   if(mainWindow != null){
     mainWindow.show();
@@ -81,13 +75,9 @@ function openDashboardWindow(page) {
   mainWindowState.manage(mainWindow);
   menuHelper.createApplicationMenu(mainWindow);
 
-  mainWindow.loadURL(`file://${__dirname}/../app/app.html` + menuURL[page]);
+  mainWindow.loadURL(`file://${__dirname}/../app/app.html`);
 
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools();
-  }
-
-  mainWindow.webContents.on('dom-ready', function() {
+  mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.show();
     mainWindow.restore();
   });
@@ -263,8 +253,5 @@ module.exports = {
   openNewDefinitionWindowForDictionary,
   openResultsWindow,
   openContextWindow,
-  isClipboardTriggersBlockedByAWindow,
-  OPEN_MAIN_PAGE,
-  OPEN_REGISTER_PAGE,
-  OPEN_LOGIN_PAGE
+  isClipboardTriggersBlockedByAWindow
 }
