@@ -13,20 +13,25 @@ const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.on(actions.LOAD_DICTIONARIES, (event) => {
+  debug(actions.LOAD_DICTIONARIES);
+
   Dictionary.findAll({ where: { deleted: false } }).then(resultSet => {
     const dictionaries = resultSet.map(dictionary => dictionary.toJSON());
-    debug('zaaaa', dictionaries);
     event.sender.send(actions.DICTIONARIES_LOADED, dictionaries);
   }).catch(e => debug(e));
 });
 
 ipc.on(actions.CREATE_DICTIONARY, (event, dictionary) => {
+  debug(actions.CREATE_DICTIONARY, dictionary);
+
   Dictionary.create(dictionary).then(createdDictionary => {
     event.sender.send(actions.DICTIONARY_CREATED, createdDictionary.toJSON());
   }).catch(e => debug(e));
 });
 
 ipc.on(actions.EDIT_DICTIONARY, (event, dictionary) => {
+  debug(actions.EDIT_DICTIONARY, dictionary);
+
   Dictionary.findById(dictionary.id).then(persistentDictionary => {
     persistentDictionary.update(dictionary).then(editedDictionary => {
       event.sender.send(actions.DICTIONARY_EDITED, editedDictionary.toJSON());
@@ -35,6 +40,8 @@ ipc.on(actions.EDIT_DICTIONARY, (event, dictionary) => {
 });
 
 ipc.on(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, (event, dictionaryId) => {
+  debug(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, dictionaryId);
+
   Dictionary.findById(dictionaryId).then(dictionary => {
     dictionary.update({ active: !dictionary.active }).then(editedDictionary => {
       event.sender.send(actions.DICTIONARY_ACTIVENESS_CHANGED, editedDictionary.id);
@@ -43,6 +50,8 @@ ipc.on(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, (event, dictionaryId) => {
 });
 
 ipc.on(actions.DELETE_DICTIONARY, (event, dictionaryId) => {
+  debug(actions.DELETE_DICTIONARY, dictionaryId);
+
   Dictionary.findById(dictionaryId).then(dictionary => {
     dictionary.update({ deleted: true }).then(deletedDictionary => {
       event.sender.send(actions.DICTIONARY_DELETED, deletedDictionary.id);
