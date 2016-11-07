@@ -8,9 +8,15 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import './app.global.css';
 import './index.scss';
+import * as actions from './actions/constants';
+const ipc = require('electron').ipcRenderer;
 
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
+
+ipc.on(actions.DICTIONARY_CREATED, (event, dictionary) => {
+  store.dispatch({type: actions.DICTIONARY_CREATED, dictionary})
+})
 
 render(
   <Provider store={store}>
