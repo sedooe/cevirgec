@@ -26,6 +26,10 @@ class Dictionaries extends Component {
     dictionaryModalOpen: false
   }
 
+  componentDidMount = () => { //see: https://twitter.com/dan_abramov/status/790581793397305345
+    this.props.actions.loadDictionaries();
+  }
+
   openDictionaryModal = (dictionary: Object) => {
     this.setState({
       dictionaryModalOpen: true,
@@ -93,7 +97,8 @@ class Dictionaries extends Component {
 }
 
 const mapStateToProps = state => ({
-  dictionaries: state.dictionary.dictionaries
+  dictionaries: state.dictionary.dictionaries,
+  isFetching: state.dictionary.isFetching
 })
 
 const mapDispatchToProps = dispatch => ({

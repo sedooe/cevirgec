@@ -12,9 +12,41 @@ const UiEvents = {};
 const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
+ipc.on(actions.LOAD_DICTIONARIES, (event) => {
+  Dictionary.findAll({ where: { deleted: false } }).then(resultSet => {
+    const dictionaries = resultSet.map(dictionary => dictionary.toJSON());
+    debug('zaaaa', dictionaries);
+    event.sender.send(actions.DICTIONARIES_LOADED, dictionaries);
+  }).catch(e => debug(e));
+});
+
 ipc.on(actions.CREATE_DICTIONARY, (event, dictionary) => {
   Dictionary.create(dictionary).then(createdDictionary => {
     event.sender.send(actions.DICTIONARY_CREATED, createdDictionary.toJSON());
+  }).catch(e => debug(e));
+});
+
+ipc.on(actions.EDIT_DICTIONARY, (event, dictionary) => {
+  Dictionary.findById(dictionary.id).then(persistentDictionary => {
+    persistentDictionary.update(dictionary).then(editedDictionary => {
+      event.sender.send(actions.DICTIONARY_EDITED, editedDictionary.toJSON());
+    }).catch(e => debug(e));
+  }).catch(e => debug(e));
+});
+
+ipc.on(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, (event, dictionaryId) => {
+  Dictionary.findById(dictionaryId).then(dictionary => {
+    dictionary.update({ active: !dictionary.active }).then(editedDictionary => {
+      event.sender.send(actions.DICTIONARY_ACTIVENESS_CHANGED, editedDictionary.id);
+    }).catch(e => debug(e));
+  }).catch(e => debug(e));
+});
+
+ipc.on(actions.DELETE_DICTIONARY, (event, dictionaryId) => {
+  Dictionary.findById(dictionaryId).then(dictionary => {
+    dictionary.update({ deleted: true }).then(deletedDictionary => {
+      event.sender.send(actions.DICTIONARY_DELETED, deletedDictionary.id);
+    }).catch(e => debug(e));
   }).catch(e => debug(e));
 });
 
