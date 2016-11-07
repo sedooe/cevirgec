@@ -8,7 +8,7 @@
 const ipc = require("electron").ipcMain;
 const Definition = require('../model/Definition');
 const Dictionary = require('../model/Dictionary');
-const Sync = require('../Sync');
+// const Sync = require('../Sync');
 const UserSearchCountQueries = require('./queries/UserSearchCountQueries');
 const DefinitionQueries = require('./queries/DefinitionQueries');
 const DatabaseEvents = {};

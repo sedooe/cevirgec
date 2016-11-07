@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Tureng",
+    "url": "http://tureng.com/search/{WORD}",
+    "sourceLang": "us",
+    "index": 1
+  }
+]

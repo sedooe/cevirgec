@@ -13,7 +13,7 @@ const appDataPath = app.getPath('userData');
 
 const userStatusFilePath = jetpack.path(appDataPath, 'user-status.json');
 const defaultUserStatus = {loggedIn: false};
-let userStatus;
+let userStatus = {};
 
 class UserStatusHelper {
 

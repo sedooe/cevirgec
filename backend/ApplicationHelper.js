@@ -41,7 +41,7 @@ function initializeDaos() {
 }
 
 function initializeSystemTray() {
-  trayIcon = new Tray('app/images/trayIcon.png');
+  trayIcon = new Tray('resources/images/trayIcon.png');
 
   authenticatedUserContextMenu = [
     {
@@ -92,10 +92,10 @@ function initializeSystemTray() {
     }
   ];
 
-  let userStatus = userStatusHelper.getUserStatus();
+  // let userStatus = userStatusHelper.getUserStatus();
 
   trayIcon.setToolTip('This is cevirgec application.');
-  setContextMenu(userStatus.loggedIn);
+  setContextMenu(true);
   GLOBAL.verbosityEventEmitter.on('change', (verbosity)=>{
     trayIcon.menu.items[1].checked = verbosity;
     trayIcon.setContextMenu(trayIcon.menu);
@@ -117,12 +117,13 @@ class ApplicationHelper {
       throw 'Application is already initialized!';
     }
 
-    //global.verbosityEventEmitter = new EventEmitter();
-    //userStatusHelper.createUserStatus();
-    //preferencesHelper.restoreSettings();
-    //shortcutHelper.restoreShortcuts();
+    global.verbosityEventEmitter = new EventEmitter();
+    userStatusHelper.createUserStatus();
+    preferencesHelper.restoreSettings();
+    shortcutHelper.restoreShortcuts();
+
     initializeDaos();
-    //initializeSystemTray();
+    initializeSystemTray();
   }
 
   setContextMenu(isUserAuthenticated) {

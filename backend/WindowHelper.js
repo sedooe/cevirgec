@@ -81,11 +81,7 @@ function openDashboardWindow(page) {
   mainWindowState.manage(mainWindow);
   menuHelper.createApplicationMenu(mainWindow);
 
-  if (process.env.HOT) {
-    mainWindow.loadURL(`file://${__dirname}/../app/hot-dev-dashboard.html` + menuURL[page]);
-  } else {
-    mainWindow.loadURL(`file://${__dirname}/../app/dashboard.html` + menuURL[page]);
-  }
+  mainWindow.loadURL(`file://${__dirname}/../app/app.html` + menuURL[page]);
 
   if (process.env.NODE_ENV === 'development') {
     mainWindow.openDevTools();

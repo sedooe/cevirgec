@@ -11,6 +11,8 @@ var menu;
 function createApplicationMenu (mainWindow) {
   var template;
 
+
+
   if (process.platform === 'darwin') {
     template = [{
       label: 'Electron',

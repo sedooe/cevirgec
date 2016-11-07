@@ -57,6 +57,8 @@ class PreferencesHelper {
   }
 
   isVerbose() {
+    debug("anaaan")
+    debug(settings)
     return settings.verbose;
   }
 

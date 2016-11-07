@@ -21,13 +21,15 @@ class FirstRunHelper {
   }
 
   persistDefaultOnlineSources() {
+    debug("d");
     const OnlineSources = require('./model/OnlineSource'); //FIXME
-
+    debug("x");
     this.restoreDefaultOnlineSources();
-
+    debug("a");
     defaultOnlineSources.forEach((onlineSource)=>{
       OnlineSources.create(onlineSource);
     });
+    debug("b");
   }
 
   doFirstRunWork() {
