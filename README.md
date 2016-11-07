@@ -49,7 +49,11 @@ or run two servers with one command
 
 Solution: http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
 
-# Boiler Plate Repo
+# Development Notes
+
+Following this advice: https://twitter.com/dan_abramov/status/790581793397305345
+
+# Boilerplate Repo
 
 https://github.com/chentsulin/electron-react-boilerplate
 
