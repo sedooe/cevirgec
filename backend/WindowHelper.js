@@ -5,9 +5,8 @@
 
 'use strict';
 
-const electron = require('electron');
-const ipc = electron.ipcMain;
-const BrowserWindow = electron.BrowserWindow;
+import { BrowserWindow, Menu, ipcMain, screen as electronScreen } from 'electron';
+
 const windowStateKeeper = require('electron-window-state');
 const menuHelper = require('./MenuHelper');
 const wordUtils = require('./WordUtils');
@@ -27,14 +26,14 @@ let contextWindow = null;
 
 // When a word is couldn't found in verbose mode, the button to open
 // AddDefinitionWindow triggers this callback
-ipc.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', function(event, data) {
+ipcMain.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', function(event, data) {
   debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', data);
 
   let theWord = wordUtils.normalize(data);
   openNewDefinitionWindowForWord(theWord);
 });
 
-ipc.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', function(event, data) {
+ipcMain.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', function(event, data) {
   debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', data);
 
   openNewDefinitionWindowForDictionary(data);
@@ -110,7 +109,6 @@ function _openNewDefinitionCommonWindow(queryString) {
       return;
     }
 
-    const electronScreen = electron.screen;
     // const position = electronScreen.getCursorScreenPoint();
     const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
@@ -149,7 +147,6 @@ function openResultPopup(selectedText, definitionsObj) {
     resultsWindow = null;
   }
 
-  const electronScreen = electron.screen;
   const position = electronScreen.getCursorScreenPoint();
 
   let windowOptions = {
@@ -181,7 +178,7 @@ function openResultPopup(selectedText, definitionsObj) {
         click() {
           resultsWindow.inspectElement(x, y);
         }
-      }]).popup(mainWindow);
+      }]).popup(resultsWindow);
     });
   }
 
@@ -201,7 +198,6 @@ function openContextWindow(selectedText) {
     contextWindow = null;
   }
 
-  const electronScreen = electron.screen;
   const position = electronScreen.getCursorScreenPoint();
 
   let windowOptions = {
