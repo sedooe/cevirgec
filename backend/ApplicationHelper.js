@@ -108,7 +108,7 @@ function setContextMenu(isUserAuthenticated) {
       }
     ];
   }
-  
+
   trayIcon.setContextMenu(Menu.buildFromTemplate(contextMenu));
 }
 
@@ -138,8 +138,7 @@ class ApplicationHelper {
   }
 
   clipboardChangeHandler(data) {
-    let userStatus = userStatusHelper.getUserStatus();
-    if (!preferencesHelper.isVerbose() || !userStatus.loggedIn) {
+    if (!preferencesHelper.isVerbose() || !userStatusHelper.isAuthenticated()) {
       debug('clipboardChangeHandler ignored', data.text);
       return;
     }
@@ -160,11 +159,11 @@ class ApplicationHelper {
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
         debug('clipboardChangeHandler', 'number of definitions found:', groupedDefinitions.length);
-        windowHelper.openResultsWindow(text, groupedDefinitions);
+        windowHelper.openResultPopup(text, groupedDefinitions);
       });
     }
     else {
-      debug('ignored', text);
+      debug('ignored', text ? '' : '<no text in clipboard> this is probably second call for clipboard workaround');
     }
   }
 }

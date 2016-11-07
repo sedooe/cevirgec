@@ -1,0 +1,58 @@
+@import '../../../node_modules/semantic-ui/dist/semantic.css';
+
+$dark-color: #f9f9f9;
+$light-color: #fff;
+$dictionary-bg: #e5e8ff;
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+  color: #333;
+  border-top: 1px solid #ddd;
+  padding-left: 5px;
+
+  &:nth-child(odd) {
+    background-color: $dark-color;
+  }
+
+  &:nth-child(even) {
+    background-color: $light-color;
+  }
+
+  &.dictionary {
+    background-color: $dictionary-bg;
+  }
+
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
+
+  div {
+    display: none;
+  }
+
+  em {
+    color: #888;
+  }
+
+}
+
+i.mini.plus.icon {
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
+}
+
+.ui.basic.segment {
+  margin: 0;
+  padding: 0 0 0 15px;
+
+  p{
+    margin: 0;
+  }
+}

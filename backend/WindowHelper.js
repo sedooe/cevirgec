@@ -27,18 +27,18 @@ let contextWindow = null;
 
 // When a word is couldn't found in verbose mode, the button to open
 // AddDefinitionWindow triggers this callback
-// ipc.on(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD, function(event, data) {
-//   debug(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD, data);
-//
-//   let theWord = wordUtils.normalize(data);
-//   openNewDefinitionWindowForWord(theWord);
-// });
-//
-// ipc.on(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY, function(event, data) {
-//   debug(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY, data);
-//
-//   openNewDefinitionWindowForDictionary(data);
-// });
+ipc.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', function(event, data) {
+  debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', data);
+
+  let theWord = wordUtils.normalize(data);
+  openNewDefinitionWindowForWord(theWord);
+});
+
+ipc.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', function(event, data) {
+  debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', data);
+
+  openNewDefinitionWindowForDictionary(data);
+});
 
 function openDashboardWindow() {
 
@@ -146,9 +146,9 @@ function _openNewDefinitionCommonWindow(queryString) {
     });
 }
 
-function openResultsWindow(selectedText, definitionsObj) {
+function openResultPopup(selectedText, definitionsObj) {
 
-  if (resultsWindow != null){
+  if (resultsWindow != null) {
     resultsWindow.close();
     resultsWindow = null;
   }
@@ -174,17 +174,22 @@ function openResultsWindow(selectedText, definitionsObj) {
 
   let urlQueryPart = `?selectedText=${selectedText}&results=${JSON.stringify(definitionsObj)}`;
 
-  if (process.env.HOT) {
-    resultsWindow.loadURL(`file://${__dirname}/../app/hot-dev-results.html${urlQueryPart}`);
-  } else {
-    resultsWindow.loadURL(`file://${__dirname}/../app/results.html${urlQueryPart}`);
-  }
+  resultsWindow.loadURL(`file://${__dirname}/../app/result_popup.html${urlQueryPart}`);
 
   if (process.env.NODE_ENV === 'development') {
-    resultsWindow.openDevTools();
+    resultsWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props;
+
+      Menu.buildFromTemplate([{
+        label: 'Inspect element',
+        click() {
+          resultsWindow.inspectElement(x, y);
+        }
+      }]).popup(mainWindow);
+    });
   }
 
-  resultsWindow.webContents.on('dom-ready', function() {
+  resultsWindow.webContents.on('did-finish-load', function() {
     resultsWindow.show();
   });
 
@@ -251,7 +256,7 @@ module.exports = {
   openDashboardWindow,
   openNewDefinitionWindowForWord,
   openNewDefinitionWindowForDictionary,
-  openResultsWindow,
+  openResultPopup,
   openContextWindow,
   isClipboardTriggersBlockedByAWindow
 }
