@@ -6,6 +6,8 @@ import counterStyles from '../app/components/Counter.css';
 
 const delay = time => new Promise(resolve => setTimeout(resolve, time));
 
+// TODO write an example e2e test. http://electron.atom.io/spectron/
+
 describe('main window', function spec() {
   this.timeout(10000);
 

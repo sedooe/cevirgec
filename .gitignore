@@ -39,3 +39,5 @@ semantic.json
 semantic/
 
 app/.vscode/
+
+jest.json
