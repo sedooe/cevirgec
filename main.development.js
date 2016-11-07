@@ -36,6 +36,8 @@ const installExtensions = async () => {
 app.on('ready', async () => {
   await installExtensions();
 
+  applicationHelper.initializeApp();
+
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
