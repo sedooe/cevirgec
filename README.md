@@ -6,7 +6,7 @@ Personal Vocabulary Trainer
 
 Enable debug output:
 
-	DEBUG=*,-babel
+	export DEBUG=*,-babel
 
 Run these two commands simultaneously in different console tabs.
 
@@ -46,8 +46,11 @@ or run two servers with one command
 			at require (internal/module.js:20:19)
 			at Object.<anonymous> (/home/sedat/Desktop/projects/cevirgec-rewrite/backend/dao/UserDao.js:9:14)
 
+Solution:
 
-Solution: http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
+	./node_modules/.bin/electron-rebuild
+
+http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
 
 # Boiler Plate Repo
 
