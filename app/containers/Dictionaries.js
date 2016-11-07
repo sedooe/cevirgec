@@ -93,7 +93,7 @@ class Dictionaries extends Component {
 }
 
 const mapStateToProps = state => ({
-  dictionaries: state.dictionary
+  dictionaries: state.dictionary.dictionaries
 })
 
 const mapDispatchToProps = dispatch => ({
