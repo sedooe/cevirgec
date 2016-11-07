@@ -126,11 +126,7 @@ function _openNewDefinitionCommonWindow(queryString) {
 
     newDefinitionWindow = new BrowserWindow(windowOptions);
 
-    if (process.env.HOT) {
-      newDefinitionWindow.loadURL(`file://${__dirname}/../app/hot-dev-new-definition.html?${queryString}`);
-    } else {
-      newDefinitionWindow.loadURL(`file://${__dirname}/../app/new-definition.html?${queryString}`);
-    }
+    newDefinitionWindow.loadURL(`file://${__dirname}/../app/add_definition_popup.html?${queryString}`);
 
     if (process.env.NODE_ENV === 'development') {
       newDefinitionWindow.openDevTools();
