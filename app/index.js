@@ -14,9 +14,19 @@ const ipc = require('electron').ipcRenderer;
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 
-ipc.on(actions.DICTIONARY_CREATED, (event, dictionary) => {
-  store.dispatch({type: actions.DICTIONARY_CREATED, dictionary})
-})
+const dbActions = [
+  actions.DICTIONARIES_LOADED,
+  actions.DICTIONARY_CREATED,
+  actions.DICTIONARY_EDITED,  
+  actions.DICTIONARY_ACTIVENESS_CHANGED,
+  actions.DICTIONARY_DELETED
+];
+
+dbActions.forEach(action => {
+  ipc.on(action, (event, data) => {
+    store.dispatch({ type: action, data });
+  });
+});
 
 render(
   <Provider store={store}>
