@@ -6,7 +6,9 @@ import Welcome from './Welcome';
 import tr from '../app/utils/Translation';
 import { Form, Checkbox } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
+import {dictionariesForDropdown} from './MockData';
 import ActiveDictionarySelector from './ActiveDictionarySelector';
+import NewDefinitionPopup from './NewDefinitionPopup';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -29,6 +31,11 @@ storiesOf('DictionaryModal', module)
   ));
 
 storiesOf('New Definition Window', module)
+  .add('The Container [NewDefinitionPopup]', () => (
+    <NewDefinitionPopup />
+  ))
   .add('ActiveDictionarySelector', () => (
-    <ActiveDictionarySelector/>
-  ));
+    <ActiveDictionarySelector
+      dictionaries={dictionariesForDropdown}
+    />
+  ))
