@@ -54,11 +54,10 @@ http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
 
 # Development Notes
 
-Use storybook to design UI:
+1. Use storybook to design UI:
+`$ npm run storybook`
 
-  npm run storybook
-
-Following this advice: https://twitter.com/dan_abramov/status/790581793397305345
+2. Following this advice: https://twitter.com/dan_abramov/status/790581793397305345
 
 # Boilerplate Repo
 
