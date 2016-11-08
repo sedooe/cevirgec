@@ -7,6 +7,7 @@ import tr from '../app/utils/Translation';
 import { Form, Checkbox } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
 import ActiveDictionarySelector from './ActiveDictionarySelector';
+import Register from './Register';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -28,7 +29,12 @@ storiesOf('DictionaryModal', module)
     <DictionaryModal/>
   ));
 
-storiesOf('New Definition Window', module)
-  .add('ActiveDictionarySelector', () => (
-    <ActiveDictionarySelector/>
+// storiesOf('New Definition Window', module)
+//   .add('ActiveDictionarySelector', () => (
+//     <ActiveDictionarySelector/>
+//   ));
+
+storiesOf('Register', module)
+  .add('Register', () => (
+    <Register />
   ));
