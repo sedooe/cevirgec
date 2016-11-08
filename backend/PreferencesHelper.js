@@ -44,7 +44,7 @@ class PreferencesHelper {
   updateSettings(newSettings) {
     settings = newSettings;
     this.saveSettings();
-    GLOBAL.verbosityEventEmitter.emit('change', newSettings.verbose);
+    global.verbosityEventEmitter.emit('change', newSettings.verbose);
   }
 
   getSettings() {

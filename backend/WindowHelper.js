@@ -5,9 +5,8 @@
 
 'use strict';
 
-const electron = require('electron');
-const ipc = electron.ipcMain;
-const BrowserWindow = electron.BrowserWindow;
+import { BrowserWindow, Menu, ipcMain, screen as electronScreen } from 'electron';
+
 const windowStateKeeper = require('electron-window-state');
 const menuHelper = require('./MenuHelper');
 const wordUtils = require('./WordUtils');
@@ -18,12 +17,6 @@ const OPEN_MAIN_PAGE = 'OPEN_MAIN_PAGE';
 const OPEN_REGISTER_PAGE = 'OPEN_REGISTER_PAGE';
 const OPEN_LOGIN_PAGE = 'OPEN_LOGIN_PAGE';
 
-let menuURL = {
-  OPEN_MAIN_PAGE: '#',
-  OPEN_REGISTER_PAGE: '#/user/register',
-  OPEN_LOGIN_PAGE: '#/user/login'
-}
-
 let mainWindow = null;
 let mainWindowState;
 
@@ -33,20 +26,20 @@ let contextWindow = null;
 
 // When a word is couldn't found in verbose mode, the button to open
 // AddDefinitionWindow triggers this callback
-// ipc.on(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD, function(event, data) {
-//   debug(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD, data);
-//
-//   let theWord = wordUtils.normalize(data);
-//   openNewDefinitionWindowForWord(theWord);
-// });
-//
-// ipc.on(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY, function(event, data) {
-//   debug(UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY, data);
-//
-//   openNewDefinitionWindowForDictionary(data);
-// });
+ipcMain.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', function(event, data) {
+  debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_WORD', data);
 
-function openDashboardWindow(page) {
+  let theWord = wordUtils.normalize(data);
+  openNewDefinitionWindowForWord(theWord);
+});
+
+ipcMain.on('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', function(event, data) {
+  debug('UiEvents.OPEN_NEW_DEFINITION_WINDOW_FOR_DICTIONARY', data);
+
+  openNewDefinitionWindowForDictionary(data);
+});
+
+function openDashboardWindow() {
 
   if(mainWindow != null){
     mainWindow.show();
@@ -81,17 +74,9 @@ function openDashboardWindow(page) {
   mainWindowState.manage(mainWindow);
   menuHelper.createApplicationMenu(mainWindow);
 
-  if (process.env.HOT) {
-    mainWindow.loadURL(`file://${__dirname}/../app/hot-dev-dashboard.html` + menuURL[page]);
-  } else {
-    mainWindow.loadURL(`file://${__dirname}/../app/dashboard.html` + menuURL[page]);
-  }
+  mainWindow.loadURL(`file://${__dirname}/../app/app.html`);
 
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.openDevTools();
-  }
-
-  mainWindow.webContents.on('dom-ready', function() {
+  mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.show();
     mainWindow.restore();
   });
@@ -124,7 +109,6 @@ function _openNewDefinitionCommonWindow(queryString) {
       return;
     }
 
-    const electronScreen = electron.screen;
     // const position = electronScreen.getCursorScreenPoint();
     const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
@@ -140,11 +124,7 @@ function _openNewDefinitionCommonWindow(queryString) {
 
     newDefinitionWindow = new BrowserWindow(windowOptions);
 
-    if (process.env.HOT) {
-      newDefinitionWindow.loadURL(`file://${__dirname}/../app/hot-dev-new-definition.html?${queryString}`);
-    } else {
-      newDefinitionWindow.loadURL(`file://${__dirname}/../app/new-definition.html?${queryString}`);
-    }
+    newDefinitionWindow.loadURL(`file://${__dirname}/../app/add_definition_popup.html?${queryString}`);
 
     if (process.env.NODE_ENV === 'development') {
       newDefinitionWindow.openDevTools();
@@ -160,14 +140,13 @@ function _openNewDefinitionCommonWindow(queryString) {
     });
 }
 
-function openResultsWindow(selectedText, definitionsObj) {
+function openResultPopup(selectedText, definitionsObj) {
 
-  if (resultsWindow != null){
+  if (resultsWindow != null) {
     resultsWindow.close();
     resultsWindow = null;
   }
 
-  const electronScreen = electron.screen;
   const position = electronScreen.getCursorScreenPoint();
 
   let windowOptions = {
@@ -188,17 +167,22 @@ function openResultsWindow(selectedText, definitionsObj) {
 
   let urlQueryPart = `?selectedText=${selectedText}&results=${JSON.stringify(definitionsObj)}`;
 
-  if (process.env.HOT) {
-    resultsWindow.loadURL(`file://${__dirname}/../app/hot-dev-results.html${urlQueryPart}`);
-  } else {
-    resultsWindow.loadURL(`file://${__dirname}/../app/results.html${urlQueryPart}`);
-  }
+  resultsWindow.loadURL(`file://${__dirname}/../app/result_popup.html${urlQueryPart}`);
 
   if (process.env.NODE_ENV === 'development') {
-    resultsWindow.openDevTools();
+    resultsWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props;
+
+      Menu.buildFromTemplate([{
+        label: 'Inspect element',
+        click() {
+          resultsWindow.inspectElement(x, y);
+        }
+      }]).popup(resultsWindow);
+    });
   }
 
-  resultsWindow.webContents.on('dom-ready', function() {
+  resultsWindow.webContents.on('did-finish-load', function() {
     resultsWindow.show();
   });
 
@@ -214,7 +198,6 @@ function openContextWindow(selectedText) {
     contextWindow = null;
   }
 
-  const electronScreen = electron.screen;
   const position = electronScreen.getCursorScreenPoint();
 
   let windowOptions = {
@@ -265,10 +248,7 @@ module.exports = {
   openDashboardWindow,
   openNewDefinitionWindowForWord,
   openNewDefinitionWindowForDictionary,
-  openResultsWindow,
+  openResultPopup,
   openContextWindow,
-  isClipboardTriggersBlockedByAWindow,
-  OPEN_MAIN_PAGE,
-  OPEN_REGISTER_PAGE,
-  OPEN_LOGIN_PAGE
+  isClipboardTriggersBlockedByAWindow
 }

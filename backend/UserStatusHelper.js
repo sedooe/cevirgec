@@ -13,7 +13,7 @@ const appDataPath = app.getPath('userData');
 
 const userStatusFilePath = jetpack.path(appDataPath, 'user-status.json');
 const defaultUserStatus = {loggedIn: false};
-let userStatus;
+let userStatus = {};
 
 class UserStatusHelper {
 
@@ -25,8 +25,14 @@ class UserStatusHelper {
     userStatus = jetpack.read(userStatusFilePath, 'json');
   }
 
+  // deprecated
   getUserStatus() {
+    debug('_____DEPRECATED_____: getUserStatus() use finer grained methods like isAuthenticated()')
     return userStatus;
+  }
+
+  isAuthenticated() {
+    return userStatus.loggedIn == true;
   }
 
   setUserStatus(status) {

@@ -41,62 +41,12 @@ function initializeDaos() {
 }
 
 function initializeSystemTray() {
-  trayIcon = new Tray('app/images/trayIcon.png');
-
-  authenticatedUserContextMenu = [
-    {
-      label: 'Dashboard',
-      accelerator: 'CmdOrCtrl+D',
-      click: function() {
-        windowHelper.openDashboardWindow(windowHelper.OPEN_MAIN_PAGE);
-      }
-    },
-    {
-      label: 'Verbose',
-      type: 'checkbox',
-      checked: preferencesHelper.isVerbose(),
-      click: (menuItem, browserWindow) => {
-        // browserWindow will be always null here
-        preferencesHelper.setVerbosity(menuItem.checked);
-      }
-    },
-    {
-      label: 'Quit',
-      accelerator: 'CmdOrCtrl+Q',
-      selector: 'terminate:',
-      click: function() {
-        app.quit();
-      }
-    }
-  ];
-
-  unauthenticatedUserContextMenu = [
-    {
-      label: 'Register',
-      click: function() {
-        windowHelper.openDashboardWindow(windowHelper.OPEN_REGISTER_PAGE);
-      }
-    },
-    {
-      label: 'Login',
-      click: function() {
-        windowHelper.openDashboardWindow(windowHelper.OPEN_LOGIN_PAGE);
-      }
-    },
-    {
-      label: 'Quit',
-      selector: 'terminate:',
-      click: function() {
-        app.quit();
-      }
-    }
-  ];
-
-  let userStatus = userStatusHelper.getUserStatus();
-
+  trayIcon = new Tray('resources/images/trayIcon.png');
   trayIcon.setToolTip('This is cevirgec application.');
-  setContextMenu(userStatus.loggedIn);
-  GLOBAL.verbosityEventEmitter.on('change', (verbosity)=>{
+
+  setContextMenu(userStatusHelper.isAuthenticated());
+
+  global.verbosityEventEmitter.on('change', (verbosity)=>{
     trayIcon.menu.items[1].checked = verbosity;
     trayIcon.setContextMenu(trayIcon.menu);
     debug('verbosityEventEmitter verbosity', verbosity);
@@ -105,7 +55,60 @@ function initializeSystemTray() {
 }
 
 function setContextMenu(isUserAuthenticated) {
-  let contextMenu = isUserAuthenticated ? authenticatedUserContextMenu : unauthenticatedUserContextMenu;
+  let contextMenu;
+
+  if(isUserAuthenticated) {
+    contextMenu = [
+      {
+        label: 'Dashboard',
+        accelerator: 'CmdOrCtrl+D',
+        click: function() {
+          windowHelper.openDashboardWindow(windowHelper.OPEN_MAIN_PAGE);
+        }
+      },
+      {
+        label: 'Verbose',
+        type: 'checkbox',
+        checked: preferencesHelper.isVerbose(),
+        click: (menuItem, browserWindow) => {
+          // browserWindow will be always null here
+          preferencesHelper.setVerbosity(menuItem.checked);
+        }
+      },
+      {
+        label: 'Quit',
+        accelerator: 'CmdOrCtrl+Q',
+        selector: 'terminate:',
+        click: function() {
+          app.quit();
+        }
+      }
+    ];
+  }
+  else {
+    contextMenu = [
+      {
+        label: 'Register',
+        click: function() {
+          windowHelper.openDashboardWindow(windowHelper.OPEN_REGISTER_PAGE);
+        }
+      },
+      {
+        label: 'Login',
+        click: function() {
+          windowHelper.openDashboardWindow(windowHelper.OPEN_LOGIN_PAGE);
+        }
+      },
+      {
+        label: 'Quit',
+        selector: 'terminate:',
+        click: function() {
+          app.quit();
+        }
+      }
+    ];
+  }
+
   trayIcon.setContextMenu(Menu.buildFromTemplate(contextMenu));
 }
 
@@ -117,12 +120,13 @@ class ApplicationHelper {
       throw 'Application is already initialized!';
     }
 
-    //global.verbosityEventEmitter = new EventEmitter();
-    //userStatusHelper.createUserStatus();
-    //preferencesHelper.restoreSettings();
-    //shortcutHelper.restoreShortcuts();
+    global.verbosityEventEmitter = new EventEmitter();
+    userStatusHelper.createUserStatus();
+    preferencesHelper.restoreSettings();
+    shortcutHelper.restoreShortcuts();
+
     initializeDaos();
-    //initializeSystemTray();
+    initializeSystemTray();
   }
 
   setContextMenu(isUserAuthenticated) {
@@ -134,8 +138,7 @@ class ApplicationHelper {
   }
 
   clipboardChangeHandler(data) {
-    let userStatus = userStatusHelper.getUserStatus();
-    if (!preferencesHelper.isVerbose() || !userStatus.loggedIn) {
+    if (!preferencesHelper.isVerbose() || !userStatusHelper.isAuthenticated()) {
       debug('clipboardChangeHandler ignored', data.text);
       return;
     }
@@ -156,11 +159,11 @@ class ApplicationHelper {
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
         debug('clipboardChangeHandler', 'number of definitions found:', groupedDefinitions.length);
-        windowHelper.openResultsWindow(text, groupedDefinitions);
+        windowHelper.openResultPopup(text, groupedDefinitions);
       });
     }
     else {
-      debug('ignored', text);
+      debug('ignored', text ? '' : '<no text in clipboard> this is probably second call for clipboard workaround');
     }
   }
 }

@@ -12,7 +12,7 @@
  const ShortcutHelper = require('../ShortcutHelper');
  const UserStatusHelper = require('../UserStatusHelper');
  const ApplicationHelper = require('../ApplicationHelper');
- const sync = require('../Sync');
+ // const sync = require('../Sync');
  const ApiUrls = '../../app/api/urls/ApiUrls';
  const debug = require('debug')(__filename.split('/').pop());
 

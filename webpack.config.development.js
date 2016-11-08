@@ -27,6 +27,11 @@ export default validate(merge(baseConfig, {
       `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
       'babel-polyfill',
       './app/add_definition_popup'
+    ],
+    result_popup: [
+      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      'babel-polyfill',
+      './app/result_popup'
     ]
   },
 

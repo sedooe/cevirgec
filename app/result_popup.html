@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css" />
   </head>
   <body style="overflow: hidden;">
-    <div id="popup" style="height: 100%;"></div>
+    <div id="results" style="height: 100%;"></div>
     <script>
       {
         const script = document.createElement('script');
         const port = process.env.PORT || 3000;
-        script.src = (process.env.HOT) ? `http://localhost:${port}/dist/add_definition_popup.bundle.js` : '../dist/add_definition_popup.bundle.js';
+        script.src = (process.env.HOT) ? `http://localhost:${port}/dist/result_popup.bundle.js` : '../dist/result_popup.bundle.js';
         document.write(script.outerHTML);
       }
     </script>

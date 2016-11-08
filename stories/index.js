@@ -6,6 +6,7 @@ import Welcome from './Welcome';
 import tr from '../app/utils/Translation';
 import { Form, Checkbox } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
+import ActiveDictionarySelector from './ActiveDictionarySelector';
 
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
@@ -25,4 +26,9 @@ storiesOf('DictionaryList', module)
 storiesOf('DictionaryModal', module)
   .add('deneme', () => (
     <DictionaryModal/>
+  ));
+
+storiesOf('New Definition Window', module)
+  .add('ActiveDictionarySelector', () => (
+    <ActiveDictionarySelector/>
   ));
