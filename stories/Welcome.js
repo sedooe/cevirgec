@@ -1,5 +1,4 @@
 import React from 'react';
-import '../app/index.scss';
 
 const styles = {
   main: {

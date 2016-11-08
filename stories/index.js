@@ -10,6 +10,8 @@ import {dictionariesForDropdown} from './MockData';
 import ActiveDictionarySelector from './ActiveDictionarySelector';
 import NewDefinitionPopup from './NewDefinitionPopup';
 
+import '../app/index.scss';
+
 storiesOf('Welcome', module)
   .add('to Storybook', () => (
     <Welcome showApp={linkTo('Button')}/>

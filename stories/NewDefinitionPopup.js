@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import { Button, Divider, Grid, Header, Label, List, Icon, Image, Input, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Segment } from 'semantic-ui-react'
 import tr from '../app/utils/Translation';
 import ActiveDictionarySelector from './ActiveDictionarySelector'
 
 class NewDefinitionPopup extends Component {
+
+  state = {
+    currentWord: 'computer',
+    dictionaries: [],
+    definitions: Array(3).fill(),
+    loading: false
+  }
 
   render() {
 
@@ -12,14 +19,18 @@ class NewDefinitionPopup extends Component {
         <Grid>
           <Grid.Column width={6}>
             <ActiveDictionarySelector
-              dictionaries={[]}
+              dictionaries={this.state.dictionaries}
             />
 
             <WordSearchInput
-              loading={false}
+              loading={this.state.loading}
             />
 
-            <ListOfExistingDefinitions />
+            <NewDefinitionForm />
+
+            <ListOfExistingDefinitions
+              definitions={this.state.definitions}
+            />
 
           </Grid.Column>
           <VerticalDivider />
@@ -33,63 +44,77 @@ class NewDefinitionPopup extends Component {
   }
 }
 
+const HorizontalToggle = ({active, onToggle}) => (
+  <Divider horizontal style={active ? null : {marginBottom: 0}}>
+    <ButtonToggle basic compact
+      type='button'
+      size='tiny'
+      icon={active ? 'angle up' : 'angle down'}
+      content={active ? tr('Less') : tr('More')}
+      onToggle={onToggle}
+    />
+  </Divider>
+);
+HorizontalToggle.propTypes = {
+  onToggle: React.PropTypes.func.isRequired,
+  active: React.PropTypes.bool.isRequired
+};
+
+class NewDefinitionForm extends Component {
+  state = {
+    detailsShown: false
+  }
+
+  render () {
+    return (
+      <Segment>
+        <Label attached='top'>{tr('Add new Definitions for <word>')}</Label>
+        <Form>
+          <Form.Group widths='equal'>
+            <Form.Input label='Definition' placeholder='You can choose from left browser' />
+          </Form.Group>
+          <HorizontalToggle
+            active={this.state.detailsShown}
+            onToggle={(active) => this.setState({detailsShown: active})}
+          />
+          {this.state.detailsShown &&
+            <span>
+              <Form.Group inline>
+                <label>Size</label>
+                <Form.Radio label='Small' value='sm' checked={'value' === 'sm'} onChange={this.handleChange} />
+                <Form.Radio label='Medium' value='md' checked={'value' === 'md'} onChange={this.handleChange} />
+                <Form.Radio label='Large' value='lg' checked={'value' === 'lg'} onChange={this.handleChange} />
+              </Form.Group>
+              <Form.TextArea label='About' placeholder='Tell us more about you...' />
+              <Form.Checkbox label='I agree to the Terms and Conditions' />
+              <Form.Group inline className='no-margin'>
+                <Button primary content={tr('Save')} style={{marginLeft: 'auto'}} />
+              </Form.Group>
+            </span>
+          }
+        </Form>
+      </Segment>
+    );
+  }
+}
+
 const ListOfExistingDefinitions = ({definitions}) => (
-  <span>
-    <Segment color='blue' attached>
-      <Header as='h5'>{tr('Definitions for $1', 'the word')}</Header>
-    </Segment>
-    <Segment attached>
-      <List divided verticalAlign='middle'>
-        <List.Item>
-          <List.Content>
-            <Label ribbon color='green' size='mini'>{tr('new')}</Label>
-            <Icon name='man' />
-            <em>n.&nbsp;</em>
-            <span>Lorem ipsum dolor sit amed.</span>
-          </List.Content>
-          <List.Content style={{marginTop: '10px'}}>
-              <Label basic size='mini'>
-                <Icon name='browser' />
-                Context
-              </Label>
-              <Label basic size='mini'>
-                <Icon name='book' />
-                Science Dictionary
-              </Label>
-              <Button basic compact size='mini' icon='edit' floated='right' />
-              <Button basic compact size='mini' icon='trash' floated='right' />
-              <Button basic compact size='mini' icon='ellipsis horizontal' floated='right' />
-          </List.Content>
-          <List.Content>
-            <em>n.&nbsp;</em>
-            <span>Lorem ipsum dolor sit amed.</span>
-          </List.Content>
-        </List.Item>
-
-        <List.Item>
-          <List.Content floated='right'>
-            <Button size='mini' icon='edit' />
-          </List.Content>
-          <List.Content>
-            Lena
-          </List.Content>
-        </List.Item>
-
-        <List.Item>
-          <List.Content floated='right'>
-            <Button size='mini' icon='edit' />
-          </List.Content>
-          <List.Content>
-            Lena
-          </List.Content>
-        </List.Item>
-      </List>
-    </Segment>
-  </span>
+  <Segment>
+    <Label attached='top'>{tr('Definitions for $1', 'the word')}</Label>
+    <List divided relaxed verticalAlign='middle' >
+      {definitions.map(function (definition) {
+        return <DefinitionListItem definition={definition} />
+      })}
+    </List>
+  </Segment>
 )
 
+ListOfExistingDefinitions.propTypes = {
+  definitions: React.PropTypes.array.isRequired,
+};
+
 const VerticalDivider = () => (
-  <div style={{position: 'relative', padding: '0'}}>
+  <div style={{position: 'relative'}} className='no-padding'>
     {/*
       Wrapper is for vertical divider bug https://github.com/Semantic-Org/Semantic-UI/issues/4342#issuecomment-253209017
       Also we cannot use !important https://github.com/facebook/react/issues/1881
@@ -106,9 +131,89 @@ const WordSearchInput = ({loading}) => (
     placeholder={tr('Search a word...')}
     label={tr('Word/Phrase')}
     loading={loading}
-    className={ loading ? '' : 'raised segment' }
-    style={{border:0, padding:0}}
+    className={ loading ? 'no-padding no-border' : 'no-padding no-border raised segment' }
   />
 );
+
+const noSidePadding = {padding: '14px 0'};
+const noBoxShadow = {boxShadow: 'none'}
+class DefinitionListItem extends Component {
+  state = {
+    detailsShown: false
+  }
+
+  toggleDetails = (active) => {
+    this.setState({detailsShown: active});
+    console.log(active);
+  }
+
+  render () {
+    return (
+      <List.Item style={noSidePadding}>
+        <List.Content>
+          <Label ribbon color='green' size='mini'>{tr('new')}</Label>
+          <Icon name='man' />
+          <em>n.&nbsp;</em>
+          <span>Lorem ipsum dolor sit amed.</span>
+        </List.Content>
+        <List.Content style={{marginTop: '10px'}}>
+            <Label basic size='tiny'>
+              <Icon name='browser' />
+              Context
+            </Label>
+            <Label basic size='tiny'>
+              <Icon name='book' />
+              Science Dictionary
+            </Label>
+            <Button basic compact size='tiny' icon='edit' floated='right' />
+            <Button basic compact size='tiny' icon='trash' floated='right' />
+            <ButtonToggle basic compact size='tiny'
+              icon={this.state.detailsShown ? 'angle up' : 'angle down'}
+              content={this.state.detailsShown ? tr('Less') : tr('More')}
+              floated='right'
+              onToggle={this.toggleDetails}
+            />
+        </List.Content>
+        {this.state.detailsShown && <List.Content>
+          <Segment basic style={noSidePadding}>
+            <Segment style={noBoxShadow}>
+              <Label attached='top right'>{tr('Usage Examples')}</Label>
+              Lorem ipsum dolor sit amed.
+            </Segment>
+            <Segment style={noBoxShadow}>
+              <Label attached='top right'>{tr('Notes')}</Label>
+              Lorem ipsum dolor sit amed.
+            </Segment>
+          </Segment>
+        </List.Content>}
+      </List.Item>
+    );
+  }
+}
+
+class ButtonToggle extends Component {
+  state = {}
+
+  handleClick = () => {
+    this.setState({ active: !this.state.active });
+    if (typeof this.props.onToggle == 'function') {
+      this.props.onToggle(!this.state.active);
+      console.log('button', !this.state.active);
+    }
+  }
+
+  render() {
+    const { active } = this.state
+    return (
+      <Button {... this.props} toggle active={active} onClick={this.handleClick}>
+        {this.children}
+      </Button>
+    )
+  }
+}
+
+ButtonToggle.propTypes = {
+  onToggle: React.PropTypes.func,
+};
 
 export default NewDefinitionPopup;
