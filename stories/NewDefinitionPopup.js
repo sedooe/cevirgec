@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Segment } from 'semantic-ui-react'
 import tr from '../app/utils/Translation';
 import ActiveDictionarySelector from './ActiveDictionarySelector'
 
@@ -35,12 +35,32 @@ class NewDefinitionPopup extends Component {
           </Grid.Column>
           <VerticalDivider />
           <Grid.Column width={10}>
-            <Image src='http://semantic-ui.com/images/wireframe/paragraph.png' />
+            <WordBrowser />
           </Grid.Column>
         </Grid>
       </main>
     )
 
+  }
+}
+
+class WordBrowser extends Component {
+
+  render() {
+    return (
+      <Segment>
+        <Menu attached='top' tabular>
+          <Menu.Item name='bio' active={'bio' === 'bio'} onClick={this.handleItemClick} />
+          <Menu.Item name='photos za' active={'activeItem' === 'photos'} onClick={this.handleItemClick} />
+          <Menu.Menu position='right'>
+          </Menu.Menu>
+        </Menu>
+
+        <Segment attached='bottom'>
+          <img src='http://semantic-ui.com/images/wireframe/paragraph.png' />
+        </Segment>
+      </Segment>
+    )
   }
 }
 
