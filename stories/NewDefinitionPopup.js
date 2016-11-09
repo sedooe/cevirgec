@@ -57,6 +57,17 @@ class WordBrowser extends Component {
         </Menu>
 
         <Segment attached='bottom'>
+          <Input fluid style={{marginBottom: '14px'}}>
+            <Button.Group>
+              <Button icon='arrow left' />
+              <Button icon='arrow right' />
+              <Button icon='home' className='no-right-radius' />
+            </Button.Group>
+            <div className="ui fluid icon input full-width">
+              <input type="text" placeholder="Search..." className='no-left-radius full-width' />
+              <i className="search icon"></i>
+            </div>
+          </Input>
           <img src='http://semantic-ui.com/images/wireframe/paragraph.png' />
         </Segment>
       </Segment>

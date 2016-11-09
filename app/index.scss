@@ -38,6 +38,24 @@ main {
 	margin: 0 !important;
 }
 
+.no-radius {
+	border-radius: 0 !important;
+}
+
+.no-right-radius {
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
+}
+
+.no-left-radius {
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+}
+
+.full-width {
+	width: 100% !important;
+}
+
 // Study page
 // FIXME move into the component
 .carousel-item {
