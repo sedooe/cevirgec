@@ -2,20 +2,14 @@ import React from 'react';
 import { storiesOf, action, linkTo } from '@kadira/storybook';
 import DictionaryList from './DictionaryList';
 import Button from './Button';
-import Welcome from './Welcome';
 import tr from '../app/utils/Translation';
 import { Form, Checkbox } from 'semantic-ui-react';
 import DictionaryModal from './DictionaryModal';
 import {dictionariesForDropdown} from './MockData';
 import ActiveDictionarySelector from './ActiveDictionarySelector';
-import NewDefinitionPopup from './NewDefinitionPopup';
+import NewDefinitionWindow from './NewDefinitionWindow';
 
 import '../app/index.scss';
-
-storiesOf('Welcome', module)
-  .add('to Storybook', () => (
-    <Welcome showApp={linkTo('Button')}/>
-  ));
 
 storiesOf('Button', module)
   .add('with text', () => (
@@ -33,8 +27,8 @@ storiesOf('DictionaryModal', module)
   ));
 
 storiesOf('New Definition Window', module)
-  .add('The Container [NewDefinitionPopup]', () => (
-    <NewDefinitionPopup />
+  .add('The Container', () => (
+    <NewDefinitionWindow />
   ))
   .add('ActiveDictionarySelector', () => (
     <ActiveDictionarySelector

@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import NewDefinitionPopup from './containers/NewDefinitionPopup';
+import NewDefinitionWindow from './containers/NewDefinitionWindow';
 
 // enable all debug logs https://github.com/visionmedia/debug#browser-support
 localStorage.debug = '*';
 
 render(
-  <NewDefinitionPopup />,
+  <NewDefinitionWindow />,
   document.getElementById('popup')
 );

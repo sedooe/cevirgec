@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Segment } from 'semantic-ui-react'
 import tr from '../app/utils/Translation';
 import ActiveDictionarySelector from './ActiveDictionarySelector'
 
-class NewDefinitionPopup extends Component {
+class NewDefinitionWindow extends Component {
 
   state = {
     currentWord: 'computer',
     dictionaries: [],
     definitions: Array(3).fill(),
+    onlineDictionaries: [{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
     loading: false
   }
 
@@ -35,7 +36,9 @@ class NewDefinitionPopup extends Component {
           </Grid.Column>
           <VerticalDivider />
           <Grid.Column width={10}>
-            <WordBrowser />
+            <OnlineDictionariesTabView
+              onlineDictionaries={this.state.onlineDictionaries}
+            />
           </Grid.Column>
         </Grid>
       </main>
@@ -44,33 +47,73 @@ class NewDefinitionPopup extends Component {
   }
 }
 
+class OnlineDictionariesTabView extends Component {
+  state = {
+    activeTabIndex: 0
+  }
+
+  setActiveTab = (newIndex) => this.setState({activeTabIndex: newIndex})
+
+  render() {
+    const that = this;
+
+    let title = this.props.onlineDictionaries.map( (onlineDictionary, index) => {
+      return <Menu.Item
+                name={onlineDictionary.name}
+                active={index == that.state.activeTabIndex}
+                onClick={that.setActiveTab.bind(that, index)}
+              />
+    } );
+
+    let content = this.props.onlineDictionaries.map((onlineDictionary, index) => <WordBrowser url={onlineDictionary.url} active={index == that.state.activeTabIndex} />)
+
+    return (
+      <Segment style={{display: 'flex'}}>
+        <span style={{display:'flex', flexDirection: 'column', flexGrow: 1}}>
+          <Menu attached='top' tabular>
+            {title}
+          </Menu>
+
+          <Segment attached='bottom'>
+            {content}
+          </Segment>
+        </span>
+      </Segment>
+    );
+  }
+}
+
+OnlineDictionariesTabView.propTypes = {
+  onlineDictionaries: React.PropTypes.array.isRequired
+}
+
 class WordBrowser extends Component {
 
   render() {
+    const display = this.props.active ? 'flex' : 'none';
     return (
-      <Segment>
-        <Menu attached='top' tabular>
-          <Menu.Item name='bio' active={'bio' === 'bio'} onClick={this.handleItemClick} />
-          <Menu.Item name='photos za' active={'activeItem' === 'photos'} onClick={this.handleItemClick} />
-          <Menu.Menu position='right'>
-          </Menu.Menu>
-        </Menu>
+      <span style={{display: display, flexDirection: 'column', flexGrow: 1}}>
+        <Input fluid style={{marginBottom: '14px'}}>
+          <Button.Group>
+            <Button icon='arrow left' />
+            <Button icon='arrow right' />
+            <Button icon='refresh' />
+            <Button icon='home' className='no-right-radius' />
+          </Button.Group>
+          <div className="ui fluid icon input full-width">
+            <input type="text" placeholder="Search..." className='no-left-radius full-width' />
+            <Icon name='checkmark' />
+          </div>
+        </Input>
 
-        <Segment attached='bottom'>
-          <Input fluid style={{marginBottom: '14px'}}>
-            <Button.Group>
-              <Button icon='arrow left' />
-              <Button icon='arrow right' />
-              <Button icon='home' className='no-right-radius' />
-            </Button.Group>
-            <div className="ui fluid icon input full-width">
-              <input type="text" placeholder="Search..." className='no-left-radius full-width' />
-              <i className="search icon"></i>
-            </div>
-          </Input>
-          <img src='http://semantic-ui.com/images/wireframe/paragraph.png' />
-        </Segment>
-      </Segment>
+        <iframe
+          sandbox="allow-forms allow-same-origin allow-scripts"
+          onLoad={this.removeLoading}
+          src={this.props.url}
+          style={{width: '100%', height: '600px', border: '1px solid #eee', flexGrow: 1 }}
+          ref={c => {this.rootElement = c}}>
+        </iframe>
+      </span>
     )
   }
 }
@@ -130,12 +173,23 @@ class NewDefinitionForm extends Component {
 }
 
 const ListOfExistingDefinitions = ({definitions}) => (
-  <Segment>
+  <Segment disabled={!definitions.length}>
     <Label attached='top'>{tr('Definitions for $1', 'the word')}</Label>
     <List divided relaxed verticalAlign='middle' >
-      {definitions.map(function (definition) {
-        return <DefinitionListItem definition={definition} />
-      })}
+      {definitions.length ?
+        definitions.map(function (definition) {
+          return <DefinitionListItem definition={definition} />
+        })
+        :
+        <List.Item style={noSidePadding}>
+          <List.Content>
+            <Message
+              header={tr('There are no definitoins for this word yet.')}
+              content={tr('Don\'t forget that we only look up from active dictionaries.')}
+            />
+          </List.Content>
+        </List.Item>
+      }
     </List>
   </Segment>
 )
@@ -244,7 +298,7 @@ class ButtonToggle extends Component {
 }
 
 ButtonToggle.propTypes = {
-  onToggle: React.PropTypes.func,
+  onToggle: React.PropTypes.func
 };
 
-export default NewDefinitionPopup;
+export default NewDefinitionWindow;
