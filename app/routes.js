@@ -7,6 +7,7 @@ import Dashboard from './containers/Dashboard';
 import Dictionaries from './containers/Dictionaries';
 import User from './containers/User';
 import Register from './components/Register';
+import Login from './components/Login';
 
 
 export default (
@@ -16,6 +17,7 @@ export default (
     <Route name="User" path="/user" component={User}>
       <IndexRedirect to="register" />
       <Route path="register" component={Register} name="Register" />
+      <Route path="login" component={Login} name="Login" />
     </Route>
   </Route>
 );

@@ -9,37 +9,33 @@ import { Link } from 'react-router';
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 
 
-class Register extends Component {
+class Login extends Component {
 
   render() {
     return (
-      <DocumentTitle title="Cevirgec › Register">
+      <DocumentTitle title="Cevirgec › Login">
         <Grid textAlign="center" columns={3}>
           <Grid.Column>
             <Header
               as="h2"
               color="teal"
               image="http://semantic-ui.com/examples/assets/images/logo.png"
-              content="Create an account"
+              content="Login to your account"
             />
 
             <Form size="large">
               <Segment>
-                <Form.Input name="email" placeholder="Email" icon="mail icon" iconPosition="left" />
                 <Form.Input name="username" placeholder="Username" icon="user icon" iconPosition="left" />
-                <Form.Input name="name" placeholder="Name" icon="user icon" iconPosition="left" />
-                <Form.Input name="surname" placeholder="Surname" icon="user icon" iconPosition="left" />
                 <Form.Input type="password" name="password" placeholder="Password" icon="lock icon" iconPosition="left" />
-                <Form.Input type="password" name="passwordAgain" placeholder="Re-type password" icon="lock icon" iconPosition="left" />
                 <Message error />
-                <Button size="large" color="teal" content="Register" />
+                <Button size="large" color="teal" content="Login" />
               </Segment>
             </Form>
 
             <Message>
-              Already have an account?
-              <Link to="/user/login" className="content">
-                &nbsp;Login
+              You don't have an account?
+              <Link to="/user/register" className="content">
+                &nbsp;Register
               </Link>
             </Message>
           </Grid.Column>
@@ -49,4 +45,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default Login;
