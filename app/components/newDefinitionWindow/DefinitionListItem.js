@@ -17,7 +17,7 @@ export default class DefinitionListItem extends Component {
     return (
       <List.Item className='no-side-padding'>
         <List.Content>
-          <Label ribbon color='green' size='mini'>{tr('new')}</Label>
+          <Label ribbon color='blue' size='mini'>{tr('new')}</Label>
           <Icon name='man' />
           <em>n.&nbsp;</em>
           <span>Lorem ipsum dolor sit amed.</span>

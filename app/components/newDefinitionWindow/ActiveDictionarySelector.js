@@ -17,30 +17,28 @@ export default class ActiveDictionarySelector extends Component {
   static propTypes = {
     dictionaries: React.PropTypes.array.isRequired,
     activeDictionaryIds: React.PropTypes.array.isRequired,
+    onAddDictionary: React.PropTypes.func.isRequired,
     onActiveDictionariesChanged: React.PropTypes.func
   };
 
   render() {
 
-    if (!this.props.dictionaries.length) {
-      return (
+    return (
+      this.props.dictionaries.length ?
+        <Segment>
+          <Form>
+            <Form.Select label={tr('Active Dictionaries')} name='activeDictionaries' options={this.props.dictionaries} fluid multiple search selection />
+            <Button content={tr('Clear All')} icon='trash'/>
+            <Button content={tr('Select All')} icon='checkmark'/>
+          </Form>
+        </Segment>
+      :
         <Segment>
           <Segment basic style={verticallyCenteredContainerStyle}>
             <span style={verticallyCenteredTextStyle}>{tr('You have no dictionaries')}</span>
-            <Button content={tr('Add a dictionary')} icon='plus' floated='right' />
+            <Button content={tr('Add a dictionary')} icon='plus' floated='right' onClick={this.props.onAddDictionary} />
           </Segment>
         </Segment>
-      );
-    }
-
-    return (
-      <Segment>
-        <Form>
-          <Form.Select label={tr('Active Dictionaries')} name='activeDictionaries' options={this.props.dictionaries} fluid multiple search selection />
-          <Button content={tr('Clear All')} icon='trash'/>
-          <Button content={tr('Select All')} icon='checkmark'/>
-        </Form>
-      </Segment>
-    )
+    );
   }
 }

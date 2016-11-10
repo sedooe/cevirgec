@@ -1,6 +1,8 @@
 'use strict';
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Segment } from 'semantic-ui-react'
 import tr from '../utils/Translation';
 import ActiveDictionarySelector from '../components/newDefinitionWindow/ActiveDictionarySelector';
@@ -8,16 +10,27 @@ import OnlineDictionariesTabView from '../components/newDefinitionWindow/OnlineD
 import ButtonToggle from '../components/newDefinitionWindow/ButtonToggle';
 import NewDefinitionForm from '../components/newDefinitionWindow/NewDefinitionForm';
 import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfExistingDefinitions';
-import '../index.scss';
+import DictionaryModal from '../components/DictionaryModal';
+import * as DictionaryActions from '../actions/dictionary';
 
-export default class NewDefinitionWindow extends Component {
+class NewDefinitionWindow extends Component {
 
   state = {
     currentWord: 'computer',
     dictionaries: [],
     definitions: Array(3).fill(),
-    onlineDictionaries: [{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
-    loading: false
+    onlineDictionaries: [],//[{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
+    loading: false,
+    dictionaryModalOpen: false
+  }
+
+  openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
+
+  hideDictionaryModal = () => this.setState({dictionaryModalOpen: false})
+
+  saveDictionary = dictionary => {
+    this.hideDictionaryModal();
+    this.props.actions.createDictionary(dictionary);
   }
 
   render() {
@@ -27,6 +40,7 @@ export default class NewDefinitionWindow extends Component {
           <Grid.Column width={6} className='no-bottom-padding'>
             <ActiveDictionarySelector
               dictionaries={this.state.dictionaries}
+              onAddDictionary={this.openDictionaryModal}
             />
 
             <WordSearchInput
@@ -48,10 +62,27 @@ export default class NewDefinitionWindow extends Component {
             />
           </Grid.Column>
         </Grid>
+
+        <DictionaryModal
+            open={this.state.dictionaryModalOpen}
+            onHide={this.hideDictionaryModal}
+            onSave={this.saveDictionary}
+            dictionary={{}}
+          />
       </main>
     )
   }
 }
+
+const mapStateToProps = state => ({
+
+})
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(DictionaryActions, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewDefinitionWindow)
 
 const VerticalDivider = () => (
   <div style={{position: 'relative'}} className='no-padding'>

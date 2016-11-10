@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
-import {Menu, Segment } from 'semantic-ui-react';
+import {Button, Menu, Message, Segment } from 'semantic-ui-react';
 import tr from '../../utils/Translation';
 import WordBrowser from './WordBrowser';
+
+const NoDictWarning = ({onAddOnlineDictionary}) => (
+  <Segment style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
+    <Message>
+      <span style={{lineHeight: '36px'}}>{tr('You have no relevant Online Dictionary for this source language.')}</span>
+      <Button content={tr('Add an online dictionary')} icon='plus' floated='right' onClick={onAddOnlineDictionary} />
+    </Message>
+  </Segment>
+)
 
 export default class OnlineDictionariesTabView extends Component {
   state = {
@@ -12,6 +21,11 @@ export default class OnlineDictionariesTabView extends Component {
 
   render() {
     const that = this;
+
+    if(!this.props.onlineDictionaries.length) {
+      console.log(NoDictWarning);
+      return <NoDictWarning onAddOnlineDictionary={this.props.onAddOnlineDictionary} />
+    }
 
     let title = this.props.onlineDictionaries.map( (onlineDictionary, index) => {
       return <Menu.Item
@@ -38,5 +52,6 @@ export default class OnlineDictionariesTabView extends Component {
 }
 
 OnlineDictionariesTabView.propTypes = {
-  onlineDictionaries: React.PropTypes.array.isRequired
+  onlineDictionaries: React.PropTypes.array.isRequired,
+  onAddOnlineDictionary: React.PropTypes.func.isRequired
 }

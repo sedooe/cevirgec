@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import {Divider, Form, Label, Segment } from 'semantic-ui-react';
+import {Button, Divider, Dropdown, Form, Label, Segment } from 'semantic-ui-react';
 import tr from '../../utils/Translation';
 import ButtonToggle from './ButtonToggle';
+
+const wordTypes = [
+  {value: 'n/a', text: tr('N/A')},
+  {value: 'noun', text: 'noun'},
+  {value: 'verb', text: 'verb'}
+]
 
 export default class NewDefinitionForm extends Component {
   state = {
@@ -14,7 +20,7 @@ export default class NewDefinitionForm extends Component {
         <Label attached='top'>{tr('Add new Definitions for <word>')}</Label>
         <Form>
           <Form.Group widths='equal'>
-            <Form.Input label='Definition' placeholder='You can choose from left browser' />
+            <Form.Input label='Definition' placeholder={tr('You can choose from right browser')} />
           </Form.Group>
           <HorizontalToggle
             active={this.state.detailsShown}
@@ -23,13 +29,16 @@ export default class NewDefinitionForm extends Component {
           {this.state.detailsShown &&
             <span>
               <Form.Group inline>
-                <label>Size</label>
-                <Form.Radio label='Small' value='sm' checked={'value' === 'sm'} onChange={this.handleChange} />
-                <Form.Radio label='Medium' value='md' checked={'value' === 'md'} onChange={this.handleChange} />
-                <Form.Radio label='Large' value='lg' checked={'value' === 'lg'} onChange={this.handleChange} />
+                <Form.Field>
+                  <Dropdown placeholder={tr('Word Type')} search selection options={wordTypes} />
+                </Form.Field>
+                <label>{tr(' Word sex')}</label>
+                <Form.Radio name='sex' label='⚲' value='neuter' defaultChecked={'value' === 'sm'} className='big-label' onChange={()=>{}} />
+                <Form.Radio name='sex' label='♂' value='masculine' defaultChecked={'value' === 'md'} className='big-label' onChange={()=>{}} />
+                <Form.Radio name='sex' label='♀' value='feminine' defaultChecked={'value' === 'lg'} className='big-label' onChange={()=>{}} />
               </Form.Group>
-              <Form.TextArea label='About' placeholder='Tell us more about you...' />
-              <Form.Checkbox label='I agree to the Terms and Conditions' />
+              <Form.TextArea rows='3' label={tr('Usage Examples')} placeholder={tr('Usage Examples')} />
+              <Form.TextArea rows='3' label={tr('Notes')} placeholder={tr('Notes')} />
               <Form.Group inline className='no-margin'>
                 <Button primary content={tr('Save')} style={{marginLeft: 'auto'}} />
               </Form.Group>
@@ -52,6 +61,7 @@ const HorizontalToggle = ({active, onToggle}) => (
     />
   </Divider>
 );
+
 HorizontalToggle.propTypes = {
   onToggle: React.PropTypes.func.isRequired,
   active: React.PropTypes.bool.isRequired
