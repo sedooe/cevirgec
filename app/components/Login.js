@@ -11,6 +11,11 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
 class Login extends Component {
 
+  login = (event, serializedForm) => {
+    event.preventDefault();
+    this.props.login(serializedForm);
+  }
+
   render() {
     return (
       <DocumentTitle title="Cevirgec › Login">
@@ -23,7 +28,7 @@ class Login extends Component {
               content="Login to your account"
             />
 
-            <Form size="large">
+            <Form size="large" onSubmit={this.login}>
               <Segment>
                 <Form.Input name="username" placeholder="Username" icon="user icon" iconPosition="left" />
                 <Form.Input type="password" name="password" placeholder="Password" icon="lock icon" iconPosition="left" />

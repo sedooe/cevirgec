@@ -8,13 +8,13 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
-
+import * as UserActions from '../actions/user';
 
 class User extends Component {
 
   render() {
     let childrenWithProps = React.Children.map(this.props.children, child => (
-      React.cloneElement(child, this.props[child.type.name])
+      React.cloneElement(child, this.props[child.type.name.toLowerCase()])
     ));
 
     return(
@@ -25,4 +25,17 @@ class User extends Component {
   }
 }
 
-export default User
+const mapStateToProps = state => ({
+  user: state.user
+})
+
+const mapDispatchToProps = dispatch => {
+  const actions = bindActionCreators(UserActions, dispatch);
+  const { register, login } = actions;
+  return {
+    register: { register },
+    login: { login }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(User)

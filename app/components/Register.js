@@ -11,6 +11,11 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
 class Register extends Component {
 
+  register = (event, serializedForm) => {
+    event.preventDefault();
+    this.props.register(serializedForm);
+  }
+
   render() {
     return (
       <DocumentTitle title="Cevirgec › Register">
@@ -23,7 +28,7 @@ class Register extends Component {
               content="Create an account"
             />
 
-            <Form size="large">
+            <Form size="large" onSubmit={this.register}>
               <Segment>
                 <Form.Input name="email" placeholder="Email" icon="mail icon" iconPosition="left" />
                 <Form.Input name="username" placeholder="Username" icon="user icon" iconPosition="left" />

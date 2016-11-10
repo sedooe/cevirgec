@@ -1,27 +1,6 @@
 // @flow
 import * as actions from '../actions/constants';
 
-const initialDictionaries = {
-  '1': {
-    id: '1',
-    name: 'deneme',
-    sourceLanguage: 'af',
-    targetLanguage: 'tr',
-    context: 'sport',
-    numberOfDefinitions: '9',
-    active: true
-  },
-  '2': {
-    id: '2',
-    name: 'sozluk',
-    sourceLanguage: 'za',
-    targetLanguage: 'tr',
-    context: 'technology',
-    numberOfDefinitions: '90',
-    active: false
-  }
-}
-
 export function dictionaries(state: Object = {}, action: Object) {
   switch (action.type) {
     case actions.DICTIONARIES_LOADED: { //action.data: dictionaries
