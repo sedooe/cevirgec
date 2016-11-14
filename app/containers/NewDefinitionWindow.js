@@ -51,6 +51,12 @@ class NewDefinitionWindow extends Component {
     this.props.actions.createDictionary(dictionary);
   }
 
+  saveOnlineSource = onlineSource => {
+    this.hideOnlineSourceModal();
+    //TODO call action
+    console.log(onlineSource);
+  }
+
   render() {
     return (
       <main className='full-height no-bottom-padding'>
@@ -94,7 +100,7 @@ class NewDefinitionWindow extends Component {
         <OnlineSourceModal
             open={this.state.onlineSourceModalOpen}
             onHide={this.hideOnlineSourceModal}
-            onSave={this.saveDictionary}
+            onSave={this.saveOnlineSource}
             onlineSource={{}}
           />
       </main>
