@@ -127,7 +127,17 @@ function _openNewDefinitionCommonWindow(queryString) {
     newDefinitionWindow.loadURL(`file://${__dirname}/../app/add_definition_popup.html?${queryString}`);
 
     if (process.env.NODE_ENV === 'development') {
-      newDefinitionWindow.openDevTools();
+      // newDefinitionWindow.openDevTools();
+      newDefinitionWindow.webContents.on('context-menu', (e, props) => {
+        const { x, y } = props;
+
+        Menu.buildFromTemplate([{
+          label: 'Inspect element',
+          click() {
+            newDefinitionWindow.inspectElement(x, y);
+          }
+        }]).popup(newDefinitionWindow);
+      });
     }
 
     newDefinitionWindow.webContents.on('dom-ready', function() {

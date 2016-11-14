@@ -52,6 +52,13 @@ Solution:
 
 http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
 
+## "Cannot call a class as a function"
+
+possible causes:
+
+* you have multiple `export default`
+* your react class don't have `extends Component`
+
 # Development Notes
 
 1. Use storybook to design UI:
