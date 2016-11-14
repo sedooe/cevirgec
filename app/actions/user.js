@@ -7,11 +7,6 @@ const requestRegister = () => ({
   type: actions.REQUEST_REGISTER
 })
 
-const registerSuccess = (user: Object) => ({
-  type: actions.REGISTER_SUCCESS,
-  user
-})
-
 const registerFail = error => ({
   type: actions.REGISTER_FAIL,
   error
@@ -28,7 +23,7 @@ export const register = (user: Object) => (dispatch: Function) => {
     body: JSON.stringify(user)
   })
   .then(response => response.json())
-  .then(json => dispatch(registerSuccess(json)))
+  .then(json => ipc.send(actions.REQUEST_REGISTER_LOCALDB, {...json.user, token: json.token}))
   .catch(e => dispatch(registerFail(e)));
 }
 

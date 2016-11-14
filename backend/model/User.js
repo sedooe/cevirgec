@@ -43,9 +43,6 @@ var User = sequelize.define('user', {
   },
   description: {
     type: Sequelize.STRING
-  },
-  token: {
-    type: Sequelize.STRING
   }
 },
 {

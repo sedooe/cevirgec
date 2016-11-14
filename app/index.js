@@ -19,12 +19,21 @@ const dbActions = [
   actions.DICTIONARY_CREATED,
   actions.DICTIONARY_EDITED,  
   actions.DICTIONARY_ACTIVENESS_CHANGED,
-  actions.DICTIONARY_DELETED
+  actions.DICTIONARY_DELETED,
+  actions.REGISTER_SUCCESS_LOCALDB,
+  actions.REGISTER_FAIL_LOCALDB
 ];
 
 dbActions.forEach(action => {
-  ipc.on(action, (event, data) => {
+  ipc.on(action, (event, data, additionalData) => {
     store.dispatch({ type: action, data });
+
+    //FIXME: it's getting uglier to handle these db callbacks here
+    if (action == actions.REGISTER_SUCCESS_LOCALDB) {
+      store.dispatch({ type: actions.LOGIN_SUCCESS, data });
+      localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('token', additionalData);
+    }
   });
 });
 
