@@ -26,7 +26,10 @@ class User extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user.user,
+  isFetching: state.user.isFetching,
+  registerFailed: state.user.registerFailed,
+  loginFailed: state.user.loginFailed
 })
 
 const mapDispatchToProps = dispatch => {
