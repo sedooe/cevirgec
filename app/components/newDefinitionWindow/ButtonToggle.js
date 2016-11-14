@@ -14,9 +14,13 @@ export default class ButtonToggle extends Component {
   }
 
   render() {
-    const { active } = this.state
+    const { active } = this.state;
+
+    // otherwise on toToggle gives error
+    // https://facebook.github.io/react/warnings/unknown-prop.html
+    const { onToggle, ...rest } = this.props;
     return (
-      <Button {... this.props} toggle active={active} onClick={this.handleClick}>
+      <Button {...rest} active={active} onClick={this.handleClick}>
         {this.children}
       </Button>
     )

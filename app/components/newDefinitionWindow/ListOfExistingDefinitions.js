@@ -8,8 +8,8 @@ const ListOfExistingDefinitions = ({definitions}) => (
     <Label attached='top'>{tr('Definitions for $1', 'the word')}</Label>
     <List divided relaxed verticalAlign='middle' >
       {definitions.length ?
-        definitions.map(function (definition) {
-          return <DefinitionListItem definition={definition} />
+        definitions.map(function (definition, index) {
+          return <DefinitionListItem definition={definition} key={index + '_df_' + definition.id } />
         })
         :
         <List.Item style={noSidePadding}>

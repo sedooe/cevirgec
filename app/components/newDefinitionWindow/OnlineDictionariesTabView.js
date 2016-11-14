@@ -3,11 +3,16 @@ import {Button, Menu, Message, Segment } from 'semantic-ui-react';
 import tr from '../../utils/Translation';
 import WordBrowser from './WordBrowser';
 
-const NoDictWarning = ({onAddOnlineDictionary}) => (
+const NoDictWarning = ({onAddOnlineSource}) => (
   <Segment style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
     <Message>
       <span style={{lineHeight: '36px'}}>{tr('You have no relevant Online Dictionary for this source language.')}</span>
-      <Button content={tr('Add an online dictionary')} icon='plus' floated='right' onClick={onAddOnlineDictionary} />
+      <Button
+        icon='plus'
+        floated='right'
+        content={tr('Add an online dictionary')}
+        onClick={onAddOnlineSource}
+      />
     </Message>
   </Segment>
 )
@@ -24,7 +29,7 @@ export default class OnlineDictionariesTabView extends Component {
 
     if(!this.props.onlineDictionaries.length) {
       console.log(NoDictWarning);
-      return <NoDictWarning onAddOnlineDictionary={this.props.onAddOnlineDictionary} />
+      return <NoDictWarning onAddOnlineSource={this.props.onAddOnlineSource} />
     }
 
     let title = this.props.onlineDictionaries.map( (onlineDictionary, index) => {
@@ -53,5 +58,5 @@ export default class OnlineDictionariesTabView extends Component {
 
 OnlineDictionariesTabView.propTypes = {
   onlineDictionaries: React.PropTypes.array.isRequired,
-  onAddOnlineDictionary: React.PropTypes.func.isRequired
+  onAddOnlineSource: React.PropTypes.func.isRequired
 }

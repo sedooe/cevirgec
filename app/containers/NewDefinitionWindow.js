@@ -11,22 +11,40 @@ import ButtonToggle from '../components/newDefinitionWindow/ButtonToggle';
 import NewDefinitionForm from '../components/newDefinitionWindow/NewDefinitionForm';
 import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfExistingDefinitions';
 import DictionaryModal from '../components/DictionaryModal';
+import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
+
+function getEmptyDefinitionForWord(word) {
+  return {
+    key: word,
+    value: '',
+    sex: 'NEUTER',
+    type: 'NONE',
+    usage: '',
+    notes: ''
+  }
+}
 
 class NewDefinitionWindow extends Component {
 
   state = {
     currentWord: 'computer',
+    currentDefinition: getEmptyDefinitionForWord('computer'), //this is the definition being edited
     dictionaries: [],
-    definitions: Array(3).fill(),
+    definitions: Array(3).fill({}),
     onlineDictionaries: [],//[{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
     loading: false,
-    dictionaryModalOpen: false
+    dictionaryModalOpen: false,
+    onlineSourceModalOpen: false
   }
 
   openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
 
   hideDictionaryModal = () => this.setState({dictionaryModalOpen: false})
+
+  openOnlineSourceModal = () => this.setState({onlineSourceModalOpen: true})
+
+  hideOnlineSourceModal = () => this.setState({onlineSourceModalOpen: false})
 
   saveDictionary = dictionary => {
     this.hideDictionaryModal();
@@ -47,7 +65,9 @@ class NewDefinitionWindow extends Component {
               loading={this.state.loading}
             />
 
-            <NewDefinitionForm />
+            <NewDefinitionForm
+              definition={this.state.currentDefinition}
+            />
 
             <ListOfExistingDefinitions
               definitions={this.state.definitions}
@@ -59,6 +79,7 @@ class NewDefinitionWindow extends Component {
           <Grid.Column width={10} className='no-bottom-padding'>
             <OnlineDictionariesTabView
               onlineDictionaries={this.state.onlineDictionaries}
+              onAddOnlineSource={this.openOnlineSourceModal}
             />
           </Grid.Column>
         </Grid>
@@ -68,6 +89,13 @@ class NewDefinitionWindow extends Component {
             onHide={this.hideDictionaryModal}
             onSave={this.saveDictionary}
             dictionary={{}}
+          />
+
+        <OnlineSourceModal
+            open={this.state.onlineSourceModalOpen}
+            onHide={this.hideOnlineSourceModal}
+            onSave={this.saveDictionary}
+            onlineSource={{}}
           />
       </main>
     )
