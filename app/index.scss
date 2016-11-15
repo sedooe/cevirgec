@@ -30,12 +30,46 @@ main {
 	padding: 0 !important;
 }
 
+.no-side-padding {
+	padding: 14px 0 !important;
+}
+
+.no-bottom-padding {
+	padding-bottom: 0 !important;
+}
+
 .no-border {
   border: 0 !important;
 }
 
 .no-margin {
 	margin: 0 !important;
+}
+
+.no-radius {
+	border-radius: 0 !important;
+}
+
+.no-right-radius {
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
+}
+
+.no-left-radius {
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+}
+
+.full-width {
+	width: 100% !important;
+}
+
+.full-height {
+	height: 100% !important;
+}
+
+.no-shadow {
+	box-shadow: none !important;
 }
 
 // Study page

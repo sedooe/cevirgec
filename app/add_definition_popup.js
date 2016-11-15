@@ -2,17 +2,17 @@
 
 import React from 'react';
 import { render } from 'react-dom';
-import NewDefinitionPopup from './containers/NewDefinitionPopup';
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore';
+import NewDefinitionWindow from './containers/NewDefinitionWindow';
 
-// See https://github.com/atom/electron/issues/254
-window.jQuery = window.$ = require('jquery');
+import './index.scss';
 
-// importing this doesn't work because it's executed before
-// 'require's and since this is dependant to jQuery application
-// breaks. Hence we had to require semantic-ui as well.
-require ('../node_modules/semantic-ui/dist/semantic.js');
+const store = configureStore();
 
 render(
-  <NewDefinitionPopup />,
+  <Provider store={store}>
+    <NewDefinitionWindow />
+  </Provider>,
   document.getElementById('popup')
 );

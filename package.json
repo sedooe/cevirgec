@@ -118,7 +118,7 @@
     "redux-logger": "^2.7.0",
     "sass-loader": "^4.0.2",
     "semantic-ui": "^2.2.4",
-    "semantic-ui-react": "^0.56.1",
+    "semantic-ui-react": "^0.60.5",
     "sequelize": "^3.24.1",
     "sinon": "^1.17.6",
     "spectron": "^3.4.0",

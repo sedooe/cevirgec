@@ -1,6 +1,6 @@
 // @flow
-import React, { PropTypes } from 'react';
-import { Button, Checkbox, Form, Icon, Modal } from 'semantic-ui-react';
+import React, { Component, PropTypes } from 'react';
+import { Button, Checkbox, Dropdown, Form, Icon, Message, Modal } from 'semantic-ui-react';
 import tr from '../utils/Translation';
 
 const languages = [
@@ -261,79 +261,77 @@ const propFunctionProxy = (prop: Function, event, serializedForm) => {
   prop(serializedForm);
 }
 
+const UsageInstruction = () => (
+  <Message
+      icon='info'
+      header={tr('How to enter a URL?')}
+      list={[ 'Search for "abcxyz" in the website you want to add',
+              'Copy result URL here',
+              'Example: http://www.wordreference.com/entr/abcxyz']}
+    />
+)
+
 type Props = {
   open: boolean,
   onHide: Function,
   onSave: Function,
-  dictionary: Object
+  onlineSource: Object
 }
 
-const DictionaryModal = (props: Props) => (
-  <Modal open={props.open}>
-    <Modal.Header>
-      {props.dictionary.id ? tr('Edit Dictionary') : tr('New Dictionary')}
-    </Modal.Header>
-    <Modal.Content>
-      <Form onSubmit={propFunctionProxy.bind(null, props.onSave)}>
-        <input type="hidden" name="id" value={props.dictionary.id} />
-        <Form.Field>
-          <label>Name</label>
-          <input placeholder="Name" name="name" defaultValue={props.dictionary.name} />
-        </Form.Field>
-        <Form.Field>
-          <label>Description</label>
-          <input placeholder="Description" name="description" defaultValue={props.dictionary.description} />
-        </Form.Field>
-        <Form.Field>
-          <label>Context</label>
-          <Form.Dropdown selection name="context"
-            options={contexts}
-            defaultValue={props.dictionary.context || 'none'}
-           />
-        </Form.Field>
-        <div className="two fields">
-          <Form.Field>
-            <label>{tr('Source Language')}</label>
-            <Form.Dropdown search selection name="sourceLanguage"
-              options={languages}
-              placeholder="Choose a language"
-              defaultValue={props.dictionary.sourceLanguage}
-              onChange={() => {}}
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>{tr('Target Language')}</label>
-            <Form.Dropdown search selection name="targetLanguage"
-              options={languages}
-              placeholder="Choose a language"
-              defaultValue={props.dictionary.targetLanguage}
-              onChange={() => {}}
-            />
-          </Form.Field>
-        </div>
-        <Form.Field>
-          <label>In use</label>
-          <Checkbox toggle name="active" defaultChecked={props.dictionary.active || false} />
-        </Form.Field>
-        <div className="ui error message"></div>
+class OnlineSourceModal extends Component {
+
+  onSubmit = (e, serializedForm) => {
+    e.preventDefault();
+    //TODO check if valid
+    this.props.onSave(serializedForm);
+  }
+
+  onChange = () => {
+    //TODO validate and show messages
+  }
+
+  render() {
+    return (
+      <Modal open={this.props.open}>
+        <Modal.Header>
+          {this.props.onlineSource.id ? tr('Edit Online Source') : tr('New Online Source')}
+        </Modal.Header>
+        <Modal.Content>
+          <Form onSubmit={this.onSubmit} onChange={this.onChange} ref='form'>
+            <input type="hidden" name="id" value={this.props.onlineSource.id} />
+            <Form.Group widths='equal'>
+              <Form.Input label={tr('Name')} name='name' placeholder={tr('Name')} required />
+              <Form.Dropdown search selection label={tr('Source Language')} name='source' options={languages} placeholder={tr('Source Language')} />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <Form.Input type='number' label={tr('Order')} name='order' placeholder={tr('Order')} />
+            </Form.Group>
+            <Form.Group widths='equal'>
+              <Form.Input label={tr('URL')} name='url' placeholder={tr('URL')} />
+            </Form.Group>
+            <div className="ui error message"></div>
+            <UsageInstruction  />
+            <button ref='submitButton' style={{display: 'none'}}></button>
+          </Form>
+        </Modal.Content>
         <Modal.Actions>
-          <Button type='button' color='black' onClick={props.onHide}>
+          <Button type='button' color='black' onClick={this.props.onHide}>
             <Icon name='remove' /> Cancel
           </Button>
-          <Button positive type='submit'>
+          <Button positive type='submit' onClick={() => this.refs.submitButton.click()}>
             <Icon name='checkmark' /> Save
           </Button>
         </Modal.Actions>
-      </Form>
-    </Modal.Content>
-  </Modal>
-)
+      </Modal>
+    )
+  }
+}
 
-DictionaryModal.propTypes = {
+OnlineSourceModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onHide: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
-  dictionary: PropTypes.object.isRequired
+  onlineSource: PropTypes.object.isRequired
 };
 
-export default DictionaryModal
+export default OnlineSourceModal
