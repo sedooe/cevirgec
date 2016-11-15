@@ -9,11 +9,20 @@ import User from './containers/User';
 import Register from './components/Register';
 import Login from './components/Login';
 
+// Taken from https://github.com/ReactTraining/react-router/blob/cbd1a95b2d9a75febb3eb58d2f9d5a513e432540/examples/auth-flow/app.js#L120
+function requireAuth(nextState, replace) {
+  if ( !localStorage.getItem('user') || !localStorage.getItem('token') ) {
+    replace({
+      pathname: '/user/login',
+      state: { nextPathname: nextState.location.pathname }
+    })
+  }
+}
 
 export default (
   <Route name="Dashboard" path="/" component={App}>
-    <IndexRoute component={Dashboard} />
-    <Route name="Dictionaries" path="/dictionaries" component={Dictionaries} />
+    <IndexRoute component={Dashboard} onEnter={requireAuth} />
+    <Route name="Dictionaries" path="/dictionaries" component={Dictionaries} onEnter={requireAuth} />
     <Route name="User" path="/user" component={User}>
       <IndexRedirect to="register" />
       <Route path="register" component={Register} name="Register" />

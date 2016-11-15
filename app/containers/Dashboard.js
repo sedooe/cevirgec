@@ -4,23 +4,48 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
 import { Link } from 'react-router';
 import tr from '../utils/Translation';
 import './Dashboard.scss';
 import { Card, Dropdown, Grid, Icon, Menu } from 'semantic-ui-react';
+import * as UserActions from '../actions/user';
 
+let createHandlers = function(dispatch) {
+  let loadUser = function(user) {
+    dispatch(UserActions.loadUser(user))
+  };
 
-export default class Dashboard extends Component {
+  return {
+    loadUser
+  };
+}
+
+class Dashboard extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handlers = createHandlers(this.props.dispatch);
+  }
+
+  componentDidMount() {
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+    this.handlers.loadUser(user);
+  }
 
   render() {
-    const user = JSON.parse(window.localStorage.getItem('user')) || { username: 'username', fullname: 'User' };
-    // FIXME: hardcoded object is needed for development, we won't need it later.
+
+    if (!this.props.user) {
+      return null;
+    }
 
     const trigger = (
       <span>
         <Icon name="user" />
-        {tr('Hello, ', user.username)}
+        {tr('Hello, ', this.props.user.username)}
       </span>
     );
 
@@ -33,13 +58,13 @@ export default class Dashboard extends Component {
               <Dropdown trigger={trigger}>
                 <Dropdown.Menu style={{ margin: '10px 0 0 -40px' }}>
                   <Dropdown.Item disabled>
-                    Signed in as <strong>{user.fullname}</strong>
+                    Signed in as <strong>{this.props.user.fullname}</strong>
                   </Dropdown.Item>
                   <Dropdown.Divider style={{margin: 0}} />
                   <Dropdown.Item>
                     <Link to="/user/profile" className="item">
                       <Icon name="user" />
-                      {user.fullname}
+                      {this.props.user.fullname}
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
@@ -61,7 +86,7 @@ export default class Dashboard extends Component {
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.logout} className="item">
+                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.props.logout} className="item">
                       <Icon name="sign out" />
                       <span>Logout</span>
                     </Link>
@@ -184,3 +209,18 @@ export default class Dashboard extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.user.user
+})
+
+// const mapDispatchToProps = dispatch => {
+//   const actions = bindActionCreators(UserActions, dispatch);
+//   const { loadUser, logout } = actions;
+//   return {
+//     loadUser,
+//     logout
+//   }
+// }
+
+export default connect(mapStateToProps)(Dashboard);

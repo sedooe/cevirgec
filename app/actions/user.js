@@ -31,9 +31,13 @@ const requestLogin = () => ({
   type: actions.REQUEST_LOGIN
 })
 
-const loginSuccess = (user: Object) => ({
+export const loginSuccess = (user: Object) => ({
   type: actions.LOGIN_SUCCESS,
   user
+})
+
+const logoutSuccess = () => ({
+  type: actions.LOGOUT_SUCCESS
 })
 
 const loginFail = error => ({
@@ -41,8 +45,14 @@ const loginFail = error => ({
   error
 })
 
+const logoutFail = error => ({
+  type: actions.LOGOUT_FAIL,
+  error
+})
+
 export const login = (userCredentials: Object) => (dispatch: Function) => {
-  dispatch(requestLogin());
+  dispatch(requestLogin());//FIXME obsolete or just needed for isFetching:true ?
+
   fetch('http://localhost:8080/api/login', {
     method: 'POST',
     headers: {
@@ -55,3 +65,25 @@ export const login = (userCredentials: Object) => (dispatch: Function) => {
   .then(json => dispatch(loginSuccess(json)))
   .catch(e => dispatch(loginFail(e)));
 }
+
+export const logout = () => (dispatch: Function) => {
+  dispatch(requestLogin());
+  fetch('http://localhost:8080/api/logout', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {console.log(response);debugger})
+  .then(() => {
+    localStorage.clear();
+    location.reload();// this will redirect to login
+  })
+  .catch(e => dispatch(logoutFail(e)));
+}
+
+export const loadUser = (user: Object) => ({
+  type: actions.LOAD_USER,
+  user
+})

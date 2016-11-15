@@ -15,8 +15,8 @@ const debug = require('debug')(__filename.split('/').pop());
 ipc.on(actions.REQUEST_REGISTER_LOCALDB, (event, user) => {
   debug(actions.REQUEST_REGISTER_LOCALDB, user);
 
-  User.create(user).then(createdDictionary => {
-    event.sender.send(actions.REGISTER_SUCCESS_LOCALDB, {...createdDictionary.toJSON(), token: user.token});
+  User.create(user).then(createdUser => {
+    event.sender.send(actions.REGISTER_SUCCESS_LOCALDB, createdUser.toJSON(), user.token);
   }).catch(e => debug(e));
 });
 

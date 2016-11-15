@@ -8,6 +8,10 @@ Enable debug output:
 
 	export DEBUG=*,-babel
 
+	// enable all debug logs https://github.com/visionmedia/debug#browser-support
+	localStorage.debug = '*';
+
+
 Run these two commands simultaneously in different console tabs.
 
 	$ npm run hot-server

@@ -12,9 +12,6 @@ window.jQuery = window.$ = require('jquery');
 // breaks. Hence we had to require semantic-ui as well.
 require ('../node_modules/semantic-ui/dist/semantic.js');
 
-// enable all debug logs https://github.com/visionmedia/debug#browser-support
-localStorage.debug = '*';
-
 render(
   <NewDefinitionPopup />,
   document.getElementById('popup')

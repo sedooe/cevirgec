@@ -2,7 +2,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
+import { Router, browserHistory, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
 import configureStore from './store/configureStore';
@@ -14,10 +14,12 @@ const ipc = require('electron').ipcRenderer;
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 
+import * as UserActions from './actions/user';
+
 const dbActions = [
   actions.DICTIONARIES_LOADED,
   actions.DICTIONARY_CREATED,
-  actions.DICTIONARY_EDITED,  
+  actions.DICTIONARY_EDITED,
   actions.DICTIONARY_ACTIVENESS_CHANGED,
   actions.DICTIONARY_DELETED,
   actions.REGISTER_SUCCESS_LOCALDB,
@@ -26,13 +28,16 @@ const dbActions = [
 
 dbActions.forEach(action => {
   ipc.on(action, (event, data, additionalData) => {
-    store.dispatch({ type: action, data });
 
     //FIXME: it's getting uglier to handle these db callbacks here
     if (action == actions.REGISTER_SUCCESS_LOCALDB) {
-      store.dispatch({ type: actions.LOGIN_SUCCESS, data });
       localStorage.setItem('user', JSON.stringify(data));
       localStorage.setItem('token', additionalData);
+      store.dispatch(UserActions.loginSuccess(data));
+      hashHistory.push('/');
+    }
+    else {
+      store.dispatch({ type: action, data });
     }
   });
 });
