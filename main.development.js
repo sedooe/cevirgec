@@ -55,9 +55,7 @@ app.on('will-quit', () => {
   shortcutHelper.unregisterAll();
   clipboardEventEmitter.stop();
 
-  let userStatus = userStatusHelper.getUserStatus();
-
-  // if (userStatusHelper.getUserStatus().loggedIn) {
+  // if (userStatusHelper.isAuthenticated()) {
   //   sync.stop(); //stop syncing in every 5 minutes
   //   sync.syncSources(userStatus); //one time sync before quit
   // }

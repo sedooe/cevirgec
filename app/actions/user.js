@@ -1,8 +1,9 @@
 // @flow
 import * as actions from './constants';
 import fetch from 'isomorphic-fetch';
-const ipc = require('electron').ipcRenderer;
 import { hashHistory } from 'react-router';
+
+const {ipcRenderer} = require('electron')
 
 const requestRegister = () => ({
   type: actions.REQUEST_REGISTER
@@ -24,7 +25,7 @@ export const register = (user: Object) => (dispatch: Function) => {
     body: JSON.stringify(user)
   })
   .then(response => response.json())
-  .then(json => ipc.send(actions.REQUEST_REGISTER_LOCALDB, {...json.user, token: json.token}))
+  .then(json => ipcRenderer.send(actions.REQUEST_REGISTER_LOCALDB, {...json.user, token: json.token}))
   .catch(e => dispatch(registerFail(e)));
 }
 
@@ -33,9 +34,10 @@ const requestLogin = () => ({
 })
 
 export const loginSuccess = (user: Object, token: String) => (dispatch: Function) => {
-
+debugger
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
+  ipcRenderer.send(actions.LOGIN_SUCCESS, user);
   hashHistory.push('/');
 
   dispatch({
@@ -44,9 +46,17 @@ export const loginSuccess = (user: Object, token: String) => (dispatch: Function
   });
 }
 
-const logoutSuccess = () => ({
-  type: actions.LOGOUT_SUCCESS
-})
+const logoutSuccess = () => (dispatch: Function) => {
+  debugger
+  localStorage.clear();
+  ipcRenderer.send(actions.LOGOUT_SUCCESS);
+  // hashHistory.push('/'); // doesn't work
+  window.location.reload();// this will redirect to login
+
+  dispatch({
+    type: actions.LOGOUT_SUCCESS
+  });
+}
 
 const loginFail = error => ({
   type: actions.LOGIN_FAIL,
@@ -88,10 +98,7 @@ export const logout = () => (dispatch: Function) => {
       throw 'Logout Failed with status ' + response.status;
     }
   } )
-  .then(() => {
-    localStorage.clear();
-    location.reload();// this will redirect to login
-  })
+  .then(response => dispatch(logoutSuccess()) )
   .catch(e => dispatch(logoutFail(e)));
 }
 

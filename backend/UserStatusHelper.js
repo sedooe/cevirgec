@@ -5,30 +5,26 @@
 
 'use strict';
 
+const {app} = require('electron');
 const jetpack = require('fs-jetpack');
-const electron = require('electron');
+const ShortcutHelper = require('./ShortcutHelper');
+const ApplicationHelper = require('./ApplicationHelper');
 const debug = require('debug')(__filename.split('/').pop());
-const app = electron.app;
-const appDataPath = app.getPath('userData');
 
+const appDataPath = app.getPath('userData');
 const userStatusFilePath = jetpack.path(appDataPath, 'user-status.json');
 const defaultUserStatus = {loggedIn: false};
+
 let userStatus = {};
 
 class UserStatusHelper {
 
-  createUserStatus() {
+  loadUserStatus() {
     if (!jetpack.exists(userStatusFilePath)) {
       userStatus = jetpack.write(userStatusFilePath, defaultUserStatus);
     }
 
     userStatus = jetpack.read(userStatusFilePath, 'json');
-  }
-
-  // deprecated
-  getUserStatus() {
-    debug('_____DEPRECATED_____: getUserStatus() use finer grained methods like isAuthenticated()')
-    return userStatus;
   }
 
   isAuthenticated() {
@@ -40,5 +36,6 @@ class UserStatusHelper {
     userStatus = status;
   }
 }
+const userStatusHelper = new UserStatusHelper();
 
-module.exports = new UserStatusHelper();
+module.exports = userStatusHelper;

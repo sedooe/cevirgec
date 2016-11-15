@@ -6,10 +6,9 @@
 'use strict';
 
 const electron = require('electron');
-const Tray = electron.Tray;
-const app = electron.app;
+
+const {app, ipcMain, Tray, Menu} = require('electron');
 const EventEmitter = require('events');
-const Menu = electron.Menu;
 const jetpack = require('fs-jetpack');
 const userStatusHelper = require('./UserStatusHelper');
 const preferencesHelper = require('./PreferencesHelper');
@@ -22,15 +21,16 @@ const clipboardEventEmitter = require('./ClipboardEventEmitter');
 
 const databaseFilePath = jetpack.path(appDataPath, 'database.sqlite');
 
+import * as Actions from '../app/actions/constants';
+
 let searchQueryHelper;
 let trayIcon;
 let authenticatedUserContextMenu;
 let unauthenticatedUserContextMenu;
 
 function initializeDaos() {
-  debug("initialize daos");
+  debug('initializeDaos');
   require('./dao/UserDao');
-  debug("userdao alti")
   require('./dao/DictionaryDao');
   require('./dao/DefinitionDao');
   require('./dao/OnlineSourcesDao');
@@ -38,13 +38,14 @@ function initializeDaos() {
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
+  debug('End of initializeDaos');
 }
 
 function initializeSystemTray() {
   trayIcon = new Tray('resources/images/trayIcon.png');
   trayIcon.setToolTip('This is cevirgec application.');
 
-  setContextMenu(userStatusHelper.isAuthenticated());
+  applicationHelper.setTrayContextMenu(userStatusHelper.isAuthenticated());
 
   global.verbosityEventEmitter.on('change', (verbosity)=>{
     trayIcon.menu.items[1].checked = verbosity;
@@ -54,74 +55,14 @@ function initializeSystemTray() {
   debug('Tray icon initialized');
 }
 
-function setContextMenu(isUserAuthenticated) {
-  let contextMenu;
-
-  if(isUserAuthenticated) {
-    contextMenu = [
-      {
-        label: 'Dashboard',
-        accelerator: 'CmdOrCtrl+D',
-        click: function() {
-          windowHelper.openDashboardWindow(windowHelper.OPEN_MAIN_PAGE);
-        }
-      },
-      {
-        label: 'Verbose',
-        type: 'checkbox',
-        checked: preferencesHelper.isVerbose(),
-        click: (menuItem, browserWindow) => {
-          // browserWindow will be always null here
-          preferencesHelper.setVerbosity(menuItem.checked);
-        }
-      },
-      {
-        label: 'Quit',
-        accelerator: 'CmdOrCtrl+Q',
-        selector: 'terminate:',
-        click: function() {
-          app.quit();
-        }
-      }
-    ];
-  }
-  else {
-    contextMenu = [
-      {
-        label: 'Register',
-        click: function() {
-          windowHelper.openDashboardWindow(windowHelper.OPEN_REGISTER_PAGE);
-        }
-      },
-      {
-        label: 'Login',
-        click: function() {
-          windowHelper.openDashboardWindow(windowHelper.OPEN_LOGIN_PAGE);
-        }
-      },
-      {
-        label: 'Quit',
-        selector: 'terminate:',
-        click: function() {
-          app.quit();
-        }
-      }
-    ];
-  }
-
-  trayIcon.setContextMenu(Menu.buildFromTemplate(contextMenu));
-}
-
 class ApplicationHelper {
 
   initializeApp() {
-    debug("ApplicationHelper baslangic");
     if (trayIcon != null) {
       throw 'Application is already initialized!';
     }
-
     global.verbosityEventEmitter = new EventEmitter();
-    userStatusHelper.createUserStatus();
+    userStatusHelper.loadUserStatus();
     preferencesHelper.restoreSettings();
     shortcutHelper.restoreShortcuts();
 
@@ -129,8 +70,56 @@ class ApplicationHelper {
     initializeSystemTray();
   }
 
-  setContextMenu(isUserAuthenticated) {
-    setContextMenu(isUserAuthenticated);
+  setTrayContextMenu(isUserAuthenticated) {
+    let contextMenu;
+
+    if(isUserAuthenticated) {
+      contextMenu = [
+        {
+          label: 'Dashboard',
+          accelerator: 'CmdOrCtrl+D',
+          click: function() {
+            windowHelper.openDashboardWindow(windowHelper.OPEN_MAIN_PAGE);
+          }
+        },
+        {
+          label: 'Verbose',
+          type: 'checkbox',
+          checked: preferencesHelper.isVerbose(),
+          click: (menuItem, browserWindow) => {
+            // browserWindow will be always null here
+            preferencesHelper.setVerbosity(menuItem.checked);
+          }
+        },
+        {
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
+          selector: 'terminate:',
+          click: function() {
+            app.quit();
+          }
+        }
+      ];
+    }
+    else {
+      contextMenu = [
+        {
+          label: 'Login',
+          click: function() {
+            windowHelper.openDashboardWindow(windowHelper.OPEN_LOGIN_PAGE);
+          }
+        },
+        {
+          label: 'Quit',
+          selector: 'terminate:',
+          click: function() {
+            app.quit();
+          }
+        }
+      ];
+    }
+
+    trayIcon.setContextMenu(Menu.buildFromTemplate(contextMenu));
   }
 
   getDatabaseFilePath() {
@@ -168,4 +157,26 @@ class ApplicationHelper {
   }
 }
 
-module.exports = new ApplicationHelper();
+const applicationHelper = new ApplicationHelper();
+module.exports = applicationHelper;
+
+
+ipcMain.on(Actions.LOGIN_SUCCESS, function(event, user) {
+  debug(Actions.LOGIN_SUCCESS, user);
+
+  userStatusHelper.setUserStatus({loggedIn: true});
+  shortcutHelper.registerGlobalShortcuts();
+  console.log(ApplicationHelper, applicationHelper.setTrayContextMenu, JSON.stringify(ApplicationHelper));
+  applicationHelper.setTrayContextMenu(true);
+  // sync.start();
+});
+
+ipcMain.on(Actions.LOGOUT_SUCCESS, function(event) {
+  debug(Actions.LOGOUT_SUCCESS);
+
+  userStatusHelper.setUserStatus({loggedIn: false});
+  shortcutHelper.unregisterAll();
+  console.log(ApplicationHelper, applicationHelper.setTrayContextMenu, JSON.stringify(ApplicationHelper));
+  applicationHelper.setTrayContextMenu(false);
+  // sync.stop();
+});
