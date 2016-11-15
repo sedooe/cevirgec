@@ -2,7 +2,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, browserHistory, hashHistory } from 'react-router';
+import { Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
 import configureStore from './store/configureStore';
@@ -31,10 +31,7 @@ dbActions.forEach(action => {
 
     //FIXME: it's getting uglier to handle these db callbacks here
     if (action == actions.REGISTER_SUCCESS_LOCALDB) {
-      localStorage.setItem('user', JSON.stringify(data));
-      localStorage.setItem('token', additionalData);
-      store.dispatch(UserActions.loginSuccess(data));
-      hashHistory.push('/');
+      store.dispatch(UserActions.loginSuccess(data, additionalData));
     }
     else {
       store.dispatch({ type: action, data });

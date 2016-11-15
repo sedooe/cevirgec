@@ -13,13 +13,15 @@ import './Dashboard.scss';
 import { Card, Dropdown, Grid, Icon, Menu } from 'semantic-ui-react';
 import * as UserActions from '../actions/user';
 
-let createHandlers = function(dispatch) {
-  let loadUser = function(user) {
-    dispatch(UserActions.loadUser(user))
-  };
+// from: https://github.com/reactjs/redux/issues/916#issuecomment-149190441
+const createHandlers = function(dispatch) {
+  const loadUser = (user) => dispatch(UserActions.loadUser(user))
+
+  const logout = () => dispatch(UserActions.logout())
 
   return {
-    loadUser
+    loadUser,
+    logout
   };
 }
 
@@ -27,13 +29,13 @@ class Dashboard extends Component {
 
   constructor(props) {
     super(props);
-    this.handlers = createHandlers(this.props.dispatch);
+    this.actions = createHandlers(this.props.dispatch);
   }
 
   componentDidMount() {
     let user = localStorage.getItem('user');
     user = JSON.parse(user);
-    this.handlers.loadUser(user);
+    this.actions.loadUser(user);
   }
 
   render() {
@@ -56,7 +58,7 @@ class Dashboard extends Component {
           <Menu text>
             <Menu.Item position="right">
               <Dropdown trigger={trigger}>
-                <Dropdown.Menu style={{ margin: '10px 0 0 -40px' }}>
+                <Dropdown.Menu style={{ margin: '10px 0 0 -81px' }}>
                   <Dropdown.Item disabled>
                     Signed in as <strong>{this.props.user.fullname}</strong>
                   </Dropdown.Item>
@@ -86,7 +88,7 @@ class Dashboard extends Component {
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.props.logout} className="item">
+                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.actions.logout} className="item">
                       <Icon name="sign out" />
                       <span>Logout</span>
                     </Link>

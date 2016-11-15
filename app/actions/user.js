@@ -2,6 +2,7 @@
 import * as actions from './constants';
 import fetch from 'isomorphic-fetch';
 const ipc = require('electron').ipcRenderer;
+import { hashHistory } from 'react-router';
 
 const requestRegister = () => ({
   type: actions.REQUEST_REGISTER
@@ -31,10 +32,17 @@ const requestLogin = () => ({
   type: actions.REQUEST_LOGIN
 })
 
-export const loginSuccess = (user: Object) => ({
-  type: actions.LOGIN_SUCCESS,
-  user
-})
+export const loginSuccess = (user: Object, token: String) => (dispatch: Function) => {
+
+  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('token', token);
+  hashHistory.push('/');
+
+  dispatch({
+    type: actions.LOGIN_SUCCESS,
+    user
+  });
+}
 
 const logoutSuccess = () => ({
   type: actions.LOGOUT_SUCCESS
@@ -62,7 +70,7 @@ export const login = (userCredentials: Object) => (dispatch: Function) => {
     body: JSON.stringify(userCredentials)
   })
   .then(response => response.json())
-  .then(json => dispatch(loginSuccess(json)))
+  .then(response => dispatch(loginSuccess(response.user, response.token)))
   .catch(e => dispatch(loginFail(e)));
 }
 
@@ -75,7 +83,11 @@ export const logout = () => (dispatch: Function) => {
       'Content-Type': 'application/json'
     }
   })
-  .then(response => {console.log(response);debugger})
+  .then(response => {
+    if (response.status != 204) {
+      throw 'Logout Failed with status ' + response.status;
+    }
+  } )
   .then(() => {
     localStorage.clear();
     location.reload();// this will redirect to login
