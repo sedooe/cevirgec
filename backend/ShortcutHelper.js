@@ -69,6 +69,7 @@ class ShortcutHelper {
   restoreShortcuts() {
     let settings = this.__getSettings();
     this.shortcuts = settings.shortcuts;
+    debug('restoreShortcuts', this.shortcuts);
   }
 
   // saveShortcuts() {

@@ -34,7 +34,9 @@ const installExtensions = async () => {
     for (const name of extensions) {
       try {
         await installer.default(installer[name], forceDownload);
-      } catch (e) {} // eslint-disable-line
+      } catch (e) {
+        console.error(e);
+      } // eslint-disable-line
     }
   }
 };
@@ -42,12 +44,17 @@ const installExtensions = async () => {
 app.on('ready', async () => {
   await installExtensions();
 
-  applicationHelper.initializeApp();
+  try {
+    applicationHelper.initializeApp();
 
-  shortcutHelper.registerGlobalShortcuts();
+    shortcutHelper.registerGlobalShortcuts();
 
-  clipboardEventEmitter.initialize();
-  clipboardEventEmitter.onChange(applicationHelper.clipboardChangeHandler);
+    clipboardEventEmitter.initialize();
+    clipboardEventEmitter.onChange(applicationHelper.clipboardChangeHandler);
+  } catch (e) {
+    console.error(e);
+  }
+
 });
 
 app.on('will-quit', () => {

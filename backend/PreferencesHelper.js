@@ -5,14 +5,12 @@
 
 'use strict';
 
-const electron = require('electron');
-const app = electron.app;
 const jetpack = require('fs-jetpack');
-const debug = require('debug')(__filename.split('/').pop());
 const firstRunHelper = require('./FirstRunHelper');
-const appDataPath = app.getPath('userData');
+const filePathHelper = require('./FilePathHelper');
+const debug = require('debug')(__filename.split('/').pop());
 
-const settingsFilePath = jetpack.path(appDataPath, 'settings.json');
+const settingsFilePath = filePathHelper.settingsFilePath();
 const defaultSettings = {
   verbose: false, // FIXME
   shortcuts: {

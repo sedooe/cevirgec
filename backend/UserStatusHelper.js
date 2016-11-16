@@ -5,30 +5,32 @@
 
 'use strict';
 
-const {app} = require('electron');
 const jetpack = require('fs-jetpack');
-const ShortcutHelper = require('./ShortcutHelper');
-const ApplicationHelper = require('./ApplicationHelper');
 const debug = require('debug')(__filename.split('/').pop());
+const filePathHelper = require('./FilePathHelper');
 
-const appDataPath = app.getPath('userData');
-const userStatusFilePath = jetpack.path(appDataPath, 'user-status.json');
-const defaultUserStatus = {loggedIn: false};
+const userStatusFilePath = filePathHelper.userStatusFilePath();
+const defaultUserStatus = {};
 
 let userStatus = {};
 
 class UserStatusHelper {
 
   loadUserStatus() {
+    debug('loadUserStatus', userStatusFilePath, jetpack.exists(userStatusFilePath));
     if (!jetpack.exists(userStatusFilePath)) {
       userStatus = jetpack.write(userStatusFilePath, defaultUserStatus);
     }
 
     userStatus = jetpack.read(userStatusFilePath, 'json');
+    filePathHelper.setUser(userStatus.username);
+
+    debug('loadUserStatus user loaded', userStatus);
+    return userStatus;
   }
 
   isAuthenticated() {
-    return userStatus.loggedIn == true;
+    return !!userStatus.username && userStatus.username != 'anonymous';
   }
 
   setUserStatus(status) {
