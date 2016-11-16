@@ -163,6 +163,7 @@ class ApplicationHelper {
 
   // this is also called just after userStatusHelper.loadUserStatus()
   loginSuccess(user) {
+    reloadDbModules();
     userStatusHelper.setUserStatus({username: user.username});
 
     preferencesHelper.restoreSettings();
@@ -193,3 +194,30 @@ ipcMain.on(Actions.LOGOUT_SUCCESS, function(event) {
   applicationHelper.setTrayContextMenu(false);
   // sync.stop();
 });
+
+
+function reloadDbModules() {
+  const decache = require('decache');
+
+  debug('decache modules')
+
+  decache('./Sequelize')
+  decache('./model/Definition')
+  decache('./model/Dictionary')
+  decache('./model/OnlineSource')
+  decache('./model/SoldListing')
+  decache('./model/User')
+  decache('./model/UserSearchCount')
+
+  decache('./dao/UserDao');
+  decache('./dao/DictionaryDao');
+  decache('./dao/DefinitionDao');
+  decache('./dao/OnlineSourcesDao');
+  decache('./dao/SettingsDao');
+  decache('./dao/UserSearchCountDao');
+  decache('./dao/QuizDao');
+  decache('./dao/SearchQueryHelper');
+
+  initializeDaos();
+  debug('decache modules done')
+}
