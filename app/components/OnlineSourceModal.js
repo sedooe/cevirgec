@@ -300,14 +300,36 @@ class OnlineSourceModal extends Component {
           <Form onSubmit={this.onSubmit} onChange={this.onChange} ref='form'>
             <input type="hidden" name="id" value={this.props.onlineSource.id} />
             <Form.Group widths='equal'>
-              <Form.Input label={tr('Name')} name='name' placeholder={tr('Name')} required />
-              <Form.Dropdown search selection label={tr('Source Language')} name='source' options={languages} placeholder={tr('Source Language')} />
+              <Form.Input
+                label={tr('Name')}
+                placeholder={tr('Name')}
+                name='name'
+                defaultValue={this.props.onlineSource.name}
+                required
+              />
+              <Form.Dropdown search selection
+                label={tr('Source Language')}
+                placeholder={tr('Source Language')}
+                name='source'
+                defaultValue={this.props.onlineSource.sourceLang}
+                options={languages}
+              />
             </Form.Group>
             <Form.Group widths='equal'>
-              <Form.Input type='number' label={tr('Order')} name='order' placeholder={tr('Order')} />
+              <Form.Input type='number'
+                label={tr('Order')}
+                placeholder={tr('Order')}
+                name='order'
+                defaultValue={this.props.onlineSource.order}
+              />
             </Form.Group>
             <Form.Group widths='equal'>
-              <Form.Input label={tr('URL')} name='url' placeholder={tr('URL')} />
+              <Form.Input
+                label={tr('URL')}
+                placeholder={tr('URL')}
+                name='url'
+                defaultValue={this.props.onlineSource.url}
+              />
             </Form.Group>
             <div className="ui error message"></div>
             <UsageInstruction  />
