@@ -43,7 +43,6 @@ export default class NewDefinitionForm extends Component {
   onCheckableInputChange = (name, e, {value}) => this.setState({definition: Object.assign({}, this.state.definition, {[name]: value} )} )
 
   render () {
-    console.log(this.state);
 
     return (
       <Segment>

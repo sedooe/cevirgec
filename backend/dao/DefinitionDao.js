@@ -108,7 +108,7 @@ ipc.on(UiEvents.SAVE_DEFINITIONS, function(event, data) {
         fields: ['key', 'value', 'usage', 'notes', 'type', 'sex']
       }
     ).catch(function(error) {
-      console.log("Update failed: " + error);
+      console.error("Update failed: " + error);
     });
   });
 

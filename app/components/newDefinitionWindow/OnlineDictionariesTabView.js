@@ -28,7 +28,6 @@ export default class OnlineDictionariesTabView extends Component {
     const that = this;
 
     if(!this.props.onlineDictionaries.length) {
-      console.log(NoDictWarning);
       return <NoDictWarning onAddOnlineSource={this.props.onAddOnlineSource} />
     }
 

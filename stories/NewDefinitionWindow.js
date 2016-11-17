@@ -229,7 +229,6 @@ class DefinitionListItem extends Component {
 
   toggleDetails = (active) => {
     this.setState({detailsShown: active});
-    console.log(active);
   }
 
   render () {
@@ -283,7 +282,6 @@ class ButtonToggle extends Component {
     this.setState({ active: !this.state.active });
     if (typeof this.props.onToggle == 'function') {
       this.props.onToggle(!this.state.active);
-      console.log('button', !this.state.active);
     }
   }
 

@@ -22,7 +22,6 @@ const eligibilityRxPartsValues = Object.keys(eligibilityRxParts).reduce((previou
 }, []);
 
 const eligibilityRxPartsCombined = eligibilityRxPartsValues.join('|');
-console.log('eligibilityRxPartsCombined', eligibilityRxPartsCombined);
 const eligibilityRx = new RegExp( eligibilityRxPartsCombined, 'g');
 const trimInnerRx = /\s+/g;
 const MAX_WORD_COUNT = 10;

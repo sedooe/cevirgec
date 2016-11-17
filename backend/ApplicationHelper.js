@@ -69,10 +69,6 @@ class ApplicationHelper {
     global.verbosityEventEmitter = new EventEmitter();
     initializeSystemTray();
 
-    console.log('filePathHelper', filePathHelper);
-    console.log(filePathHelper.databaseFilePath());
-
-
     const user = userStatusHelper.loadUserStatus();
     this.loginSuccess(user);
 
@@ -190,7 +186,6 @@ ipcMain.on(Actions.LOGOUT_SUCCESS, function(event) {
 
   userStatusHelper.setUserStatus({});
   shortcutHelper.unregisterAll();
-  console.log(ApplicationHelper, applicationHelper.setTrayContextMenu, JSON.stringify(ApplicationHelper));
   applicationHelper.setTrayContextMenu(false);
   // sync.stop();
 });

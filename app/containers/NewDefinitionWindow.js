@@ -54,7 +54,6 @@ class NewDefinitionWindow extends Component {
   saveOnlineSource = onlineSource => {
     this.hideOnlineSourceModal();
     //TODO call action
-    console.log(onlineSource);
   }
 
   render() {
