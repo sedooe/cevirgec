@@ -32,7 +32,6 @@ function initializeDaos() {
   require('./dao/DictionaryDao');
   require('./dao/DefinitionDao');
   require('./dao/OnlineSourcesDao');
-  require('./dao/SettingsDao');
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
@@ -208,7 +207,6 @@ function reloadDbModules() {
   decache('./dao/DictionaryDao');
   decache('./dao/DefinitionDao');
   decache('./dao/OnlineSourcesDao');
-  decache('./dao/SettingsDao');
   decache('./dao/UserSearchCountDao');
   decache('./dao/QuizDao');
   decache('./dao/SearchQueryHelper');
