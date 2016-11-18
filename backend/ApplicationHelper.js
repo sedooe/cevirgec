@@ -211,6 +211,11 @@ function reloadDbModules() {
   decache('./dao/QuizDao');
   decache('./dao/SearchQueryHelper');
 
+  console.log('11111111111111111111111');
+  var Sequelize = require('sequelize');
+  var sequelize = require('./Sequelize');
+  console.log('22222222222222222222222', Sequelize, sequelize);
+
   initializeDaos();
   debug('decache modules done')
 }

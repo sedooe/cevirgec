@@ -1,52 +1,41 @@
 // @flow
 import * as actions from './constants';
-const ipc = require('electron').ipcRenderer;
 
-const requestLoadDictionaries = () => ({
-  type: actions.REQUEST_LOAD_DICTIONARIES
+const requestLoadOnlineSources = () => ({
+  type: actions.REQUEST_LOAD_ONLINE_SOURCES
 })
 
-export const loadDictionaries = () => (dispatch: Function) => {
-  dispatch(requestLoadDictionaries());
-  ipc.send(actions.LOAD_DICTIONARIES);
+export const loadOnlineSources = () => (dispatch: Function) => {
+  dispatch(requestLoadOnlineSources());
+  ipc.send(actions.LOAD_ONLINE_SOURCES);
 }
 
-const requestCreateDictionary = (dictionary: Object) => ({
-  type: actions.REQUEST_CREATE_DICTIONARY,
+const requestCreateOnlineSource = (dictionary: Object) => ({
+  type: actions.REQUEST_CREATE_ONLINE_SOURCE,
   dictionary
 })
 
-export const createDictionary = (dictionary: Object) => (dispatch: Function) => {
-  dispatch(requestCreateDictionary(dictionary));
-  ipc.send(actions.CREATE_DICTIONARY, dictionary);
+export const createOnlineSource = (dictionary: Object) => (dispatch: Function) => {
+  dispatch(requestCreateOnlineSource(dictionary));
+  ipc.send(actions.CREATE_ONLINE_SOURCE, dictionary);
 }
 
-const requestEditDictionary = (dictionary: Object) => ({
-  type: actions.REQUEST_EDIT_DICTIONARY,
+const requestEditOnlineSource = (dictionary: Object) => ({
+  type: actions.REQUEST_EDIT_ONLINE_SOURCE,
   dictionary
 })
 
-export const editDictionary = (dictionary: Object) => (dispatch: Function) => {
-  dispatch(requestEditDictionary(dictionary));
-  ipc.send(actions.EDIT_DICTIONARY, dictionary);
+export const editOnlineSource = (dictionary: Object) => (dispatch: Function) => {
+  dispatch(requestEditOnlineSource(dictionary));
+  ipc.send(actions.EDIT_ONLINE_SOURCE, dictionary);
 }
 
-const requestDeleteDictionary = (dictionaryId: number) => ({
-  type: actions.REQUEST_DELETE_DICTIONARY,
+const requestDeleteOnlineSource = (dictionaryId: number) => ({
+  type: actions.REQUEST_DELETE_ONLINE_SOURCE,
   dictionaryId
 })
 
-export const deleteDictionary = (dictionaryId: number) => (dispatch: Function) => {
-  dispatch(requestDeleteDictionary(dictionaryId));
-  ipc.send(actions.DELETE_DICTIONARY, dictionaryId);
-}
-
-const requestchangeActivenessOfDictionary = (dictionaryId: number) => ({
-  type: actions.REQUEST_CHANGE_ACTIVENESS_OF_DICTIONARY,
-  dictionaryId
-})
-
-export const changeActivenessOfDictionary = (dictionaryId: number) => (dispatch: Function) => {
-  dispatch(requestchangeActivenessOfDictionary(dictionaryId));
-  ipc.send(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, dictionaryId);
+export const deleteOnlineSource = (dictionaryId: number) => (dispatch: Function) => {
+  dispatch(requestDeleteOnlineSource(dictionaryId));
+  ipc.send(actions.DELETE_ONLINE_SOURCE, dictionaryId);
 }

@@ -7,12 +7,11 @@
 
 const ipc = require("electron").ipcMain;
 const OnlineSources = require('../model/OnlineSource');
-const DatabaseEvents = {};
-const UiEvents = {};
+const actions = require('../../app/actions/constants');
 const debug = require('debug')(__filename.split('/').pop());
 
-ipc.on(UiEvents.LOAD_ALL_ONLINE_SOURCES, function(event, data) {
-  debug(UiEvents.LOAD_ALL_ONLINE_SOURCES);
+ipc.on(actions.LOAD_ONLINE_SOURCES, function(event, data) {
+  debug(actions.LOAD_ONLINE_SOURCES);
 
   OnlineSources.findAll({order: ['index']})
     .then((resultArray)=>{
@@ -21,12 +20,12 @@ ipc.on(UiEvents.LOAD_ALL_ONLINE_SOURCES, function(event, data) {
           return entity.toJSON();
         });
 
-      event.sender.send(DatabaseEvents.ONLINE_SOURCES_READY, values);
+      event.sender.send(actions.ONLINE_SOURCES_LOADED, values);
     });
 });
 
-ipc.on(UiEvents.LOAD_ONLINE_SOURCES_BY_LANGUAGE, function(event, data) {
-  debug(UiEvents.LOAD_ONLINE_SOURCES_BY_LANGUAGE);
+ipc.on(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE, function(event, data) {
+  debug(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE);
 
   OnlineSources.findAll({where: {sourceLang: data}})
     .then((resultArray)=>{
@@ -34,20 +33,20 @@ ipc.on(UiEvents.LOAD_ONLINE_SOURCES_BY_LANGUAGE, function(event, data) {
         return entity.toJSON();
       });
 
-      event.sender.send(DatabaseEvents.ONLINE_SOURCES_BY_LANGUAGE_READY, values);
+      event.sender.send(actions.ONLINE_SOURCES_BY_LANGUAGE_LOADED, values);
     });
 });
 
-ipc.on(UiEvents.DELETE_ONLINE_SOURCE, function(event, data) {
-  debug(UiEvents.DELETE_ONLINE_SOURCE);
+ipc.on(actions.DELETE_ONLINE_SOURCE, function(event, data) {
+  debug(actions.DELETE_ONLINE_SOURCE);
 
   OnlineSources.destroy({where: {id: data}}).then((resultArray)=>{
       event.sender.send(DatabaseEvents.ONLINE_SOURCE_DELETED, data);
     });
 });
 
-ipc.on(UiEvents.UPSERT_ONLINE_SOURCE, function(event, data) {
-  debug(UiEvents.UPSERT_ONLINE_SOURCE);
+ipc.on(actions.UPSERT_ONLINE_SOURCE, function(event, data) {
+  debug(actions.UPSERT_ONLINE_SOURCE);
 
   // avoid upsert since it can't give the created/updated model in callback
   // due to sqlite limitation. See `Note` on http://docs.sequelizejs.com/en/latest/api/model/#upsertvalues-options-promisecreated
