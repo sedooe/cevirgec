@@ -21,6 +21,10 @@ or run two servers with one command
 
 	$ npm run dev
 
+you can also use `tmux`
+
+		./init-tmux.sh
+		tmux attach
 
 # Development Installation
 
