@@ -73,6 +73,7 @@ possible causes:
 `$ npm run storybook`
 
 2. Following this advice: https://twitter.com/dan_abramov/status/790581793397305345
+3. This can be used for sqlite3 viewing [SQLite Browser](http://sqlitestudio.pl/?act=download)
 
 ## Error: Module did not self-register
 

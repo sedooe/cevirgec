@@ -41,7 +41,7 @@ ipc.on(actions.DELETE_ONLINE_SOURCE, function(event, data) {
   debug(actions.DELETE_ONLINE_SOURCE);
 
   OnlineSources.destroy({where: {id: data}}).then((resultArray)=>{
-      event.sender.send(DatabaseEvents.ONLINE_SOURCE_DELETED, data);
+      event.sender.send(actions.ONLINE_SOURCE_DELETED, data);
     });
 });
 
@@ -54,12 +54,12 @@ ipc.on(actions.UPSERT_ONLINE_SOURCE, function(event, data) {
     OnlineSources.update(data, {where: {id: data.id}}).then(()=>{
       // in update affacted row cannot be returened due to sqlite limitation, an array of count is returened instead.
       // See http://docs.sequelizejs.com/en/latest/api/model/#updatevalues-options-promisearrayaffectedcount-affectedrows
-      event.sender.send(DatabaseEvents.ONLINE_SOURCE_CREATED, data);
+      event.sender.send(actions.ONLINE_SOURCE_CREATED, data);
     });
   }
   else{
     OnlineSources.create(data).then((createdModel)=>{
-      event.sender.send(DatabaseEvents.ONLINE_SOURCE_CREATED, createdModel.toJSON());
+      event.sender.send(actions.ONLINE_SOURCE_EDITED, createdModel.toJSON());
     });
   }
 

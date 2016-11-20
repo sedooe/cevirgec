@@ -34,7 +34,6 @@ const requestLogin = () => ({
 })
 
 export const loginSuccess = (user: Object, token: String) => (dispatch: Function) => {
-debugger
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
   ipcRenderer.send(actions.LOGIN_SUCCESS, user);
@@ -47,7 +46,6 @@ debugger
 }
 
 const logoutSuccess = () => (dispatch: Function) => {
-  debugger
   localStorage.clear();
   ipcRenderer.send(actions.LOGOUT_SUCCESS);
   // hashHistory.push('/'); // doesn't work

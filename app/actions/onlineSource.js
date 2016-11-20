@@ -1,5 +1,6 @@
 // @flow
 import * as actions from './constants';
+const { ipcRenderer } = require('electron');
 
 const requestLoadOnlineSources = () => ({
   type: actions.REQUEST_LOAD_ONLINE_SOURCES
@@ -7,17 +8,17 @@ const requestLoadOnlineSources = () => ({
 
 export const loadOnlineSources = () => (dispatch: Function) => {
   dispatch(requestLoadOnlineSources());
-  ipc.send(actions.LOAD_ONLINE_SOURCES);
+  ipcRenderer.send(actions.LOAD_ONLINE_SOURCES);
 }
 
 const requestCreateOnlineSource = (dictionary: Object) => ({
-  type: actions.REQUEST_CREATE_ONLINE_SOURCE,
+  type: actions.REQUEST_UPSERT_ONLINE_SOURCE,
   dictionary
 })
 
 export const createOnlineSource = (dictionary: Object) => (dispatch: Function) => {
   dispatch(requestCreateOnlineSource(dictionary));
-  ipc.send(actions.CREATE_ONLINE_SOURCE, dictionary);
+  ipcRenderer.send(actions.UPSERT_ONLINE_SOURCE, dictionary);
 }
 
 const requestEditOnlineSource = (dictionary: Object) => ({
@@ -27,7 +28,7 @@ const requestEditOnlineSource = (dictionary: Object) => ({
 
 export const editOnlineSource = (dictionary: Object) => (dispatch: Function) => {
   dispatch(requestEditOnlineSource(dictionary));
-  ipc.send(actions.EDIT_ONLINE_SOURCE, dictionary);
+  ipcRenderer.send(actions.EDIT_ONLINE_SOURCE, dictionary);
 }
 
 const requestDeleteOnlineSource = (dictionaryId: number) => ({
@@ -37,5 +38,5 @@ const requestDeleteOnlineSource = (dictionaryId: number) => ({
 
 export const deleteOnlineSource = (dictionaryId: number) => (dispatch: Function) => {
   dispatch(requestDeleteOnlineSource(dictionaryId));
-  ipc.send(actions.DELETE_ONLINE_SOURCE, dictionaryId);
+  ipcRenderer.send(actions.DELETE_ONLINE_SOURCE, dictionaryId);
 }

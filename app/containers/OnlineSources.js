@@ -34,7 +34,7 @@ class OnlineSources extends Component {
   }
 
   componentDidMount = () => { //see: https://twitter.com/dan_abramov/status/790581793397305345
-    this.props.actions.loadDictionaries();
+    this.props.actions.loadOnlineSources();
   }
 
   openOnlineSourceModal = (dictionary: Object) => {
@@ -56,7 +56,8 @@ class OnlineSources extends Component {
 
     if (onlineSource.id) {
       this.props.actions.editOnlineSource(onlineSource);
-    } else {
+    }
+    else {
       this.props.actions.createOnlineSource(onlineSource);
     }
   }
