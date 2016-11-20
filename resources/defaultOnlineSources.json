@@ -4,5 +4,11 @@
     "url": "http://tureng.com/search/{WORD}",
     "sourceLang": "us",
     "index": 1
+  },
+  {
+    "name": "The Free Dictionary",
+    "url": "http://www.thefreedictionary.com/{WORD}",
+    "sourceLang": "us",
+    "index": 1
   }
 ]

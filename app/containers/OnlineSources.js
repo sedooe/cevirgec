@@ -22,11 +22,6 @@ const sourceLangSpanStyle = {
   color: '#666'
 };
 
-let mockData = {
-  1: {name: 'Tureng', sourceLang: 'gb', url: 'http://tureng.com/{WORD}'},
-  2: {name: 'Tureng 2', sourceLang: 'fr', url: 'http://tureng2.com/{WORD}'}
-}
-
 class OnlineSources extends Component {
   state = {
     currentOnlineSource: {},
@@ -80,7 +75,7 @@ class OnlineSources extends Component {
 
             <div className="ui grey segment">
               <OnlineSourceList
-                onlineSources={mockData}
+                onlineSources={this.props.onlineSources}
                 onEdit={this.openOnlineSourceModal}
                 onDelete={this.deleteOnlineSource}
               />
@@ -102,7 +97,7 @@ class OnlineSources extends Component {
 
 
 const mapStateToProps = state => ({
-  dictionaries: state.dictionary.dictionaries
+  onlineSources: state.onlineSource.onlineSources
 })
 
 const mapDispatchToProps = dispatch => ({
