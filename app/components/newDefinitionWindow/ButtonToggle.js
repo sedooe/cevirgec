@@ -9,7 +9,6 @@ export default class ButtonToggle extends Component {
     this.setState({ active: !this.state.active });
     if (typeof this.props.onToggle == 'function') {
       this.props.onToggle(!this.state.active);
-      console.log('button', !this.state.active);
     }
   }
 

@@ -5,14 +5,13 @@
 
 'use strict';
 
-const electron = require('electron');
-const app = electron.app;
 const jetpack = require('fs-jetpack');
-const debug = require('debug')(__filename.split('/').pop());
 const firstRunHelper = require('./FirstRunHelper');
-const appDataPath = app.getPath('userData');
+const filePathHelper = require('./FilePathHelper');
+const debug = require('debug')(__filename.split('/').pop());
 
-const settingsFilePath = jetpack.path(appDataPath, 'settings.json');
+let settingsFilePath;
+
 const defaultSettings = {
   verbose: false, // FIXME
   shortcuts: {
@@ -28,6 +27,8 @@ let settings;
 class PreferencesHelper {
 
   restoreSettings() {
+    settingsFilePath = filePathHelper.settingsFilePath();
+
     // Create defaultSettings at first run
     if(!jetpack.exists(settingsFilePath)) {
       firstRunHelper.doFirstRunWork();
@@ -66,3 +67,21 @@ class PreferencesHelper {
 }
 
 module.exports = new PreferencesHelper();
+
+//  ipc.on(Actions.LOAD_ALL_SETTINGS, function(event) {
+//    debug(Actions.LOAD_ALL_SETTINGS);
+//
+//    let settings = PreferencesHelper.getSettings();
+//
+//    event.sender.send(DatabaseEvents.LOAD_ALL_SETTINGS_READY, settings);
+//  });
+//
+// ipc.on(Actions.UPDATE_ALL_SETTINGS, function(event, data) {
+//   debug(Actions.UPDATE_ALL_SETTINGS, data);
+//
+//   PreferencesHelper.updateSettings(data);
+//   let settings = PreferencesHelper.getSettings();
+//
+//   // need to send callback since we don't use optimistic ui
+//   event.sender.send(DatabaseEvents.LOAD_ALL_SETTINGS_READY, settings);
+// });

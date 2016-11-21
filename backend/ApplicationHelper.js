@@ -15,11 +15,9 @@ const preferencesHelper = require('./PreferencesHelper');
 const shortcutHelper = require('./ShortcutHelper');
 const windowHelper = require('./WindowHelper');
 const debug = require('debug')(__filename.split('/').pop());
-const appDataPath = app.getPath('userData');
 const wordUtils = require('./WordUtils');
 const clipboardEventEmitter = require('./ClipboardEventEmitter');
-
-const databaseFilePath = jetpack.path(appDataPath, 'database.sqlite');
+const filePathHelper = require('./FilePathHelper');
 
 import * as Actions from '../app/actions/constants';
 
@@ -34,7 +32,6 @@ function initializeDaos() {
   require('./dao/DictionaryDao');
   require('./dao/DefinitionDao');
   require('./dao/OnlineSourcesDao');
-  require('./dao/SettingsDao');
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
@@ -44,8 +41,6 @@ function initializeDaos() {
 function initializeSystemTray() {
   trayIcon = new Tray('resources/images/trayIcon.png');
   trayIcon.setToolTip('This is cevirgec application.');
-
-  applicationHelper.setTrayContextMenu(userStatusHelper.isAuthenticated());
 
   global.verbosityEventEmitter.on('change', (verbosity)=>{
     trayIcon.menu.items[1].checked = verbosity;
@@ -57,17 +52,26 @@ function initializeSystemTray() {
 
 class ApplicationHelper {
 
+  /**
+   * This method is used in Sequelize.js
+   * When I try to use FilePathHelper.databaseFilePath() directly in Sequelize.js
+   * instead of this method the application hangs. It's smth like cyclic deps.
+  **/
+  getDatabaseFilePath() {
+    return filePathHelper.databaseFilePath();
+  }
+
   initializeApp() {
     if (trayIcon != null) {
       throw 'Application is already initialized!';
     }
     global.verbosityEventEmitter = new EventEmitter();
-    userStatusHelper.loadUserStatus();
-    preferencesHelper.restoreSettings();
-    shortcutHelper.restoreShortcuts();
+    initializeSystemTray();
+
+    const user = userStatusHelper.loadUserStatus();
+    this.loginSuccess(user);
 
     initializeDaos();
-    initializeSystemTray();
   }
 
   setTrayContextMenu(isUserAuthenticated) {
@@ -122,10 +126,6 @@ class ApplicationHelper {
     trayIcon.setContextMenu(Menu.buildFromTemplate(contextMenu));
   }
 
-  getDatabaseFilePath() {
-    return databaseFilePath;
-  }
-
   clipboardChangeHandler(data) {
     if (!preferencesHelper.isVerbose() || !userStatusHelper.isAuthenticated()) {
       debug('clipboardChangeHandler ignored', data.text);
@@ -155,6 +155,19 @@ class ApplicationHelper {
       debug('ignored', text ? '' : '<no text in clipboard> this is probably second call for clipboard workaround');
     }
   }
+
+  // this is also called just after userStatusHelper.loadUserStatus()
+  loginSuccess(user) {
+    reloadDbModules();
+    userStatusHelper.setUserStatus({username: user.username});
+
+    preferencesHelper.restoreSettings();
+    shortcutHelper.restoreShortcuts();
+
+    shortcutHelper.registerGlobalShortcuts();
+    this.setTrayContextMenu(userStatusHelper.isAuthenticated());//FIXME this is necessary bu inconsistent
+    // sync.start();
+  }
 }
 
 const applicationHelper = new ApplicationHelper();
@@ -164,19 +177,40 @@ module.exports = applicationHelper;
 ipcMain.on(Actions.LOGIN_SUCCESS, function(event, user) {
   debug(Actions.LOGIN_SUCCESS, user);
 
-  userStatusHelper.setUserStatus({loggedIn: true});
-  shortcutHelper.registerGlobalShortcuts();
-  console.log(ApplicationHelper, applicationHelper.setTrayContextMenu, JSON.stringify(ApplicationHelper));
-  applicationHelper.setTrayContextMenu(true);
-  // sync.start();
+  applicationHelper.loginSuccess(user);
 });
 
 ipcMain.on(Actions.LOGOUT_SUCCESS, function(event) {
   debug(Actions.LOGOUT_SUCCESS);
 
-  userStatusHelper.setUserStatus({loggedIn: false});
+  userStatusHelper.setUserStatus({});
   shortcutHelper.unregisterAll();
-  console.log(ApplicationHelper, applicationHelper.setTrayContextMenu, JSON.stringify(ApplicationHelper));
   applicationHelper.setTrayContextMenu(false);
   // sync.stop();
 });
+
+
+function reloadDbModules() {
+  const decache = require('decache');
+
+  debug('decache modules')
+
+  decache('./Sequelize')
+  decache('./model/Definition')
+  decache('./model/Dictionary')
+  decache('./model/OnlineSource')
+  decache('./model/SoldListing')
+  decache('./model/User')
+  decache('./model/UserSearchCount')
+
+  decache('./dao/UserDao');
+  decache('./dao/DictionaryDao');
+  decache('./dao/DefinitionDao');
+  decache('./dao/OnlineSourcesDao');
+  decache('./dao/UserSearchCountDao');
+  decache('./dao/QuizDao');
+  decache('./dao/SearchQueryHelper');
+
+  initializeDaos();
+  debug('decache modules done')
+}

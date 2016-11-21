@@ -10,7 +10,6 @@ export default class DefinitionListItem extends Component {
 
   toggleDetails = (active) => {
     this.setState({detailsShown: active});
-    console.log(active);
   }
 
   render () {
