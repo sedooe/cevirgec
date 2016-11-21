@@ -4,7 +4,6 @@ import * as actions from '../actions/constants';
 export function onlineSources(state: Object = {}, action: Object) {
   switch (action.type) {
     case actions.ONLINE_SOURCES_LOADED: { //action.data: onlineSources
-      debugger
       const onlineSources = {};
       action.data.forEach(onlineSource => {
         onlineSources[onlineSource.id] = onlineSource;
@@ -13,7 +12,6 @@ export function onlineSources(state: Object = {}, action: Object) {
     }
     case actions.ONLINE_SOURCE_CREATED:
     case actions.ONLINE_SOURCE_EDITED: { //action.data: onlineSource
-      debugger
       const id = action.data.id;
       return {...state, [id]: action.data };
     }

@@ -67,15 +67,15 @@ const logoutFail = error => ({
 })
 
 export const login = (userCredentials: Object) => (dispatch: Function) => {
-  dispatch(requestLogin());//FIXME obsolete or just needed for isFetching:true ?
+  dispatch(requestLogin());
 
   fetch('http://localhost:8080/api/login', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(userCredentials)
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + btoa(userCredentials.username + ':' + userCredentials.password)
+    }
   })
   .then(response => response.json())
   .then(response => dispatch(loginSuccess(response.user, response.token)))

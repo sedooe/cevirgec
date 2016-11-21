@@ -32,10 +32,10 @@ class OnlineSources extends Component {
     this.props.actions.loadOnlineSources();
   }
 
-  openOnlineSourceModal = (dictionary: Object) => {
+  openOnlineSourceModal = (onlineSource: Object) => {
     this.setState({
       onlineSourceModalOpen: true,
-      currentOnlineSource: dictionary
+      currentOnlineSource: onlineSource
     });
   }
 
@@ -46,20 +46,19 @@ class OnlineSources extends Component {
     });
   }
 
-  saveOnlineSource = onlineSource => {
+  saveOnlineSource = (onlineSource: Object) => {
     this.hideOnlineSourceModal();
 
     if (onlineSource.id) {
       this.props.actions.editOnlineSource(onlineSource);
-    }
-    else {
+    } else {
       this.props.actions.createOnlineSource(onlineSource);
     }
   }
 
-  deleteOnlineSource = dictionary => {
-    if ( confirm( tr(`This operation cannot be undone, do you want to delete online dictionary "${dictionary.name}"?`), tr('Are you sure to delete?')) ) {
-      this.props.actions.deleteOnlineSource(dictionary.id);
+  deleteOnlineSource = (onlineSource: Object) => {
+    if ( confirm( tr(`This operation cannot be undone, do you want to delete online source "${onlineSource.name}"?`), tr('Are you sure to delete?')) ) {
+      this.props.actions.deleteOnlineSource(onlineSource.id);
     }
   }
 

@@ -26,7 +26,8 @@ const dbActions = [
   actions.REGISTER_FAIL_LOCALDB,
   actions.ONLINE_SOURCES_LOADED,
   actions.ONLINE_SOURCE_CREATED,
-  actions.ONLINE_SOURCE_EDITED
+  actions.ONLINE_SOURCE_EDITED,
+  actions.ONLINE_SOURCE_DELETED
 ];
 
 dbActions.forEach(action => {
