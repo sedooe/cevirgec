@@ -211,6 +211,9 @@ function reloadDbModules() {
   decache('./dao/QuizDao');
   decache('./dao/SearchQueryHelper');
 
+  var Sequelize = require('sequelize');
+  var sequelize = require('./Sequelize');
+
   initializeDaos();
   debug('decache modules done')
 }

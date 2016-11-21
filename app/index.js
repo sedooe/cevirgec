@@ -23,7 +23,11 @@ const dbActions = [
   actions.DICTIONARY_ACTIVENESS_CHANGED,
   actions.DICTIONARY_DELETED,
   actions.REGISTER_SUCCESS_LOCALDB,
-  actions.REGISTER_FAIL_LOCALDB
+  actions.REGISTER_FAIL_LOCALDB,
+  actions.ONLINE_SOURCES_LOADED,
+  actions.ONLINE_SOURCE_CREATED,
+  actions.ONLINE_SOURCE_EDITED,
+  actions.ONLINE_SOURCE_DELETED
 ];
 
 dbActions.forEach(action => {
@@ -34,7 +38,7 @@ dbActions.forEach(action => {
       store.dispatch(UserActions.loginSuccess(data, additionalData));
     }
     else {
-      store.dispatch({ type: action, data });
+      store.dispatch({ type: action, data, additionalData });
     }
   });
 });
