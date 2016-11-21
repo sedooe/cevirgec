@@ -24,7 +24,9 @@ const dbActions = [
   actions.DICTIONARY_DELETED,
   actions.REGISTER_SUCCESS_LOCALDB,
   actions.REGISTER_FAIL_LOCALDB,
-  actions.ONLINE_SOURCES_LOADED
+  actions.ONLINE_SOURCES_LOADED,
+  actions.ONLINE_SOURCE_CREATED,
+  actions.ONLINE_SOURCE_EDITED
 ];
 
 dbActions.forEach(action => {

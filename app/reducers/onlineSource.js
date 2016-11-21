@@ -13,6 +13,7 @@ export function onlineSources(state: Object = {}, action: Object) {
     }
     case actions.ONLINE_SOURCE_CREATED:
     case actions.ONLINE_SOURCE_EDITED: { //action.data: onlineSource
+      debugger
       const id = action.data.id;
       return {...state, [id]: action.data };
     }
@@ -32,9 +33,8 @@ export function onlineSources(state: Object = {}, action: Object) {
 
 export function isFetching(state: boolean = false, action: Object) {
   switch (action.type) {
-    case actions.REQUEST_CREATE_ONLINE_SOURCE:
+    case actions.REQUEST_UPSERT_ONLINE_SOURCE:
     case actions.REQUEST_DELETE_ONLINE_SOURCE:
-    case actions.REQUEST_EDIT_ONLINE_SOURCE:
     case actions.REQUEST_CHANGE_ACTIVENESS_OF_ONLINE_SOURCE:
     case actions.REQUEST_LOAD_DICTIONARIES:
       return true;

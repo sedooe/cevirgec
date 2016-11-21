@@ -310,7 +310,7 @@ class OnlineSourceModal extends Component {
               <Form.Dropdown search selection
                 label={tr('Source Language')}
                 placeholder={tr('Source Language')}
-                name='source'
+                name='sourceLang'
                 defaultValue={this.props.onlineSource.sourceLang}
                 options={languages}
               />
@@ -319,8 +319,8 @@ class OnlineSourceModal extends Component {
               <Form.Input type='number'
                 label={tr('Order')}
                 placeholder={tr('Order')}
-                name='order'
-                defaultValue={this.props.onlineSource.order}
+                name='index'
+                defaultValue={this.props.onlineSource.index}
               />
             </Form.Group>
             <Form.Group widths='equal'>
