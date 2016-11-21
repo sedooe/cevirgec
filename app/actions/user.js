@@ -34,7 +34,6 @@ const requestLogin = () => ({
 })
 
 export const loginSuccess = (user: Object, token: String) => (dispatch: Function) => {
-debugger
   localStorage.setItem('user', JSON.stringify(user));
   localStorage.setItem('token', token);
   ipcRenderer.send(actions.LOGIN_SUCCESS, user);
@@ -47,7 +46,6 @@ debugger
 }
 
 const logoutSuccess = () => (dispatch: Function) => {
-  debugger
   localStorage.clear();
   ipcRenderer.send(actions.LOGOUT_SUCCESS);
   // hashHistory.push('/'); // doesn't work
@@ -69,15 +67,15 @@ const logoutFail = error => ({
 })
 
 export const login = (userCredentials: Object) => (dispatch: Function) => {
-  dispatch(requestLogin());//FIXME obsolete or just needed for isFetching:true ?
+  dispatch(requestLogin());
 
   fetch('http://localhost:8080/api/login', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(userCredentials)
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + btoa(userCredentials.username + ':' + userCredentials.password)
+    }
   })
   .then(response => response.json())
   .then(response => dispatch(loginSuccess(response.user, response.token)))
