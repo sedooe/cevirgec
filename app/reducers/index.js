@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
 import { dictionaries, isFetching as isDictionariesFetching } from './dictionary';
 import { onlineSources, isFetching as isOnlineSourcesFetching } from './onlineSource';
-import user from './user';
+import { user, isFetching as isUserFetching } from './user';
 
 const rootReducer = combineReducers({
   dictionary: combineReducers({
@@ -14,7 +14,10 @@ const rootReducer = combineReducers({
     onlineSources,
     isFetching: isOnlineSourcesFetching
   }),
-  user,
+  user: combineReducers({
+    user,
+    isFetching: isUserFetching
+  }),
   routing
 });
 

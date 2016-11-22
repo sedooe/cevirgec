@@ -1,6 +1,5 @@
 export const REQUEST_REGISTER = 'REQUEST_REGISTER';
 export const REQUEST_REGISTER_LOCALDB = 'REQUEST_REGISTER_LOCALDB';
-export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_SUCCESS_LOCALDB = 'REGISTER_SUCCESS_LOCALDB';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 
@@ -15,5 +14,7 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 // Note that there is no callback for this backend ipc action.
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAIL = 'LOGOUT_FAIL';
+
+export const REQUEST_LOGOUT = 'REQUEST_LOGOUT';
 
 export const LOAD_USER = 'LOAD_USER';

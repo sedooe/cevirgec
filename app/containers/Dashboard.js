@@ -13,29 +13,13 @@ import './Dashboard.scss';
 import { Card, Dropdown, Grid, Icon, Menu } from 'semantic-ui-react';
 import * as UserActions from '../actions/user';
 
-// from: https://github.com/reactjs/redux/issues/916#issuecomment-149190441
-const createHandlers = function(dispatch) {
-  const loadUser = (user) => dispatch(UserActions.loadUser(user))
-
-  const logout = () => dispatch(UserActions.logout())
-
-  return {
-    loadUser,
-    logout
-  };
-}
 
 class Dashboard extends Component {
-
-  constructor(props) {
-    super(props);
-    this.actions = createHandlers(this.props.dispatch);
-  }
 
   componentDidMount() {
     let user = localStorage.getItem('user');
     user = JSON.parse(user);
-    this.actions.loadUser(user);
+    this.props.loadUser(user);
   }
 
   render() {
@@ -88,7 +72,7 @@ class Dashboard extends Component {
                     </Link>
                   </Dropdown.Item>
                   <Dropdown.Item>
-                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.actions.logout} className="item">
+                    <Link to="" query={{ menuLink: 'logout' }} onClick={this.props.logout} className="item">
                       <Icon name="sign out" />
                       <span>Logout</span>
                     </Link>
@@ -213,16 +197,16 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user.user
+  user: state.user.user.user
 })
 
-// const mapDispatchToProps = dispatch => {
-//   const actions = bindActionCreators(UserActions, dispatch);
-//   const { loadUser, logout } = actions;
-//   return {
-//     loadUser,
-//     logout
-//   }
-// }
+const mapDispatchToProps = dispatch => {
+  const actions = bindActionCreators(UserActions, dispatch);
+  const { loadUser, logout } = actions;
+  return {
+    loadUser,
+    logout
+  }
+}
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

@@ -1,5 +1,5 @@
 // @flow
-import * as actions from './constants/user.js';
+import * as actions from './constants/user';
 import fetch from 'isomorphic-fetch';
 import { hashHistory } from 'react-router';
 
@@ -41,28 +41,13 @@ export const loginSuccess = (user: Object, token: String) => (dispatch: Function
 
   dispatch({
     type: actions.LOGIN_SUCCESS,
-    user
-  });
-}
-
-const logoutSuccess = () => (dispatch: Function) => {
-  localStorage.clear();
-  ipcRenderer.send(actions.LOGOUT_SUCCESS);
-  // hashHistory.push('/'); // doesn't work
-  window.location.reload();// this will redirect to login
-
-  dispatch({
-    type: actions.LOGOUT_SUCCESS
+    user,
+    token
   });
 }
 
 const loginFail = error => ({
   type: actions.LOGIN_FAIL,
-  error
-})
-
-const logoutFail = error => ({
-  type: actions.LOGOUT_FAIL,
   error
 })
 
@@ -82,8 +67,28 @@ export const login = (userCredentials: Object) => (dispatch: Function) => {
   .catch(e => dispatch(loginFail(e)));
 }
 
+const requestLogout = () => ({
+  type: actions.REQUEST_LOGOUT
+})
+
+const logoutSuccess = () => (dispatch: Function) => {
+  localStorage.clear();
+  ipcRenderer.send(actions.LOGOUT_SUCCESS);
+  // hashHistory.push('/'); // doesn't work
+  window.location.reload();// this will redirect to login
+
+  dispatch({
+    type: actions.LOGOUT_SUCCESS
+  });
+}
+
+const logoutFail = error => ({
+  type: actions.LOGOUT_FAIL,
+  error
+})
+
 export const logout = () => (dispatch: Function) => {
-  dispatch(requestLogin());
+  dispatch(requestLogout());
   fetch('http://localhost:8080/api/logout', {
     method: 'GET',
     headers: {
@@ -96,7 +101,7 @@ export const logout = () => (dispatch: Function) => {
       throw 'Logout Failed with status ' + response.status;
     }
   } )
-  .then(response => dispatch(logoutSuccess()) )
+  .then(response => dispatch(logoutSuccess()))
   .catch(e => dispatch(logoutFail(e)));
 }
 
