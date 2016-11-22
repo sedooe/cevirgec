@@ -8,6 +8,11 @@ const OnlineSources = require('../model/OnlineSource');
 const actions = require('../../app/actions/constants/onlineSource');
 const debug = require('debug')(__filename.split('/').pop());
 
+ipc.removeAllListeners(actions.LOAD_ONLINE_SOURCES);
+ipc.removeAllListeners(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE);
+ipc.removeAllListeners(actions.DELETE_ONLINE_SOURCE);
+ipc.removeAllListeners(actions.UPSERT_ONLINE_SOURCE);
+
 ipc.on(actions.LOAD_ONLINE_SOURCES, (event) => {
   debug(actions.LOAD_ONLINE_SOURCES);
 

@@ -12,6 +12,8 @@ const UiEvents = {};
 const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
+ipc.removeAllListeners(actions.REQUEST_REGISTER_LOCALDB);
+
 ipc.on(actions.REQUEST_REGISTER_LOCALDB, (event, user) => {
   debug(actions.REQUEST_REGISTER_LOCALDB, user);
 

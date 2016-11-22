@@ -12,6 +12,12 @@ const UiEvents = {};
 const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
+ipc.removeAllListeners(actions.LOAD_DICTIONARIES);
+ipc.removeAllListeners(actions.CREATE_DICTIONARY);
+ipc.removeAllListeners(actions.EDIT_DICTIONARY);
+ipc.removeAllListeners(actions.CHANGE_ACTIVENESS_OF_DICTIONARY);
+ipc.removeAllListeners(actions.DELETE_DICTIONARY);
+
 ipc.on(actions.LOAD_DICTIONARIES, (event) => {
   debug(actions.LOAD_DICTIONARIES);
 
