@@ -1,5 +1,5 @@
 // @flow
-import * as actions from './constants';
+import * as actions from './constants/user.js';
 import fetch from 'isomorphic-fetch';
 import { hashHistory } from 'react-router';
 

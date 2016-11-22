@@ -1,5 +1,5 @@
 // @flow
-import * as actions from './constants';
+import * as actions from './constants/dictionary';
 const { ipcRenderer } = require('electron');
 
 const requestLoadDictionaries = () => ({

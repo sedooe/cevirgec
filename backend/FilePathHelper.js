@@ -10,7 +10,7 @@ const { app, ipcMain } = require('electron');
 const jetpack = require('fs-jetpack');
 const debug = require('debug')(__filename.split('/').pop());
 
-import * as Actions from '../app/actions/constants';
+import * as Actions from '../app/actions/constants/user';
 
 /**
  * app.getPath: https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname

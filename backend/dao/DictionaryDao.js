@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const ipc = require('electron').ipcMain;
-const actions = require('../../app/actions/constants');
+const actions = require('../../app/actions/constants/dictionary');
 const Dictionary = require('../model/Dictionary');
 const Definition = require('../model/Definition');
 const DatabaseEvents = {};

@@ -1,5 +1,5 @@
 // @flow
-import * as actions from '../actions/constants';
+import * as actions from '../actions/constants/onlineSource';
 
 export function onlineSources(state: Object = {}, action: Object) {
   switch (action.type) {

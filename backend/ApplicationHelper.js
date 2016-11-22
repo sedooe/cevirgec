@@ -19,7 +19,7 @@ const wordUtils = require('./WordUtils');
 const clipboardEventEmitter = require('./ClipboardEventEmitter');
 const filePathHelper = require('./FilePathHelper');
 
-import * as Actions from '../app/actions/constants';
+import * as Actions from '../app/actions/constants/user';
 
 let searchQueryHelper;
 let trayIcon;

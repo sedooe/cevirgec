@@ -1,5 +1,5 @@
 // @flow
-import * as actions from './constants';
+import * as actions from './constants/onlineSource';
 const { ipcRenderer } = require('electron');
 
 const requestLoadOnlineSources = () => ({

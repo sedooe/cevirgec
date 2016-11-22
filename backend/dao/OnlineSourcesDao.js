@@ -5,7 +5,7 @@
 
 const ipc = require('electron').ipcMain;
 const OnlineSources = require('../model/OnlineSource');
-const actions = require('../../app/actions/constants');
+const actions = require('../../app/actions/constants/onlineSource');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.on(actions.LOAD_ONLINE_SOURCES, (event) => {
