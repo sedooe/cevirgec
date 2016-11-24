@@ -5,7 +5,7 @@ import { dictionaries, isFetching as isDictionariesFetching } from './dictionary
 import { onlineSources, isFetching as isOnlineSourcesFetching } from './onlineSource';
 import { user, isFetching as isUserFetching } from './user';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   dictionary: combineReducers({
     dictionaries,
     isFetching: isDictionariesFetching
@@ -21,4 +21,4 @@ const rootReducer = combineReducers({
   routing
 });
 
-export default rootReducer;
+export default appReducer;

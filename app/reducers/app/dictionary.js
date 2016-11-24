@@ -1,5 +1,5 @@
 // @flow
-import * as actions from '../actions/constants/dictionary';
+import * as actions from '../../actions/constants/dictionary';
 
 export function dictionaries(state: Object = {}, action: Object) {
   switch (action.type) {

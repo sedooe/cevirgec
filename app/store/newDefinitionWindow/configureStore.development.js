@@ -3,12 +3,12 @@ import thunk from 'redux-thunk';
 import { hashHistory } from 'react-router';
 import { routerMiddleware, push } from 'react-router-redux';
 import createLogger from 'redux-logger';
-import rootReducer from '../reducers';
+import newDefinitionWindowReducer from '../../reducers/newDefinitionWindow';
 
-import * as counterActions from '../actions/dictionary';
+import * as dictionaryActions from '../../actions/dictionary';
 
 const actionCreators = {
-  ...counterActions,
+  ...dictionaryActions,
   push,
 };
 
@@ -27,15 +27,15 @@ const enhancer = compose(
 );
 
 export default function configureStore(initialState: Object) {
-  const store = createStore(rootReducer, initialState, enhancer);
+  const store = createStore(newDefinitionWindowReducer, initialState, enhancer);
 
   if (window.devToolsExtension) {
     window.devToolsExtension.updateStore(store);
   }
 
   if (module.hot) {
-    module.hot.accept('../reducers', () =>
-      store.replaceReducer(require('../reducers')) // eslint-disable-line global-require
+    module.hot.accept('../../reducers/newDefinitionWindow', () =>
+      store.replaceReducer(require('../../reducers/newDefinitionWindow')) // eslint-disable-line global-require
     );
   }
 

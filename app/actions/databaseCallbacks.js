@@ -2,7 +2,7 @@ import * as userActions from './constants/user';
 import * as dictionaryActions from './constants/dictionary';
 import * as onlineSourceActions from './constants/onlineSource';
 
-const dbCallbacks = [
+export const dbCallbacks = [
   dictionaryActions.DICTIONARIES_LOADED,
   dictionaryActions.DICTIONARY_CREATED,
   dictionaryActions.DICTIONARY_EDITED,
@@ -15,4 +15,6 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCE_DELETED
 ];
 
-export default dbCallbacks;
+export const dbCallbacksNewDefWindow = [
+  dictionaryActions.DICTIONARIES_LOADED
+];

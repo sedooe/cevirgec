@@ -50,3 +50,18 @@ export const changeActivenessOfDictionary = (dictionaryId: number) => (dispatch:
   dispatch(requestchangeActivenessOfDictionary(dictionaryId));
   ipcRenderer.send(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, dictionaryId);
 }
+
+export const dictionariesAndActiveDictionariesLoaded = (dictionaries: Array<Object>, activeDictionaryIds: Array<String>) => ({
+  type: actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED,
+  dictionaries,
+  activeDictionaryIds
+})
+
+export const activeDictionariesSelectAll = (dictionaries: Array<Object>) => ({
+  type: actions.ACTIVE_DICTIONARIES_SELECT_ALL,
+  dictionaries
+})
+
+export const activeDictionariesClearAll = () => ({
+  type: actions.ACTIVE_DICTIONARIES_CLEAR_ALL
+})

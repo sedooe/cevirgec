@@ -5,14 +5,13 @@ import { Provider } from 'react-redux';
 import { Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
-import configureStore from './store/configureStore';
+import configureStore from './store/app/configureStore';
 import './app.global.css';
 import './index.scss';
 import * as UserActions from './actions/user';
 import { REGISTER_SUCCESS_LOCALDB } from './actions/constants/user';
-import dbCallbacks from './actions/databaseCallbacks';
+import { dbCallbacks }  from './actions/databaseCallbacks';
 const ipc = require('electron').ipcRenderer;
-
 
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);

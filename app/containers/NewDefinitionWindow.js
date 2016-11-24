@@ -1,3 +1,5 @@
+// @flow
+
 'use strict';
 
 import React, { Component } from 'react'
@@ -38,6 +40,10 @@ class NewDefinitionWindow extends Component {
     onlineSourceModalOpen: false
   }
 
+  componentDidMount = () => {
+    this.props.loadDictionaries();
+  }
+
   openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
 
   hideDictionaryModal = () => this.setState({dictionaryModalOpen: false})
@@ -57,13 +63,17 @@ class NewDefinitionWindow extends Component {
   }
 
   render() {
+    
     return (
       <main className='full-height no-bottom-padding'>
         <Grid className='full-height'>
           <Grid.Column width={6} className='no-bottom-padding'>
             <ActiveDictionarySelector
-              dictionaries={this.state.dictionaries}
+              dictionaries={this.props.dictionaries}
+              activeDictionaryIds={this.props.activeDictionaryIds}
               onAddDictionary={this.openDictionaryModal}
+              onSelectAll={this.props.activeDictionariesSelectAll}
+              onClearAll={this.props.activeDictionariesClearAll}
             />
 
             <WordSearchInput
@@ -108,12 +118,18 @@ class NewDefinitionWindow extends Component {
 }
 
 const mapStateToProps = state => ({
-
+  dictionaries: state.dictionary.dictionaries,
+  activeDictionaryIds: state.dictionary.activeDictionaries
 })
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(DictionaryActions, dispatch)
-})
+const mapDispatchToProps = dispatch => {
+  const actions = bindActionCreators(DictionaryActions, dispatch);
+  return {
+    loadDictionaries: actions.loadDictionaries,
+    activeDictionariesSelectAll: actions.activeDictionariesSelectAll,
+    activeDictionariesClearAll: actions.activeDictionariesClearAll
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDefinitionWindow)
 
