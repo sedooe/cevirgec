@@ -4,6 +4,8 @@ Personal Vocabulary Trainer
 
 # Run the App on Development
 
+Runs well with node `v6.5.0` and npm `v3.10.3`
+
 Enable debug output:
 
 	export DEBUG=*,-babel

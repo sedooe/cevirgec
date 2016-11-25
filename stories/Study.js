@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Segment } from 'semantic-ui-react'
+import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Segment } from 'semantic-ui-react'
 import tr from '../app/utils/Translation';
 import FlipCard from 'react-flipcard';
 import Slider from 'react-slick';
@@ -8,6 +8,18 @@ import ActiveDictionarySelector from '../app/components/newDefinitionWindow/Acti
 
 import '../node_modules/slick-carousel/slick/slick.scss';
 import '../node_modules/slick-carousel/slick/slick-theme.scss';
+
+const FlipButton = ({onClick, message}) => (
+  <Popup
+    content={message}
+    trigger={
+      <Button basic icon floated='right' onClick={onClick}>
+        <Icon name='refresh' />
+      </Button>
+    }
+    on='hover'
+  />
+);
 
 class FlippingCardForSlider extends Component {
 
@@ -20,30 +32,35 @@ class FlippingCardForSlider extends Component {
   render () {
     return (
         <FlipCard disabled={true} flipped={this.state.isFlipped}>
-          <Card fluid>
+          <Card color='grey' fluid>
             <Card.Content>
-              <Image floated='right' size='mini' src='http://semantic-ui.com/images/avatar/large/steve.jpg' />
+              <FlipButton
+                onClick={this.toggle}
+                message={tr('See meaning')}
+              />
               <Card.Header>
-                Steve Sanders
+                Steve wants to add you to
               </Card.Header>
-              <Card.Meta>
-                Friends of Elliot
-              </Card.Meta>
               <Card.Description>
-                Steve wants to add you to the group <strong>best friends</strong>
+                Steve wants to add you to the group best friends
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
-              <div className='ui two buttons'>
-                <Button basic color='green' onClick={this.toggle}>Approve</Button>
-                <Button basic color='red'>Decline</Button>
-              </div>
+              <Icon name='man' />
+              <em>n.&nbsp;</em>
+              <Label basic size='tiny' style={{float: 'right'}}>
+                <Icon name='book' />
+                Science Dictionary
+              </Label>
             </Card.Content>
           </Card>
 
           <Card fluid>
             <Card.Content>
-              <Image floated='right' size='mini' src='http://semantic-ui.com/images/avatar2/large/molly.png' />
+              <FlipButton
+                onClick={this.toggle}
+                message={tr('See the word')}
+              />
               <Card.Header>
                 Molly Thomas
               </Card.Header>
@@ -56,8 +73,8 @@ class FlippingCardForSlider extends Component {
             </Card.Content>
             <Card.Content extra>
               <div className='ui two buttons'>
-                <Button basic color='green' onClick={this.toggle}>Approve</Button>
-                <Button basic color='red'>Decline</Button>
+                <Button basic color='green' icon='thumbs outline up' content={tr('Got it')} onClick={this.toggle} />
+                <Button basic color='red' icon='thumbs outline down' content={tr('Failed')} onClick={this.toggle} />
               </div>
             </Card.Content>
           </Card>
@@ -81,12 +98,11 @@ const FlipCardFullWidthStyle = () => (
 )
 
 const settings = {
-  className: 'center',
   centerMode: true,
   infinite: false,
-  centerPadding: '60px',
-  slidesToShow: 1,
-  speed: 500
+  // centerPadding: '50px',//default
+  speed: 500,
+  arrows: false
 };
 
 // alternative DIY: https://www.codementor.io/reactjs/tutorial/building-a-flipper-using-react-js-and-less-css
@@ -105,23 +121,32 @@ export default class Study extends Component {
             <ActiveDictionarySelector
               dictionaries = {[]}
             />
-            <FlippingCardForSlider />
-          </Grid.Column>
-          <Grid.Column width={6}>
-            <div>
-              <h2>Center Mode</h2>
+
+            <Segment padded attached>
+              <Label attached='top'>{tr('Study Your Words')}</Label>
+
               <Slider {...settings} ref='slider'>
-                {this.props.definitions.map(() => (
-                  <div style={{height: '170px', padding: '0 15px'}}>
+                {this.props.definitions.map((val, index) => (
+                  <div style={{height: '170px', padding: '0 15px'}} key={val.id + '_' + index}>
                     <FlippingCardForSlider />
                   </div>
                 ))}
               </Slider>
-              <div style={{textAlign: 'center'}}>
-                <Button onClick={this.previous}>Previous</Button>
-                <Button onClick={this.next}>Next</Button>
-              </div>
-            </div>
+            </Segment>
+            <Button.Group attached='bottom'>
+              <Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />
+              <Button onClick={this.next} icon='right arrow' labelPosition='right' content={tr('Next')} />
+            </Button.Group>
+
+          </Grid.Column>
+          <Grid.Column width={6}>
+            <h3>TODOs</h3>
+            <ul>
+              <li>next/prev => skip/prev</li>
+              <li>add early finish button</li>
+              <li>add "start/reset/finish" buttons</li>
+              <li>show results</li>
+            </ul>
           </Grid.Column>
         </Grid>
       </main>
