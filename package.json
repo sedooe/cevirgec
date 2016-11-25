@@ -115,6 +115,8 @@
     "node-sass": "^3.10.1",
     "react-addons-test-utils": "^15.4.0-rc.3",
     "react-document-title": "^2.0.2",
+    "react-flipcard": "^0.2.1",
+    "react-slick": "^0.14.5",
     "react-test-renderer": "^15.4.0-rc.3",
     "redux-logger": "^2.7.0",
     "sass-loader": "^4.0.2",

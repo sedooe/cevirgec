@@ -9,6 +9,8 @@ import {dictionariesForDropdown} from './MockData';
 import ActiveDictionarySelector from './ActiveDictionarySelector';
 import Register from './Register';
 import NewDefinitionWindow from './NewDefinitionWindow';
+import Study from './Study';
+
 
 import '../app/index.scss';
 
@@ -41,3 +43,10 @@ storiesOf('New Definition Window', module)
       dictionaries={dictionariesForDropdown}
     />
   ))
+
+  storiesOf('Study', module)
+    .add('Study', () => (
+      <Study
+        definitions = {Array(7).fill({})}
+      />
+    ));
