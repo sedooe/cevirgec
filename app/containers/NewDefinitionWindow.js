@@ -74,6 +74,7 @@ class NewDefinitionWindow extends Component {
               onAddDictionary={this.openDictionaryModal}
               onSelectAll={this.props.activeDictionariesSelectAll}
               onClearAll={this.props.activeDictionariesClearAll}
+              onActiveDictionariesChange={this.props.changeActiveDictionaries}
             />
 
             <WordSearchInput
@@ -127,7 +128,8 @@ const mapDispatchToProps = dispatch => {
   return {
     loadDictionaries: actions.loadDictionaries,
     activeDictionariesSelectAll: actions.activeDictionariesSelectAll,
-    activeDictionariesClearAll: actions.activeDictionariesClearAll
+    activeDictionariesClearAll: actions.activeDictionariesClearAll,
+    changeActiveDictionaries: actions.changeActiveDictionaries
   }
 }
 

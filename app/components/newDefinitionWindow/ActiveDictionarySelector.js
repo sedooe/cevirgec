@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react'
 import { Button, Dropdown, Icon, Image, Form, Modal, Segment } from 'semantic-ui-react'
 import tr from '../../utils/Translation';
@@ -21,17 +20,21 @@ export default class ActiveDictionarySelector extends Component {
     onAddDictionary: React.PropTypes.func.isRequired,
     onSelectAll: React.PropTypes.func.isRequired,
     onClearAll: React.PropTypes.func.isRequired,
-    onActiveDictionariesChanged: React.PropTypes.func
+    onActiveDictionariesChange: React.PropTypes.func
   };
 
-  onClearAll = (event: Object) => {
+  onClearAll = event => {
     event.preventDefault();
     this.props.onClearAll();
   }
 
-  onSelectAll = (event: Object) => {
+  onSelectAll = event => {
     event.preventDefault();
     this.props.onSelectAll(this.props.dictionaries);
+  }
+
+  handleChange = (event, inputObject) => {
+    this.props.onActiveDictionariesChange(inputObject.value);
   }
 
   render() {
@@ -50,6 +53,7 @@ export default class ActiveDictionarySelector extends Component {
             name='activeDictionaries'
             options={options}
             value={this.props.activeDictionaryIds}
+            onChange={this.handleChange}
           />
           <Button content={tr('Clear All')} icon='trash' onClick={this.onClearAll} />
           <Button content={tr('Select All')} icon='checkmark' onClick={this.onSelectAll} />

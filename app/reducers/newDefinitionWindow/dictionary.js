@@ -34,6 +34,8 @@ export function activeDictionaries(state: Array<String> = [], action: Object) {
       return Object.keys(action.dictionaries);
     case actions.ACTIVE_DICTIONARIES_CLEAR_ALL:
       return [];
+    case actions.CHANGE_ACTIVE_DICTIONARIES:
+      return action.dictionaryIds;
     default:
       return state;
   }

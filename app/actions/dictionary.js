@@ -65,3 +65,8 @@ export const activeDictionariesSelectAll = (dictionaries: Array<Object>) => ({
 export const activeDictionariesClearAll = () => ({
   type: actions.ACTIVE_DICTIONARIES_CLEAR_ALL
 })
+
+export const changeActiveDictionaries = (dictionaryIds: Array<String>) => ({
+  type: actions.CHANGE_ACTIVE_DICTIONARIES,
+  dictionaryIds
+})
