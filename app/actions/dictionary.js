@@ -1,5 +1,6 @@
 // @flow
 import * as actions from './constants/dictionary';
+import { loadOnlineSourcesOfActiveDictionaries } from './onlineSource';
 const { ipcRenderer } = require('electron');
 
 const requestLoadDictionaries = () => ({
@@ -51,22 +52,44 @@ export const changeActivenessOfDictionary = (dictionaryId: number) => (dispatch:
   ipcRenderer.send(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, dictionaryId);
 }
 
-export const dictionariesAndActiveDictionariesLoaded = (dictionaries: Array<Object>, activeDictionaryIds: Array<String>) => ({
-  type: actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED,
-  dictionaries,
-  activeDictionaryIds
-})
+export const dictionariesAndActiveDictionariesLoaded = (dictionaries: Array<Object>, activeDictionaryIds: Array<String>) => 
+  (dispatch: Function) => {
+    const dictionariesObject = {};
+    const activeDictionaries = {};
+    dictionaries.forEach(dictionary => {
+      dictionariesObject[dictionary.id] = dictionary;
+      if (activeDictionaryIds.indexOf(dictionary.id.toString()) > -1) {
+        activeDictionaries[dictionary.id] = dictionary;
+      }
+    });
 
-export const activeDictionariesSelectAll = (dictionaries: Array<Object>) => ({
-  type: actions.ACTIVE_DICTIONARIES_SELECT_ALL,
-  dictionaries
-})
+    dispatch(loadOnlineSourcesOfActiveDictionaries(activeDictionaries));
+    dispatch({
+      type: actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED,
+      dictionariesObject,
+      activeDictionaryIds
+    });
+}
 
-export const activeDictionariesClearAll = () => ({
-  type: actions.ACTIVE_DICTIONARIES_CLEAR_ALL
-})
+export const activeDictionariesSelectAll = (dictionaries: Object) => (dispatch: Function) => {
+  dispatch(loadOnlineSourcesOfActiveDictionaries(dictionaries));
+  dispatch({
+    type: actions.ACTIVE_DICTIONARIES_SELECT_ALL,
+    dictionaries
+  });
+}
 
-export const changeActiveDictionaries = (dictionaryIds: Array<String>) => ({
-  type: actions.CHANGE_ACTIVE_DICTIONARIES,
-  dictionaryIds
-})
+export const activeDictionariesClearAll = () => (dispatch: Function) => {
+  dispatch(loadOnlineSourcesOfActiveDictionaries({}));
+  dispatch({ type: actions.ACTIVE_DICTIONARIES_CLEAR_ALL });
+}
+
+export const changeActiveDictionaries = (dictionaryIds: Array<String>, dictionaries: Object) => (dispatch: Function) => {
+  const activeDictionaries = {};
+  dictionaryIds.forEach(id => activeDictionaries[id] = dictionaries[id]);
+  dispatch(loadOnlineSourcesOfActiveDictionaries(activeDictionaries));
+  dispatch({
+    type: actions.CHANGE_ACTIVE_DICTIONARIES,
+    dictionaryIds
+  });
+}

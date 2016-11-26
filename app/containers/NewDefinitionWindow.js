@@ -94,7 +94,7 @@ class NewDefinitionWindow extends Component {
 
           <Grid.Column width={10} className='no-bottom-padding'>
             <OnlineDictionariesTabView
-              onlineDictionaries={this.state.onlineDictionaries}
+              onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
             />
           </Grid.Column>
@@ -120,7 +120,8 @@ class NewDefinitionWindow extends Component {
 
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
-  activeDictionaryIds: state.dictionary.activeDictionaries
+  activeDictionaryIds: state.dictionary.activeDictionaries,
+  onlineSources: state.onlineSource.onlineSources
 })
 
 const mapDispatchToProps = dispatch => {

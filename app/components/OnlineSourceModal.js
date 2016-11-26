@@ -310,8 +310,8 @@ class OnlineSourceModal extends Component {
               <Form.Dropdown search selection
                 label={tr('Source Language')}
                 placeholder={tr('Source Language')}
-                name='sourceLang'
-                defaultValue={this.props.onlineSource.sourceLang}
+                name='sourceLanguage'
+                defaultValue={this.props.onlineSource.sourceLanguage}
                 options={languages}
               />
             </Form.Group>

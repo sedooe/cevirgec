@@ -24,6 +24,8 @@ export function dictionaries(state: Object = {}, action: Object) {
       delete newState[action.data];
       return Object.assign({}, newState);
     }
+    case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
+      return action.dictionariesObject;
     default:
       return state;
   }

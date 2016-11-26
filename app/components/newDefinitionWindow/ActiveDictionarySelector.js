@@ -34,7 +34,7 @@ export default class ActiveDictionarySelector extends Component {
   }
 
   handleChange = (event, inputObject) => {
-    this.props.onActiveDictionariesChange(inputObject.value);
+    this.props.onActiveDictionariesChange(inputObject.value, this.props.dictionaries);
   }
 
   render() {
@@ -45,7 +45,7 @@ export default class ActiveDictionarySelector extends Component {
       options.push({ text: dictionaries[key].name, value: key });
     });
 
-    const Dropdown = (
+    const dropdown = (
       <Segment>
         <Form>
           <Form.Select fluid multiple search selection
@@ -61,7 +61,7 @@ export default class ActiveDictionarySelector extends Component {
       </Segment>
     );
 
-    const NoDictionary = (
+    const noDictionary = (
       <Segment>
         <Segment basic style={verticallyCenteredContainerStyle}>
           <span style={verticallyCenteredTextStyle}>{tr('You have no dictionaries')}</span>
@@ -70,6 +70,6 @@ export default class ActiveDictionarySelector extends Component {
       </Segment>
     );
 
-    return Object.keys(dictionaries).length ? Dropdown : NoDictionary;
+    return Object.keys(dictionaries).length ? dropdown : noDictionary;
   }
 }
