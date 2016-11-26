@@ -26,7 +26,7 @@ class FlippingCardForSlider extends Component {
   static propTypes = {
     onMark: React.PropTypes.func.isRequired,
     definition: React.PropTypes.object.isRequired,
-    isCorrect: React.PropTypes.boolean
+    isCorrect: React.PropTypes.bool
   };
 
   state = {
@@ -147,25 +147,39 @@ const TotalRowListItem = ({correct, incorrect, skipped}) => (
 
 // 'results' is a map of definition ids and corresponding boolean values
 // indicating wheter it's correct or not
-const StudyResults = ({definitions, results}) => (
-  <List divided relaxed>
-    {definitions.map((definition) => (
-      <List.Item key={definition.key + '_' + definition.id}>
-        <List.Icon
-          size='large'
-          verticalAlign='middle'
-          name={results[definition.id] ? 'checkmark' : (results[definition.id] === false ? 'remove' : 'radio')}
-          color={results[definition.id] ? 'green' : (results[definition.id] === false ? 'red' : 'grey')}
-        />
-        <List.Content>
-          <List.Header>[{definition.id}] Semantic-Org/Semantic-UI</List.Header>
-          <List.Description >Updated 10 mins ago</List.Description>
-        </List.Content>
-      </List.Item>
-    ))}
-    <TotalRowListItem correct={7} incorrect={2} skipped={1} />
-  </List>
-)
+const StudyResults = ({definitions, results}) => {
+  let correct = 0,
+      incorrect = 0,
+      skipped = 0;
+  return (
+    <List divided relaxed>
+      {definitions.map((definition) => {
+        let isCorrect = results[definition.id];
+        if(typeof isCorrect != 'boolean') {
+          ++skipped;
+        }
+        else {
+          isCorrect ? ++correct : ++incorrect
+        }
+        return (
+          <List.Item key={definition.key + '_' + definition.id}>
+            <List.Icon
+              size='large'
+              verticalAlign='middle'
+              name={results[definition.id] ? 'checkmark' : (results[definition.id] === false ? 'remove' : 'radio')}
+              color={results[definition.id] ? 'green' : (results[definition.id] === false ? 'red' : 'grey')}
+            />
+            <List.Content>
+              <List.Header>[{definition.id}] Semantic-Org/Semantic-UI</List.Header>
+              <List.Description >Updated 10 mins ago</List.Description>
+            </List.Content>
+          </List.Item>
+        );
+      })}
+      <TotalRowListItem correct={correct} incorrect={incorrect} skipped={skipped} />
+    </List>
+  )
+}
 
 StudyResults.propTypes = {
   definitions: React.PropTypes.array.isRequired,
