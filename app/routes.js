@@ -7,6 +7,7 @@ import Dashboard from './containers/Dashboard';
 import Dictionaries from './containers/Dictionaries';
 import OnlineSources from './containers/OnlineSources';
 import User from './containers/User';
+import Study from './containers/Study';
 import Register from './components/Register';
 import Login from './components/Login';
 
@@ -25,6 +26,7 @@ export default (
     <IndexRoute component={Dashboard} onEnter={requireAuth} />
     <Route name="Dictionaries" path="/dictionaries" component={Dictionaries} onEnter={requireAuth} />
     <Route name="OnlineSources" path="/online-sources" component={OnlineSources} onEnter={requireAuth} />
+    <Route name="Study" path="/study" component={Study} onEnter={requireAuth} />
     <Route name="User" path="/user" component={User}>
       <IndexRedirect to="register" />
       <Route path="register" component={Register} name="Register" />
