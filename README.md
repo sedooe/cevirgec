@@ -77,6 +77,12 @@ possible causes:
 2. Following this advice: https://twitter.com/dan_abramov/status/790581793397305345
 3. This can be used for sqlite3 viewing [SQLite Browser](http://sqlitestudio.pl/?act=download)
 
+4. Create mock data with id:
+
+```
+Array(10).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
+```
+
 ## Error: Module did not self-register
 
 

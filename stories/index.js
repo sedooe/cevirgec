@@ -47,6 +47,6 @@ storiesOf('New Definition Window', module)
   storiesOf('Study', module)
     .add('Study', () => (
       <Study
-        definitions = {Array(7).fill({})}
+        definitions = {Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))}
       />
     ));
