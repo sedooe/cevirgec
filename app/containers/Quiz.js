@@ -24,21 +24,17 @@ class QuizCardForSlider extends Component {
 
   static propTypes = {
     onMark: React.PropTypes.func.isRequired,
-    definition: React.PropTypes.object.isRequired,
+    question: React.PropTypes.object.isRequired,
     isCorrect: React.PropTypes.bool
   };
 
-  state = {
-    isFlipped: false
+  state = {}
+
+  makeSelection = (event, {value}) => {
+    let isCorrect = !!this.props.question.choices[value].isCorrect;
+    this.setState({selected: value})
+    this.props.onMark(Object.assign({}, this.props.question, {isCorrect}))
   }
-
-  toggle = () => this.setState({isFlipped: !this.state.isFlipped})
-
-  mark = (isCorrect) => {
-    this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}))
-  }
-
-  makeSelection = (event, {value}) => this.setState({selected: value})
 
   render () {
     return (
@@ -51,45 +47,17 @@ class QuizCardForSlider extends Component {
             Steve wants to add you to the group best friends
           </Card.Description>
           <Form>
-            <Form.Field>
-              Selected value: <b>{this.state.selected}</b>
-            </Form.Field>
-            <Form.Field>
-              <Radio
-                label='Choose this'
-                name='radioGroup'
-                value='this'
-                checked={this.state.selected === 'this'}
-                onChange={this.makeSelection}
-              />
-            </Form.Field>
-            <Form.Field>
-              <Radio
-                label='Or that'
-                name='radioGroup'
-                value='that'
-                checked={this.state.selected === 'that'}
-                onChange={this.makeSelection}
-              />
-            </Form.Field>
-            <Form.Field>
-              <Radio
-                label='Or that'
-                name='radioGroup'
-                value='that'
-                checked={this.state.selected === 'that'}
-                onChange={this.makeSelection}
-              />
-            </Form.Field>
-            <Form.Field>
-              <Radio
-                label='Or that'
-                name='radioGroup'
-                value='that'
-                checked={this.state.selected === 'that'}
-                onChange={this.makeSelection}
-              />
-            </Form.Field>
+            {Object.values(this.props.question.choices).map((choice) => (
+              <Form.Field key={'answer_' + choice.id}>
+                <Radio
+                  label={choice.text}
+                  name='answer'
+                  value={choice.id + ''}
+                  checked={this.state.selected == choice.id}
+                  onChange={this.makeSelection}
+                />
+              </Form.Field>
+            ))}
           </Form>
         </Card.Content>
         <Card.Content extra>
@@ -229,7 +197,7 @@ class Quiz extends Component {
 
   afterSlideChange = (currentSlide) => {
     this.setState({currentSlideIndex: currentSlide})
-    this.setState({isLastSlide: currentSlide == this.props.definitions.length - 1})
+    this.setState({isLastSlide: currentSlide == this.props.questions.length - 1})
   }
 
   onCardMarked = (definition) => {
@@ -238,7 +206,7 @@ class Quiz extends Component {
     setTimeout(() => this.next(), 0)
   }
 
-  studyFinished = () => this.state.isLastSlide && typeof this.state.results[this.props.definitions[this.props.definitions.length-1].id] == 'boolean'
+  studyFinished = () => this.state.isLastSlide && typeof this.state.results[this.props.questions[this.props.questions.length-1].id] == 'boolean'
 
   render() {
     return (
@@ -258,16 +226,16 @@ class Quiz extends Component {
                   <Label attached='top'>{tr('Study Your Words')}</Label>
 
                   <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
-                    {this.props.definitions.map((definition, index) => (
+                    {this.props.questions.map((question, index) => (
                       /*
                         1px top padding ensures card's top border to be visible otherwise it's hidden.
                         This is only valid for QuizCardForSlider not for Study page
                       */
-                      <div style={{height: '300px', padding: '1px 15px'}} key={definition.id + '_' + index}>
+                      <div style={{height: '300px', padding: '1px 15px'}} key={question.id + '_' + index}>
                         <QuizCardForSlider
                           onMark={this.onCardMarked}
-                          definition={definition}
-                          isCorrect={this.state.results[definition.id]}
+                          question={question}
+                          isCorrect={this.state.results[question.id]}
                         />
                       </div>
                     ))}
@@ -287,7 +255,7 @@ class Quiz extends Component {
                 this.state.studyStarted ?
                 <Button fluid
                   color={this.studyFinished() ? 'blue' : null}
-                  content={tr('Finish study')}
+                  content={tr('End Quiz')}
                   onClick={this.finishStudy}
                 />
                 :
@@ -304,7 +272,7 @@ class Quiz extends Component {
               <Segment>
                 <Label attached='top'>{tr('My Results')}</Label>
                 <StudyResults
-                  definitions={this.props.definitions}
+                  definitions={this.props.questions}
                   results={this.state.results}
                 />
               </Segment>
@@ -319,7 +287,16 @@ class Quiz extends Component {
 
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
-  definitions: Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
+  questions: Array(5).fill().map(() => ({
+    id: Math.ceil(Math.random()*1000),
+    choices: {
+      11: {id: 11, text: 'Lorem ipsum'},
+      12: {id: 12, text: 'Dolor sit amed'},
+      13: {id: 13, text: 'Naquem ip sumat', isCorrect: true},
+      14: {id: 14, text: 'Ra qel out enum'}
+    },
+    definition: {}
+  }))
 })
 
 const mapDispatchToProps = dispatch => ({

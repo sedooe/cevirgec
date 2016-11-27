@@ -58,6 +58,7 @@ you can also use `tmux`
 
 Solution:
 
+	npm install -g node-gyp
 	./node_modules/.bin/electron-rebuild
 
 http://electron.atom.io/docs/tutorial/using-native-node-modules/ -- 15.10.2016
