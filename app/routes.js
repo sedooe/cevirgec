@@ -9,8 +9,10 @@ import OnlineSources from './containers/OnlineSources';
 import User from './containers/User';
 import Study from './containers/Study';
 import Quiz from './containers/Quiz';
+import Help from './containers/Help';
 import Register from './components/Register';
 import Login from './components/Login';
+
 
 // Taken from https://github.com/ReactTraining/react-router/blob/cbd1a95b2d9a75febb3eb58d2f9d5a513e432540/examples/auth-flow/app.js#L120
 function requireAuth(nextState, replace) {
@@ -34,5 +36,6 @@ export default (
       <Route path="register" component={Register} name="Register" />
       <Route path="login" component={Login} name="Login" />
     </Route>
+    <Route name="Help" path="/help" component={Help} onEnter={requireAuth} />
   </Route>
 );
