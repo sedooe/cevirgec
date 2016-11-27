@@ -1,27 +1,26 @@
-import React, { Component } from 'react'
-import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Segment } from 'semantic-ui-react'
-import tr from '../app/utils/Translation';
+/* Copyright (c) 2015 Kod Gemisi Ltd.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+// @flow
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import DocumentTitle from 'react-document-title';
+import * as DictionaryActions from '../actions/dictionary';
+
+import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Radio, Segment } from 'semantic-ui-react'
+import tr from '../utils/Translation';
 import FlipCard from 'react-flipcard';
 import Slider from 'react-slick';
-import DefinitionSourceDictionarySelector from './DefinitionSourceDictionarySelector';
-import ActiveDictionarySelector from '../app/components/newDefinitionWindow/ActiveDictionarySelector';
+import DefinitionSourceDictionarySelector from '../components/study/DefinitionSourceDictionarySelector';
+import ActiveDictionarySelector from '../components/newDefinitionWindow/ActiveDictionarySelector';
 
-import '../node_modules/slick-carousel/slick/slick.scss';
-import '../node_modules/slick-carousel/slick/slick-theme.scss';
+import '../../node_modules/slick-carousel/slick/slick.scss';
+import '../../node_modules/slick-carousel/slick/slick-theme.scss';
 
-const FlipButton = ({onClick, message}) => (
-  <Popup
-    content={message}
-    trigger={
-      <Button basic icon floated='right' onClick={onClick}>
-        <Icon name='refresh' />
-      </Button>
-    }
-    on='hover'
-  />
-);
-
-class FlippingCardForSlider extends Component {
+class QuizCardForSlider extends Component {
 
   static propTypes = {
     onMark: React.PropTypes.func.isRequired,
@@ -39,58 +38,69 @@ class FlippingCardForSlider extends Component {
     this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}))
   }
 
-  makeSelection = () => {throw 'Not implemented, TODO read selected radio input'}
+  makeSelection = (event, {value}) => this.setState({selected: value})
 
   render () {
     return (
-        <FlipCard disabled={true} flipped={this.state.isFlipped}>
-          <Card color='grey' fluid>
-            <Card.Content>
-              <FlipButton
-                onClick={this.toggle}
-                message={tr('See meaning')}
+      <Card color='grey' fluid>
+        <Card.Content>
+          <Card.Header>
+            Steve wants to add you to
+          </Card.Header>
+          <Card.Description>
+            Steve wants to add you to the group best friends
+          </Card.Description>
+          <Form>
+            <Form.Field>
+              Selected value: <b>{this.state.selected}</b>
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='Choose this'
+                name='radioGroup'
+                value='this'
+                checked={this.state.selected === 'this'}
+                onChange={this.makeSelection}
               />
-              <Card.Header>
-                Steve wants to add you to
-              </Card.Header>
-              <Card.Description>
-                Steve wants to add you to the group best friends
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <Icon name='man' />
-              <em>n.&nbsp;</em>
-              <Label basic size='tiny' style={{float: 'right'}}>
-                <Icon name='book' />
-                Science Dictionary
-              </Label>
-            </Card.Content>
-          </Card>
-
-          <Card fluid>
-            <Card.Content>
-              <FlipButton
-                onClick={this.toggle}
-                message={tr('See the word')}
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='Or that'
+                name='radioGroup'
+                value='that'
+                checked={this.state.selected === 'that'}
+                onChange={this.makeSelection}
               />
-              <Card.Header>
-                Molly Thomas
-              </Card.Header>
-              <Card.Meta>
-                New User
-              </Card.Meta>
-              <Card.Description>
-                Molly wants to add you to the group <strong>musicians</strong>
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <div className='ui two buttons'>
-                <Button basic={typeof this.props.isCorrect != 'boolean' || this.props.isCorrect === false} color='green' icon='thumbs up' content={tr('Got it')} onClick={this.mark.bind(this, true)} />
-                <Button basic={typeof this.props.isCorrect != 'boolean' || this.props.isCorrect === true} color='red' icon='thumbs down' content={tr('Failed')} onClick={this.mark.bind(this, false)} />
-              </div>
-            </Card.Content>
-          </Card>
-        </FlipCard>
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='Or that'
+                name='radioGroup'
+                value='that'
+                checked={this.state.selected === 'that'}
+                onChange={this.makeSelection}
+              />
+            </Form.Field>
+            <Form.Field>
+              <Radio
+                label='Or that'
+                name='radioGroup'
+                value='that'
+                checked={this.state.selected === 'that'}
+                onChange={this.makeSelection}
+              />
+            </Form.Field>
+          </Form>
+        </Card.Content>
+        <Card.Content extra>
+          <Icon name='man' />
+          <em>n.&nbsp;</em>
+          <Label basic size='tiny' style={{float: 'right'}}>
+            <Icon name='book' />
+            Science Dictionary
+          </Label>
+        </Card.Content>
+      </Card>
     )
   }
 }
@@ -114,7 +124,8 @@ const settings = {
   infinite: false,
   // centerPadding: '50px',//default
   speed: 500,
-  arrows: false
+  arrows: false,
+  adaptiveHeight: true
 };
 
 const TotalRowListItem = ({correct, incorrect, skipped}) => (
@@ -187,7 +198,7 @@ StudyResults.propTypes = {
 }
 
 // alternative DIY: https://www.codementor.io/reactjs/tutorial/building-a-flipper-using-react-js-and-less-css
-export default class Study extends Component {
+class Quiz extends Component {
 
   state = {
     dictionaries: [],
@@ -204,12 +215,13 @@ export default class Study extends Component {
     studyStarted: true,
     isLastSlide: false,
     currentSlideIndex: 0,
-    showResults: false
+    showResults: false,
+    results: {}
   })
 
   finishStudy = () => {
     if(this.state.isLastSlide ||
-       (!this.state.isLastSlide && confirm(tr('Do you want to end studying now?')))
+       (!this.state.isLastSlide && confirm(tr('Do you want to end studying now?'), tr('Confirm early finish')))
     ) {
       this.setState({studyStarted: false, showResults: true})
     }
@@ -230,14 +242,15 @@ export default class Study extends Component {
 
   render() {
     return (
-      <main>
-        <FlipCardFullWidthStyle />
-        <Grid>
-          <Grid.Column width={6}>
+      <DocumentTitle title={tr('Cevirgec › Quiz')}>
+        <div>
+          <FlipCardFullWidthStyle />
+
             <ActiveDictionarySelector
               dictionaries = {[]}
             />
 
+            <div style={{maxWidth: '800px',margin: 'auto'}}>
             {
               this.state.studyStarted &&
               [
@@ -246,8 +259,12 @@ export default class Study extends Component {
 
                   <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
                     {this.props.definitions.map((definition, index) => (
-                      <div style={{height: '170px', padding: '0 15px'}} key={definition.id + '_' + index}>
-                        <FlippingCardForSlider
+                      /*
+                        1px top padding ensures card's top border to be visible otherwise it's hidden.
+                        This is only valid for QuizCardForSlider not for Study page
+                      */
+                      <div style={{height: '300px', padding: '1px 15px'}} key={definition.id + '_' + index}>
+                        <QuizCardForSlider
                           onMark={this.onCardMarked}
                           definition={definition}
                           isCorrect={this.state.results[definition.id]}
@@ -263,6 +280,7 @@ export default class Study extends Component {
                 </Button.Group>
               ]
             }
+            </div>
 
             <Segment basic className='no-padding'>
               {
@@ -280,6 +298,7 @@ export default class Study extends Component {
               }
             </Segment>
 
+            <div style={{maxWidth: '800px',margin: 'auto'}}>
             {
               this.state.showResults &&
               <Segment>
@@ -290,23 +309,21 @@ export default class Study extends Component {
                 />
               </Segment>
             }
-          </Grid.Column>
-          <Grid.Column width={6}>
-            <h3>TODOs</h3>
-            <ul>
-              <li>next/prev => skip/prev</li>
-              <li>add early finish button</li>
-              <li>add "start/reset/finish" buttons</li>
-              <li>show results</li>
-            </ul>
-            <br/>
-            <StudyResults
-              definitions={this.props.definitions}
-              results={this.state.results}
-            />
-          </Grid.Column>
-        </Grid>
-      </main>
+            </div>
+        </div>
+      </DocumentTitle>
     );
   }
 }
+
+
+const mapStateToProps = state => ({
+  dictionaries: state.dictionary.dictionaries,
+  definitions: Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
+})
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators(DictionaryActions, dispatch)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz)

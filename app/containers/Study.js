@@ -271,8 +271,8 @@ class Study extends Component {
                 </Segment>,
                 <Button.Group attached='bottom' key='buttonGroup'>
                   {/**<Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />}
-                  <Button onClick={this.next} icon='right arrow' labelPosition='right' content={tr('Next')} /> **/}
-                  <Button onClick={this.next} icon='right arrow' labelPosition='right' content={tr('Skip')} />
+                  <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Next')} /> **/}
+                  <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Skip')} />
                 </Button.Group>
               ]
             }
