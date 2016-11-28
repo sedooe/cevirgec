@@ -255,7 +255,10 @@ class Study extends Component {
               this.state.studyStarted &&
               [
                 <Segment padded attached key='flipCardsContainerSegment'>
-                  <Label attached='top'>{tr('Study Your Words')}</Label>
+                  <Label attached='top'>
+                    {tr('Study Your Words')}
+                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{this.props.definitions.length}</span>
+                  </Label>
 
                   <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
                     {this.props.definitions.map((definition, index) => (

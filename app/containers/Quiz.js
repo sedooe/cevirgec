@@ -92,8 +92,7 @@ const settings = {
   infinite: false,
   // centerPadding: '50px',//default
   speed: 500,
-  arrows: false,
-  adaptiveHeight: true
+  arrows: false
 };
 
 const TotalRowListItem = ({correct, incorrect, skipped}) => (
@@ -223,7 +222,10 @@ class Quiz extends Component {
               this.state.studyStarted &&
               [
                 <Segment padded attached key='flipCardsContainerSegment'>
-                  <Label attached='top'>{tr('Study Your Words')}</Label>
+                  <Label attached='top'>
+                    {tr('Study Your Words')}
+                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{this.props.questions.length}</span>
+                  </Label>
 
                   <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
                     {this.props.questions.map((question, index) => (
@@ -231,7 +233,7 @@ class Quiz extends Component {
                         1px top padding ensures card's top border to be visible otherwise it's hidden.
                         This is only valid for QuizCardForSlider not for Study page
                       */
-                      <div style={{height: '300px', padding: '1px 15px'}} key={question.id + '_' + index}>
+                      <div style={{height: '250px', padding: '1px 15px'}} key={question.id + '_' + index}>
                         <QuizCardForSlider
                           onMark={this.onCardMarked}
                           question={question}
@@ -244,6 +246,7 @@ class Quiz extends Component {
                 <Button.Group attached='bottom' key='buttonGroup'>
                   {/**<Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />}
                   <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Next')} /> **/}
+                  <Button onClick={this.previous} icon='arrow left' labelPosition='left' content={tr('Previous')} />
                   <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Skip')} />
                 </Button.Group>
               ]
