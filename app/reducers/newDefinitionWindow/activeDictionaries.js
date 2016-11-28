@@ -1,7 +1,7 @@
 // @flow
 import * as actions from '../../actions/constants/dictionary';
 
-export function activeDictionaries(state: Array<String> = [], action: Object) {
+export default function activeDictionaries(state: Array<String> = [], action: Object) {
   switch (action.type) {
     case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
       return action.activeDictionaryIds;

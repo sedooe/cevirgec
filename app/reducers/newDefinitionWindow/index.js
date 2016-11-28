@@ -3,7 +3,8 @@ import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
 import { dictionaries, isFetching as isDictionariesFetching } from '../app/dictionary';
 import { onlineSources, isFetching as isOnlineSourcesFetching } from '../app/onlineSource';
-import { activeDictionaries } from './activeDictionaries';
+import activeDictionaries from './activeDictionaries';
+import wordAndDefinitions from './wordAndDefinitions';
 
 const newDefinitionWindowReducer = combineReducers({
   dictionary: combineReducers({
@@ -15,6 +16,7 @@ const newDefinitionWindowReducer = combineReducers({
     onlineSources,
     isFetching: isOnlineSourcesFetching
   }),
+  wordAndDefinitions,
   routing
 });
 

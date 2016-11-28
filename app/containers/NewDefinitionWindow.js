@@ -15,6 +15,7 @@ import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfE
 import DictionaryModal from '../components/DictionaryModal';
 import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
+import { changeCurrentWord } from '../actions/wordAndDefinitions';
 
 function getEmptyDefinitionForWord(word) {
   return {
@@ -62,6 +63,12 @@ class NewDefinitionWindow extends Component {
     //TODO call action
   }
 
+  onCurrentWordChange = event => {
+    if (event.keyCode === 13) {
+      this.props.changeCurrentWord(event.target.value);
+    }
+  }
+
   render() {
     
     return (
@@ -77,8 +84,14 @@ class NewDefinitionWindow extends Component {
               onActiveDictionariesChange={this.props.changeActiveDictionaries}
             />
 
-            <WordSearchInput
+            <Input fluid 
+              disabled={this.state.loading}
+              icon='search'
+              placeholder={tr('Search a word...')}
+              label={tr('Word/Phrase')}
               loading={this.state.loading}
+              className={ this.state.loading ? 'no-padding no-border' : 'no-padding no-border raised segment' }
+              onKeyUp={this.onCurrentWordChange}
             />
 
             <NewDefinitionForm
@@ -96,23 +109,24 @@ class NewDefinitionWindow extends Component {
             <OnlineDictionariesTabView
               onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
+              currentWord={this.props.currentWord}
             />
           </Grid.Column>
         </Grid>
 
         <DictionaryModal
-            open={this.state.dictionaryModalOpen}
-            onHide={this.hideDictionaryModal}
-            onSave={this.saveDictionary}
-            dictionary={{}}
-          />
+          open={this.state.dictionaryModalOpen}
+          onHide={this.hideDictionaryModal}
+          onSave={this.saveDictionary}
+          dictionary={{}}
+        />
 
         <OnlineSourceModal
-            open={this.state.onlineSourceModalOpen}
-            onHide={this.hideOnlineSourceModal}
-            onSave={this.saveOnlineSource}
-            onlineSource={{}}
-          />
+          open={this.state.onlineSourceModalOpen}
+          onHide={this.hideOnlineSourceModal}
+          onSave={this.saveOnlineSource}
+          onlineSource={{}}
+        />
       </main>
     )
   }
@@ -121,7 +135,8 @@ class NewDefinitionWindow extends Component {
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
   activeDictionaryIds: state.dictionary.activeDictionaries,
-  onlineSources: state.onlineSource.onlineSources
+  onlineSources: state.onlineSource.onlineSources,
+  currentWord: state.wordAndDefinitions.currentWord
 })
 
 const mapDispatchToProps = dispatch => {
@@ -130,7 +145,8 @@ const mapDispatchToProps = dispatch => {
     loadDictionaries: actions.loadDictionaries,
     activeDictionariesSelectAll: actions.activeDictionariesSelectAll,
     activeDictionariesClearAll: actions.activeDictionariesClearAll,
-    changeActiveDictionaries: actions.changeActiveDictionaries
+    changeActiveDictionaries: actions.changeActiveDictionaries,
+    changeCurrentWord: bindActionCreators({changeCurrentWord}, dispatch).changeCurrentWord
   }
 }
 
@@ -146,14 +162,4 @@ const VerticalDivider = () => (
       <Icon name='square outline' style={{color: '#aaa'}} />
     </Divider>
   </div>
-);
-
-const WordSearchInput = ({loading}) => (
-  <Input fluid disabled={loading}
-    icon='search'
-    placeholder={tr('Search a word...')}
-    label={tr('Word/Phrase')}
-    loading={loading}
-    className={ loading ? 'no-padding no-border' : 'no-padding no-border raised segment' }
-  />
 );
