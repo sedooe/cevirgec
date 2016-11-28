@@ -10,101 +10,15 @@ import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
 import * as DictionaryActions from '../actions/dictionary';
 
-import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Segment } from 'semantic-ui-react'
+import { Button, Label, Segment } from 'semantic-ui-react'
 import tr from '../utils/Translation';
-import FlipCard from 'react-flipcard';
 import Slider from 'react-slick';
 import DefinitionSourceDictionarySelector from '../components/study/DefinitionSourceDictionarySelector';
-import ActiveDictionarySelector from '../components/newDefinitionWindow/ActiveDictionarySelector';
+import StudyCardForSlider from '../components/study/StudyCardForSlider';
+import StudyResults from '../components/study/StudyResults';
 
 import '../../node_modules/slick-carousel/slick/slick.scss';
 import '../../node_modules/slick-carousel/slick/slick-theme.scss';
-
-const FlipButton = ({onClick, message}) => (
-  <Popup
-    content={message}
-    trigger={
-      <Button basic icon floated='right' onClick={onClick}>
-        <Icon name='refresh' />
-      </Button>
-    }
-    on='hover'
-  />
-);
-
-class FlippingCardForSlider extends Component {
-
-  static propTypes = {
-    onMark: React.PropTypes.func.isRequired,
-    definition: React.PropTypes.object.isRequired,
-    isCorrect: React.PropTypes.bool
-  };
-
-  state = {
-    isFlipped: false
-  }
-
-  toggle = () => this.setState({isFlipped: !this.state.isFlipped})
-
-  mark = (isCorrect) => {
-    this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}))
-  }
-
-  makeSelection = () => {throw 'Not implemented, TODO read selected radio input'}
-
-  render () {
-    return (
-        <FlipCard disabled={true} flipped={this.state.isFlipped}>
-          <Card color='grey' fluid>
-            <Card.Content>
-              <FlipButton
-                onClick={this.toggle}
-                message={tr('See meaning')}
-              />
-              <Card.Header>
-                Steve wants to add you to
-              </Card.Header>
-              <Card.Description>
-                Steve wants to add you to the group best friends
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <Icon name='man' />
-              <em>n.&nbsp;</em>
-              <Label basic size='tiny' style={{float: 'right'}}>
-                <Icon name='book' />
-                Science Dictionary
-              </Label>
-            </Card.Content>
-          </Card>
-
-          <Card fluid>
-            <Card.Content>
-              <FlipButton
-                onClick={this.toggle}
-                message={tr('See the word')}
-              />
-              <Card.Header>
-                Molly Thomas
-              </Card.Header>
-              <Card.Meta>
-                New User
-              </Card.Meta>
-              <Card.Description>
-                Molly wants to add you to the group <strong>musicians</strong>
-              </Card.Description>
-            </Card.Content>
-            <Card.Content extra>
-              <div className='ui two buttons'>
-                <Button basic={typeof this.props.isCorrect != 'boolean' || this.props.isCorrect === false} color='green' icon='thumbs up' content={tr('Got it')} onClick={this.mark.bind(this, true)} />
-                <Button basic={typeof this.props.isCorrect != 'boolean' || this.props.isCorrect === true} color='red' icon='thumbs down' content={tr('Failed')} onClick={this.mark.bind(this, false)} />
-              </div>
-            </Card.Content>
-          </Card>
-        </FlipCard>
-    )
-  }
-}
 
 const FlipCardFullWidthStyle = () => (
   <style>
@@ -128,76 +42,6 @@ const settings = {
   arrows: false
 };
 
-const TotalRowListItem = ({correct, incorrect, skipped}) => (
-  <List.Item key='resultListItem'>
-    <Grid columns='equal' textAlign='center'>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='checkmark' color='green' /> {correct}
-          </Label>
-        </Segment>
-      </Grid.Column>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='remove' color='red' /> {incorrect}
-          </Label>
-        </Segment>
-      </Grid.Column>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='radio' color='grey' /> {skipped}
-          </Label>
-        </Segment>
-      </Grid.Column>
-    </Grid>
-  </List.Item>
-)
-
-// 'results' is a map of definition ids and corresponding boolean values
-// indicating wheter it's correct or not
-const StudyResults = ({definitions, results}) => {
-  let correct = 0,
-      incorrect = 0,
-      skipped = 0;
-  return (
-    <List divided relaxed>
-      {definitions.map((definition) => {
-        let isCorrect = results[definition.id];
-        if(typeof isCorrect != 'boolean') {
-          ++skipped;
-        }
-        else {
-          isCorrect ? ++correct : ++incorrect
-        }
-        return (
-          <List.Item key={definition.key + '_' + definition.id}>
-            <List.Icon
-              size='large'
-              verticalAlign='middle'
-              name={results[definition.id] ? 'checkmark' : (results[definition.id] === false ? 'remove' : 'radio')}
-              color={results[definition.id] ? 'green' : (results[definition.id] === false ? 'red' : 'grey')}
-            />
-            <List.Content>
-              <List.Header>[{definition.id}] Semantic-Org/Semantic-UI</List.Header>
-              <List.Description >Updated 10 mins ago</List.Description>
-            </List.Content>
-          </List.Item>
-        );
-      })}
-      <TotalRowListItem correct={correct} incorrect={incorrect} skipped={skipped} />
-    </List>
-  )
-}
-
-StudyResults.propTypes = {
-  definitions: React.PropTypes.array.isRequired,
-  results: React.PropTypes.object.isRequired
-}
-
-// alternative DIY: https://www.codementor.io/reactjs/tutorial/building-a-flipper-using-react-js-and-less-css
 class Study extends Component {
 
   state = {
@@ -246,8 +90,14 @@ class Study extends Component {
         <div>
           <FlipCardFullWidthStyle />
 
-            <ActiveDictionarySelector
-              dictionaries = {[]}
+            <DefinitionSourceDictionarySelector
+              dictionaries = {Array(5).fill().map(() => ({
+                id: Math.ceil(Math.random()*1000),
+                name: Math.random().toString(36).substr(2, 6),
+                value: Math.random().toString(36).substr(2, 6),
+                text: Math.random().toString(36).substr(2, 6)
+              }))}
+              onSelectedDictionaryChanged={()=>{}}
             />
 
             <div style={{maxWidth: '800px',margin: 'auto'}}>
@@ -263,7 +113,7 @@ class Study extends Component {
                   <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
                     {this.props.definitions.map((definition, index) => (
                       <div style={{height: '170px', padding: '0 15px'}} key={definition.id + '_' + index}>
-                        <FlippingCardForSlider
+                        <StudyCardForSlider
                           onMark={this.onCardMarked}
                           definition={definition}
                           isCorrect={this.state.results[definition.id]}

@@ -12,66 +12,13 @@ import * as DictionaryActions from '../actions/dictionary';
 
 import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Radio, Segment } from 'semantic-ui-react'
 import tr from '../utils/Translation';
-import FlipCard from 'react-flipcard';
 import Slider from 'react-slick';
 import DefinitionSourceDictionarySelector from '../components/study/DefinitionSourceDictionarySelector';
-import ActiveDictionarySelector from '../components/newDefinitionWindow/ActiveDictionarySelector';
+import QuizCardForSlider from '../components/quiz/QuizCardForSlider';
+import QuizResults from '../components/quiz/QuizResults';
 
 import '../../node_modules/slick-carousel/slick/slick.scss';
 import '../../node_modules/slick-carousel/slick/slick-theme.scss';
-
-class QuizCardForSlider extends Component {
-
-  static propTypes = {
-    onMark: React.PropTypes.func.isRequired,
-    question: React.PropTypes.object.isRequired,
-    isCorrect: React.PropTypes.bool
-  };
-
-  state = {}
-
-  makeSelection = (event, {value}) => {
-    let isCorrect = !!this.props.question.choices[value].isCorrect;
-    this.setState({selected: value})
-    this.props.onMark(Object.assign({}, this.props.question, {isCorrect}))
-  }
-
-  render () {
-    return (
-      <Card color='grey' fluid>
-        <Card.Content>
-          <Card.Header>
-            Steve wants to add you to
-          </Card.Header>
-          <Card.Description>
-            Steve wants to add you to the group best friends
-          </Card.Description>
-          <Form>
-            {Object.values(this.props.question.choices).map((choice) => (
-              <Form.Field key={'answer_' + choice.id}>
-                <Radio
-                  label={choice.text}
-                  name='answer'
-                  value={choice.id + ''}
-                  checked={this.state.selected == choice.id}
-                  onChange={this.makeSelection}
-                />
-              </Form.Field>
-            ))}
-          </Form>
-        </Card.Content>
-        <Card.Content extra>
-          <Icon name='man' />
-          <em>n.&nbsp;</em>
-          <Label basic size='tiny' style={{float: 'right'}}>
-            <Icon name='book' />
-            Science Dictionary
-          </Label>
-        </Card.Content>
-      </Card>
-    )
-  }
-}
 
 const FlipCardFullWidthStyle = () => (
   <style>
@@ -94,75 +41,6 @@ const settings = {
   speed: 500,
   arrows: false
 };
-
-const TotalRowListItem = ({correct, incorrect, skipped}) => (
-  <List.Item key='resultListItem'>
-    <Grid columns='equal' textAlign='center'>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='checkmark' color='green' /> {correct}
-          </Label>
-        </Segment>
-      </Grid.Column>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='remove' color='red' /> {incorrect}
-          </Label>
-        </Segment>
-      </Grid.Column>
-      <Grid.Column>
-        <Segment basic>
-          <Label size='big'>
-            <Icon name='radio' color='grey' /> {skipped}
-          </Label>
-        </Segment>
-      </Grid.Column>
-    </Grid>
-  </List.Item>
-)
-
-// 'results' is a map of definition ids and corresponding boolean values
-// indicating wheter it's correct or not
-const StudyResults = ({definitions, results}) => {
-  let correct = 0,
-      incorrect = 0,
-      skipped = 0;
-  return (
-    <List divided relaxed>
-      {definitions.map((definition) => {
-        let isCorrect = results[definition.id];
-        if(typeof isCorrect != 'boolean') {
-          ++skipped;
-        }
-        else {
-          isCorrect ? ++correct : ++incorrect
-        }
-        return (
-          <List.Item key={definition.key + '_' + definition.id}>
-            <List.Icon
-              size='large'
-              verticalAlign='middle'
-              name={results[definition.id] ? 'checkmark' : (results[definition.id] === false ? 'remove' : 'radio')}
-              color={results[definition.id] ? 'green' : (results[definition.id] === false ? 'red' : 'grey')}
-            />
-            <List.Content>
-              <List.Header>[{definition.id}] Semantic-Org/Semantic-UI</List.Header>
-              <List.Description >Updated 10 mins ago</List.Description>
-            </List.Content>
-          </List.Item>
-        );
-      })}
-      <TotalRowListItem correct={correct} incorrect={incorrect} skipped={skipped} />
-    </List>
-  )
-}
-
-StudyResults.propTypes = {
-  definitions: React.PropTypes.array.isRequired,
-  results: React.PropTypes.object.isRequired
-}
 
 // alternative DIY: https://www.codementor.io/reactjs/tutorial/building-a-flipper-using-react-js-and-less-css
 class Quiz extends Component {
@@ -213,8 +91,14 @@ class Quiz extends Component {
         <div>
           <FlipCardFullWidthStyle />
 
-            <ActiveDictionarySelector
-              dictionaries = {[]}
+            <DefinitionSourceDictionarySelector
+              dictionaries = {Array(5).fill().map(() => ({
+                id: Math.ceil(Math.random()*1000),
+                name: Math.random().toString(36).substr(2, 6),
+                value: Math.random().toString(36).substr(2, 6),
+                text: Math.random().toString(36).substr(2, 6)
+              }))}
+              onSelectedDictionaryChanged={()=>{}}
             />
 
             <div style={{maxWidth: '800px',margin: 'auto'}}>
@@ -274,7 +158,7 @@ class Quiz extends Component {
               this.state.showResults &&
               <Segment>
                 <Label attached='top'>{tr('My Results')}</Label>
-                <StudyResults
+                <QuizResults
                   definitions={this.props.questions}
                   results={this.state.results}
                 />

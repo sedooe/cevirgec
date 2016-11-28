@@ -16,8 +16,8 @@ export default class DefinitionSourceDictionarySelector extends Component {
 
   static propTypes = {
     dictionaries: React.PropTypes.array.isRequired,
-    activeDictionaryIds: React.PropTypes.array.isRequired,
-    onActiveDictionariesChanged: React.PropTypes.func
+    selectedDictionaryId: React.PropTypes.number,
+    onSelectedDictionaryChanged: React.PropTypes.func.isRequired
   };
 
   render() {
@@ -26,9 +26,11 @@ export default class DefinitionSourceDictionarySelector extends Component {
       this.props.dictionaries.length ?
         <Segment>
           <Form>
-            <Form.Select label={tr('Active Dictionaries')} name='activeDictionaries' options={this.props.dictionaries} fluid multiple search selection />
-            <Button content={tr('Clear All')} icon='trash'/>
-            <Button content={tr('Select All')} icon='checkmark'/>
+            <Form.Select label={tr('Selected Dictionary')} name='selectedDictionaries' options={this.props.dictionaries} fluid search selection />
+            {/**
+              <Button content={tr('Clear All')} icon='trash'/>
+              <Button content={tr('Select All')} icon='checkmark'/>
+            **/}
           </Form>
         </Segment>
       :
