@@ -7,9 +7,6 @@ const ipc = require('electron').ipcMain;
 const actions = require('../../app/actions/constants/user');
 const User = require('../model/User');
 const Definition = require('../model/Definition');
-const DatabaseEvents = {};
-const UiEvents = {};
-const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.REQUEST_REGISTER_LOCALDB);

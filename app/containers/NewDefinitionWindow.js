@@ -15,7 +15,7 @@ import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfE
 import DictionaryModal from '../components/DictionaryModal';
 import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
-import { changeCurrentWord } from '../actions/wordAndDefinitions';
+import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
 
 function getEmptyDefinitionForWord(word) {
   return {
@@ -69,6 +69,10 @@ class NewDefinitionWindow extends Component {
     }
   }
 
+  onSaveDefinition = (definition: Object) => {
+    this.props.saveDefinition(definition, this.props.activeDictionaryIds);
+  }
+
   render() {
     
     return (
@@ -84,7 +88,7 @@ class NewDefinitionWindow extends Component {
               onActiveDictionariesChange={this.props.changeActiveDictionaries}
             />
 
-            <Input fluid 
+            <Input fluid
               disabled={this.state.loading}
               icon='search'
               placeholder={tr('Search a word...')}
@@ -95,7 +99,9 @@ class NewDefinitionWindow extends Component {
             />
 
             <NewDefinitionForm
+              currentWord={this.props.currentWord || ''}            
               definition={this.state.currentDefinition}
+              onSaveDefinition={this.onSaveDefinition}
             />
 
             <ListOfExistingDefinitions
@@ -109,7 +115,7 @@ class NewDefinitionWindow extends Component {
             <OnlineDictionariesTabView
               onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
-              currentWord={this.props.currentWord}
+              currentWord={this.props.currentWord || ''}
             />
           </Grid.Column>
         </Grid>
@@ -133,20 +139,23 @@ class NewDefinitionWindow extends Component {
 }
 
 const mapStateToProps = state => ({
-  dictionaries: state.dictionary.dictionaries,
-  activeDictionaryIds: state.dictionary.activeDictionaries,
-  onlineSources: state.onlineSource.onlineSources,
+  dictionaries: state.dictionaries.dictionaries,
+  activeDictionaryIds: state.dictionaries.activeDictionaries,
+  onlineSources: state.onlineSources,
   currentWord: state.wordAndDefinitions.currentWord
 })
 
 const mapDispatchToProps = dispatch => {
-  const actions = bindActionCreators(DictionaryActions, dispatch);
+  const dictionaryActions = bindActionCreators(DictionaryActions, dispatch);
+  const definitionActions = bindActionCreators(WordAndDefinitionActions, dispatch);
+
   return {
-    loadDictionaries: actions.loadDictionaries,
-    activeDictionariesSelectAll: actions.activeDictionariesSelectAll,
-    activeDictionariesClearAll: actions.activeDictionariesClearAll,
-    changeActiveDictionaries: actions.changeActiveDictionaries,
-    changeCurrentWord: bindActionCreators({changeCurrentWord}, dispatch).changeCurrentWord
+    loadDictionaries: dictionaryActions.loadDictionaries,
+    activeDictionariesSelectAll: dictionaryActions.activeDictionariesSelectAll,
+    activeDictionariesClearAll: dictionaryActions.activeDictionariesClearAll,
+    changeActiveDictionaries: dictionaryActions.changeActiveDictionaries,
+    changeCurrentWord: definitionActions.changeCurrentWord,
+    saveDefinition: definitionActions.saveDefinition
   }
 }
 

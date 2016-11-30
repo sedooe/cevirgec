@@ -1,7 +1,7 @@
 // @flow
-import * as actions from '../../actions/constants/onlineSource';
+import * as actions from '../actions/constants/onlineSource';
 
-export function onlineSources(state: Object = {}, action: Object) {
+export default function onlineSources(state: Object = {}, action: Object) {
   switch (action.type) {
     case actions.ONLINE_SOURCES_LOADED:
     case actions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED: { //action.data: onlineSources
@@ -25,26 +25,6 @@ export function onlineSources(state: Object = {}, action: Object) {
       delete newState[action.data];
       return Object.assign({}, newState);
     }
-    default:
-      return state;
-  }
-}
-
-export function isFetching(state: boolean = false, action: Object) {
-  switch (action.type) {
-    case actions.REQUEST_UPSERT_ONLINE_SOURCE:
-    case actions.REQUEST_DELETE_ONLINE_SOURCE:
-    case actions.REQUEST_CHANGE_ACTIVENESS_OF_ONLINE_SOURCE:
-    case actions.REQUEST_LOAD_DICTIONARIES:
-    case actions.REQUEST_LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES:
-      return true;
-    case actions.ONLINE_SOURCE_CREATED:
-    case actions.ONLINE_SOURCE_DELETED:
-    case actions.ONLINE_SOURCE_EDITED:
-    case actions.ONLINE_SOURCE_ACTIVENESS_CHANGED:
-    case actions.DICTIONARIES_LOADED:
-    case actions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED:
-      return false;
     default:
       return state;
   }

@@ -49,20 +49,21 @@ export default class OnlineDictionariesTabView extends Component {
     });
 
     return (
-        <span style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
-          <Menu attached='top' tabular>
-            {title}
-          </Menu>
+      <span style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
+        <Menu attached='top' tabular>
+          {title}
+        </Menu>
 
-          <Segment attached='bottom' style={{display:'flex', flexDirection: 'column', flexGrow: 1}}>
-            {content}
-          </Segment>
-        </span>
+        <Segment attached='bottom' style={{display:'flex', flexDirection: 'column', flexGrow: 1}}>
+          {content}
+        </Segment>
+      </span>
     );
   }
 }
 
 OnlineDictionariesTabView.propTypes = {
   onlineSources: React.PropTypes.object.isRequired,
-  onAddOnlineSource: React.PropTypes.func.isRequired
+  onAddOnlineSource: React.PropTypes.func.isRequired,
+  currentWord: React.PropTypes.string.isRequired
 }

@@ -7,9 +7,6 @@ const ipc = require('electron').ipcMain;
 const actions = require('../../app/actions/constants/dictionary');
 const Dictionary = require('../model/Dictionary');
 const Definition = require('../model/Definition');
-const DatabaseEvents = {};
-const UiEvents = {};
-const DictionaryQueries = require('./queries/DictionaryQueries');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.LOAD_DICTIONARIES);

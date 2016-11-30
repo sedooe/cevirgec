@@ -1,6 +1,7 @@
 import * as userActions from './constants/user';
 import * as dictionaryActions from './constants/dictionary';
 import * as onlineSourceActions from './constants/onlineSource';
+import * as definitionActions from './constants/newDefinitionWindow';
 
 export const dbCallbacks = [
   dictionaryActions.DICTIONARIES_LOADED,
@@ -17,5 +18,6 @@ export const dbCallbacks = [
 
 export const dbCallbacksNewDefWindow = [
   dictionaryActions.DICTIONARIES_LOADED,
-  onlineSourceActions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED
+  onlineSourceActions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED,
+  definitionActions.DEFINITION_SAVED
 ];
