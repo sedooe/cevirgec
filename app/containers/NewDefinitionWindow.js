@@ -99,13 +99,15 @@ class NewDefinitionWindow extends Component {
             />
 
             <NewDefinitionForm
-              currentWord={this.props.currentWord || ''}            
+              currentWord={this.props.currentWord}            
               definition={this.state.currentDefinition}
               onSaveDefinition={this.onSaveDefinition}
             />
 
             <ListOfExistingDefinitions
-              definitions={this.state.definitions}
+              definitions={this.props.definitions}
+              dictionaries={this.props.dictionaries}              
+              currentWord={this.props.currentWord}
             />
           </Grid.Column>
 
@@ -115,7 +117,7 @@ class NewDefinitionWindow extends Component {
             <OnlineDictionariesTabView
               onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
-              currentWord={this.props.currentWord || ''}
+              currentWord={this.props.currentWord}
             />
           </Grid.Column>
         </Grid>
@@ -142,7 +144,8 @@ const mapStateToProps = state => ({
   dictionaries: state.dictionaries.dictionaries,
   activeDictionaryIds: state.dictionaries.activeDictionaries,
   onlineSources: state.onlineSources,
-  currentWord: state.wordAndDefinitions.currentWord
+  currentWord: state.wordAndDefinitions.currentWord,
+  definitions: state.wordAndDefinitions.definitions
 })
 
 const mapDispatchToProps = dispatch => {

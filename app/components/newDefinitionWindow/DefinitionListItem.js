@@ -12,23 +12,41 @@ export default class DefinitionListItem extends Component {
     this.setState({detailsShown: active});
   }
 
+  static propTypes = {
+    definition: React.PropTypes.object.isRequired,
+    dictionary: React.PropTypes.object.isRequired
+  };
+
+  iconValue = sex => {
+    switch (sex) {
+      case 'MASCULINE':
+        return 'man';
+      case 'FEMININE':
+        return 'woman';
+      default:
+        return 'neuter';
+    }
+  }
+
   render () {
+    const { definition, dictionary } = this.props;
+
     return (
       <List.Item className='no-side-padding'>
         <List.Content>
           <Label ribbon color='blue' size='mini'>{tr('new')}</Label>
-          <Icon name='man' />
-          <em>n.&nbsp;</em>
-          <span>Lorem ipsum dolor sit amed.</span>
+          <Icon name={this.iconValue(definition.sex)} />
+          <em>n.&nbsp;</em>  {/* FIXME: use real value of it. noun, verb, phrase etc. */}
+          <span>{definition.value}</span>
         </List.Content>
         <List.Content style={{marginTop: '10px'}}>
             <Label basic size='tiny'>
               <Icon name='browser' />
-              Context
+              {dictionary.context || 'No Context'}
             </Label>
             <Label basic size='tiny'>
               <Icon name='book' />
-              Science Dictionary
+              {dictionary.name}
             </Label>
             <Button basic compact size='tiny' icon='edit' floated='right' />
             <Button basic compact size='tiny' icon='trash' floated='right' />
@@ -43,11 +61,11 @@ export default class DefinitionListItem extends Component {
           <Segment basic className='no-side-padding'>
             <Segment className='no-shadow'>
               <Label attached='top right'>{tr('Usage Examples')}</Label>
-              Lorem ipsum dolor sit amed.
+              {definition.usage}
             </Segment>
             <Segment className='no-shadow'>
               <Label attached='top right'>{tr('Notes')}</Label>
-              Lorem ipsum dolor sit amed.
+              {definition.notes}
             </Segment>
           </Segment>
         </List.Content>}
