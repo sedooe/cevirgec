@@ -20,14 +20,29 @@ ipc.on(actions.SAVE_DEFINITION, (event, definition, activeDictionaryIds) => {
     return definitionWithId;
   });
 
-  Definition.bulkCreate(definitions).then(createdDefinitions => {
-    const definitionsJSON = createdDefinitions.map(def => def.toJSON());
-    debug('zoooooo', definitionsJSON);
-    event.sender.send(actions.DEFINITION_SAVED, definitionsJSON);
-  }).catch(e => debug(e));
+  saveDefinitions(definitions).then(definitionsResultSet => {
+    debug("huaaa", definitionsResultSet);
+    event.sender.send(actions.DEFINITION_SAVED, definitionsResultSet);
+  })
+  
 });
 
+const saveDefinitions = definitions => {
+  return new Promise(resolve => {
+    const definitionsResultSet = [];
 
+    definitions.forEach(definition => {
+      debug("1");
+      Definition.create(definition).then(createdDefinition => {
+        definitionsResultSet.push(createdDefinition.toJSON());
+        debug("definitionsResultSet", definitionsResultSet);
+      }).catch(e => debug(e));
+    });
+
+    debug("2");
+    resolve(definitionsResultSet);
+  });
+}
 
 // This function is used when NewDefinitionWindow active
 // ipc.on(UiEvents.SEARCH_WORD, function(event, data) {
