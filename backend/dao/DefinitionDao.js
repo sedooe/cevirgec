@@ -10,9 +10,10 @@ const Dictionary = require('../model/Dictionary');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.SAVE_DEFINITION);
+ipc.removeAllListeners(actions.FIND_DEFINITIONS_OF_WORD);
 
 ipc.on(actions.SAVE_DEFINITION, (event, definition, activeDictionaryIds) => {
-  debug(actions.SAVE_DEFINITION, definition);
+  debug(actions.SAVE_DEFINITION, definition, activeDictionaryIds);
 
   const definitions = activeDictionaryIds.map(id => {
     const definitionWithId = clone(definition);
@@ -28,6 +29,21 @@ ipc.on(actions.SAVE_DEFINITION, (event, definition, activeDictionaryIds) => {
     event.sender.send(actions.DEFINITION_SAVED, definitionsResultSet);
   });
 });
+
+ipc.on(actions.FIND_DEFINITIONS_OF_WORD, (event, word, activeDictionaryIds) => {
+  debug(actions.FIND_DEFINITIONS_OF_WORD, word, activeDictionaryIds);
+
+  Definition.findAll({
+    where: {
+      dictionaryId: activeDictionaryIds,
+      key: word
+    }
+  }).then(resultSet => {
+    const definitions = resultSet.map(definition => definition.toJSON());
+    event.sender.send(actions.FOUND_DEFINITIONS_OF_WORD, definitions);
+  }).catch(e => debug(e));
+});
+
 
 // This function is used when NewDefinitionWindow active
 // ipc.on(UiEvents.SEARCH_WORD, function(event, data) {

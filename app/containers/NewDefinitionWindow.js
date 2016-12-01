@@ -65,7 +65,7 @@ class NewDefinitionWindow extends Component {
 
   onCurrentWordChange = event => {
     if (event.keyCode === 13) {
-      this.props.changeCurrentWord(event.target.value);
+      this.props.changeCurrentWordAndLookForDefinitions(event.target.value, this.props.activeDictionaryIds);
     }
   }
 
@@ -157,7 +157,7 @@ const mapDispatchToProps = dispatch => {
     activeDictionariesSelectAll: dictionaryActions.activeDictionariesSelectAll,
     activeDictionariesClearAll: dictionaryActions.activeDictionariesClearAll,
     changeActiveDictionaries: dictionaryActions.changeActiveDictionaries,
-    changeCurrentWord: definitionActions.changeCurrentWord,
+    changeCurrentWordAndLookForDefinitions: definitionActions.changeCurrentWordAndLookForDefinitions,
     saveDefinition: definitionActions.saveDefinition
   }
 }

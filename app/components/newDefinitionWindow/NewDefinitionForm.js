@@ -48,7 +48,7 @@ export default class NewDefinitionForm extends Component {
 
     return (
       <Segment>
-        <Label attached='top'>{tr('Add new Definitions for <word>')}</Label>
+        <Label attached='top'>{tr(`Add new Definitions for ${this.props.currentWord}`)}</Label>
         <Form onSubmit={this.onSubmit}>
           <Form.Group widths='equal'>
             <Form.Input

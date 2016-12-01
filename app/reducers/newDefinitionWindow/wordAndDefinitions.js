@@ -11,6 +11,7 @@ export default function wordAndDefinitions(state: Object = initialState, action:
     case actions.CHANGE_CURRENT_WORD:
       return {...state, currentWord: action.word }
     case actions.DEFINITION_SAVED: //action.data: definitions, array
+    case actions.FOUND_DEFINITIONS_OF_WORD:
       const definitions = {};
       action.data.forEach(definition => {
         definitions[definition.id] = definition;
