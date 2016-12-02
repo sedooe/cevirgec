@@ -17,6 +17,11 @@ export default function wordAndDefinitions(state: Object = initialState, action:
         definitions[definition.id] = definition;
       });
       return {...state, definitions }
+    case actions.DEFINITION_DELETED: //action.data: definitionId
+      const newState = Object.assign({}, state);
+      newState.definitions = Object.assign({}, state.definitions);
+      delete newState.definitions[action.data];
+      return newState;
     default:
       return state;
   }

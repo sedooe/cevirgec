@@ -28,6 +28,12 @@ export default class DefinitionListItem extends Component {
     }
   }
 
+  deleteDefinition = () => {
+    if (confirm('Are you sure to delete this definition?')) {
+      this.props.onDefinitionDelete(this.props.definition.id);      
+    }
+  }
+
   render () {
     const { definition, dictionary } = this.props;
 
@@ -49,7 +55,7 @@ export default class DefinitionListItem extends Component {
               {dictionary.name}
             </Label>
             <Button basic compact size='tiny' icon='edit' floated='right' />
-            <Button basic compact size='tiny' icon='trash' floated='right' />
+            <Button onClick={this.deleteDefinition} basic compact size='tiny' icon='trash' floated='right' />
             <ButtonToggle basic compact size='tiny'
               icon={this.state.detailsShown ? 'angle up' : 'angle down'}
               content={this.state.detailsShown ? tr('Less') : tr('More')}

@@ -20,3 +20,12 @@ export const saveDefinition = (definition: Object, activeDictionaryIds: Array<St
   dispatch(requestSaveDefinition());
   ipcRenderer.send(actions.SAVE_DEFINITION, definition, activeDictionaryIds);
 }
+
+const requestDeleteDefinition = () => ({
+  type: actions.REQUEST_DELETE_DEFINITION
+})
+
+export const deleteDefinition = (definitionId: number) => (dispatch: Function) => {
+  dispatch(requestDeleteDefinition());
+  ipcRenderer.send(actions.DELETE_DEFINITION, definitionId);
+}

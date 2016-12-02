@@ -11,6 +11,7 @@ const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.SAVE_DEFINITION);
 ipc.removeAllListeners(actions.FIND_DEFINITIONS_OF_WORD);
+ipc.removeAllListeners(actions.DELETE_DEFINITION);
 
 ipc.on(actions.SAVE_DEFINITION, (event, definition, activeDictionaryIds) => {
   debug(actions.SAVE_DEFINITION, definition, activeDictionaryIds);
@@ -43,6 +44,14 @@ ipc.on(actions.FIND_DEFINITIONS_OF_WORD, (event, word, activeDictionaryIds) => {
     event.sender.send(actions.FOUND_DEFINITIONS_OF_WORD, definitions);
   }).catch(e => debug(e));
 });
+
+ipc.on(actions.DELETE_DEFINITION, (event, definitionId) => {
+  debug(actions.DELETE_DEFINITION, definitionId);
+
+  Definition.destroy({ where: { id: definitionId } }).then(() => {
+    event.sender.send(actions.DEFINITION_DELETED, definitionId);
+  }).catch(e => debug(e));
+})
 
 
 // This function is used when NewDefinitionWindow active

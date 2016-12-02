@@ -5,7 +5,7 @@ import { Button, Label, List, Message, Segment } from 'semantic-ui-react';
 import DefinitionListItem from './DefinitionListItem';
 import tr from '../../utils/Translation';
 
-const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord}) => (
+const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete}) => (
   <Segment disabled={!Object.keys(definitions).length}>
     <Label attached='top'>{tr(`Definitions for ${currentWord}`)}</Label>
     <List divided relaxed verticalAlign='middle' >
@@ -13,7 +13,8 @@ const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord}) => 
         Object.keys(definitions).map((key, index) => {
           return <DefinitionListItem 
                    definition={definitions[key]}
-                   dictionary={dictionaries[definitions[key].dictionaryId]} 
+                   dictionary={dictionaries[definitions[key].dictionaryId]}
+                   onDefinitionDelete={onDefinitionDelete}
                    key={index + '_df_' + definitions[key].id } />
         })
         :
@@ -33,7 +34,8 @@ const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord}) => 
 ListOfExistingDefinitions.propTypes = {
   definitions: React.PropTypes.object.isRequired,
   currentWord: React.PropTypes.string.isRequired,
-  dictionaries: React.PropTypes.object.isRequired
+  dictionaries: React.PropTypes.object.isRequired,
+  onDefinitionDelete: React.PropTypes.func.isRequired
 };
 
 export default ListOfExistingDefinitions;

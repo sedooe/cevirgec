@@ -20,6 +20,7 @@ export default function isFetching(state: boolean = false, action: Object) {
     case userActions.REQUEST_LOGOUT:
     case definitionActions.REQUEST_SAVE_DEFINITION:
     case definitionActions.REQUEST_FIND_DEFINITIONS_OF_WORD:
+    case definitionActions.REQUEST_DELETE_DEFINITION:
       return true;
     case dictionaryActions.DICTIONARY_CREATED:
     case dictionaryActions.DICTIONARY_DELETED:
@@ -38,6 +39,7 @@ export default function isFetching(state: boolean = false, action: Object) {
     case userActions.LOGOUT_FAIL:
     case definitionActions.DEFINITION_SAVED:
     case definitionActions.FOUND_DEFINITIONS_OF_WORD:
+    case definitionActions.DEFINITION_DELETED:
       return false;
     default:
       return state;
