@@ -6,10 +6,14 @@ const requestFindDefinitionsOfWord = () => ({
   type: actions.REQUEST_FIND_DEFINITIONS_OF_WORD
 })
 
-export const changeCurrentWordAndLookForDefinitions = (word: String, activeDictionaryIds: Array<String>) => (dispatch: Function) => {
-  dispatch({ type: actions.CHANGE_CURRENT_WORD, word });
+export const lookForDefinitions = (word: String, activeDictionaryIds: Array<String>) => (dispatch: Function) => {
   dispatch(requestFindDefinitionsOfWord());
   ipcRenderer.send(actions.FIND_DEFINITIONS_OF_WORD, word, activeDictionaryIds);
+}
+
+export const changeCurrentWordAndLookForDefinitions = (word: String, activeDictionaryIds: Array<String>) => (dispatch: Function) => {
+  dispatch({ type: actions.CHANGE_CURRENT_WORD, word });
+  dispatch(lookForDefinitions(word, activeDictionaryIds));
 }
 
 const requestSaveDefinition = () => ({

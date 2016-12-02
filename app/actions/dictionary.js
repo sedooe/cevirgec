@@ -1,5 +1,6 @@
 // @flow
 import * as actions from './constants/dictionary';
+import { lookForDefinitions } from './wordAndDefinitions';
 import { loadOnlineSourcesOfActiveDictionaries } from './onlineSource';
 const { ipcRenderer } = require('electron');
 
@@ -71,12 +72,16 @@ export const dictionariesAndActiveDictionariesLoaded = (dictionaries: Array<Obje
     });
 }
 
-export const activeDictionariesSelectAll = (dictionaries: Object) => (dispatch: Function) => {
+export const activeDictionariesSelectAll = (dictionaries: Object, word: String) => (dispatch: Function) => {
   dispatch(loadOnlineSourcesOfActiveDictionaries(dictionaries));
   dispatch({
     type: actions.ACTIVE_DICTIONARIES_SELECT_ALL,
     dictionaries
   });
+
+  console.log("zaaaa", typeof Object.keys(dictionaries)[0]);
+  const dictionaryIds = Object.keys(dictionaries).map(key => key.toString());
+  dispatch(lookForDefinitions(word, dictionaryIds));
 }
 
 export const activeDictionariesClearAll = () => (dispatch: Function) => {
@@ -84,7 +89,7 @@ export const activeDictionariesClearAll = () => (dispatch: Function) => {
   dispatch({ type: actions.ACTIVE_DICTIONARIES_CLEAR_ALL });
 }
 
-export const changeActiveDictionaries = (dictionaryIds: Array<String>, dictionaries: Object) => (dispatch: Function) => {
+export const changeActiveDictionaries = (dictionaryIds: Array<String>, dictionaries: Object, word: String) => (dispatch: Function) => {
   const activeDictionaries = {};
   dictionaryIds.forEach(id => activeDictionaries[id] = dictionaries[id]);
   dispatch(loadOnlineSourcesOfActiveDictionaries(activeDictionaries));
@@ -92,4 +97,5 @@ export const changeActiveDictionaries = (dictionaryIds: Array<String>, dictionar
     type: actions.CHANGE_ACTIVE_DICTIONARIES,
     dictionaryIds
   });
+  dispatch(lookForDefinitions(word, dictionaryIds));
 }

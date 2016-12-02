@@ -73,6 +73,14 @@ class NewDefinitionWindow extends Component {
     this.props.saveDefinition(definition, this.props.activeDictionaryIds);
   }
 
+  onDictionariesSelectAll = (dictionaries: Object) => {
+    this.props.activeDictionariesSelectAll(dictionaries, this.props.currentWord);
+  }
+
+  onActiveDictionariesChange = (dictionaryIds: Array<String>, dictionaries: Object) => {
+    this.props.changeActiveDictionaries(dictionaryIds, dictionaries, this.props.currentWord);
+  }
+
   render() {
     
     return (
@@ -83,9 +91,9 @@ class NewDefinitionWindow extends Component {
               dictionaries={this.props.dictionaries}
               activeDictionaryIds={this.props.activeDictionaryIds}
               onAddDictionary={this.openDictionaryModal}
-              onSelectAll={this.props.activeDictionariesSelectAll}
+              onSelectAll={this.onDictionariesSelectAll}
               onClearAll={this.props.activeDictionariesClearAll}
-              onActiveDictionariesChange={this.props.changeActiveDictionaries}
+              onActiveDictionariesChange={this.onActiveDictionariesChange}
             />
 
             <Input fluid
