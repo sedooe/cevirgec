@@ -1,20 +1,25 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
-import isFetching from '../isFetching';
-import dictionaries from '../dictionary';
-import onlineSources from '../onlineSource';
+import { dictionaries, isFetching as isDictionaryFetching } from '../dictionary';
+import { onlineSources, isFetching as isOnlineSourceFetching } from '../onlineSource';
 import activeDictionaries from './activeDictionaries';
-import wordAndDefinitions from './wordAndDefinitions';
+import { wordAndDefinitions, isFetching as isWordAndDefinitionsFetching } from './wordAndDefinitions';
 
 const newDefinitionWindowReducer = combineReducers({
-  dictionaries: combineReducers({
+  dictionary: combineReducers({
     dictionaries,
-    activeDictionaries
+    activeDictionaries,
+    isDictionaryFetching
   }),
-  onlineSources,
-  wordAndDefinitions,
-  isFetching,
+  onlineSource: combineReducers({
+    onlineSources,
+    isOnlineSourceFetching
+  }),
+  wordAndDefinitions: combineReducers({
+    wordAndDefinitions,
+    isWordAndDefinitionsFetching
+  }),
   routing
 });
 

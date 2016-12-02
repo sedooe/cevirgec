@@ -6,7 +6,7 @@ const initialState = {
   definitions: {}
 };
 
-export default function wordAndDefinitions(state: Object = initialState, action: Object) {
+export function wordAndDefinitions(state: Object = initialState, action: Object) {
   switch (action.type) {
     case actions.CHANGE_CURRENT_WORD:
       return {...state, currentWord: action.word }
@@ -22,6 +22,21 @@ export default function wordAndDefinitions(state: Object = initialState, action:
       newState.definitions = Object.assign({}, state.definitions);
       delete newState.definitions[action.data];
       return newState;
+    default:
+      return state;
+  }
+}
+
+export function isFetching(state: boolean = false, action: Object) {
+  switch (action.type) {
+    case actions.REQUEST_SAVE_DEFINITION:
+    case actions.REQUEST_FIND_DEFINITIONS_OF_WORD:
+    case actions.REQUEST_DELETE_DEFINITION:
+      return true;
+    case actions.DEFINITION_SAVED:
+    case actions.FOUND_DEFINITIONS_OF_WORD:
+    case actions.DEFINITION_DELETED:
+      return false;
     default:
       return state;
   }

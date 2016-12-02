@@ -142,11 +142,11 @@ class NewDefinitionWindow extends Component {
 }
 
 const mapStateToProps = state => ({
-  dictionaries: state.dictionaries.dictionaries,
-  activeDictionaryIds: state.dictionaries.activeDictionaries,
-  onlineSources: state.onlineSources,
-  currentWord: state.wordAndDefinitions.currentWord,
-  definitions: state.wordAndDefinitions.definitions
+  dictionaries: state.dictionary.dictionaries,
+  activeDictionaryIds: state.dictionary.activeDictionaries,
+  onlineSources: state.onlineSource.onlineSources,
+  currentWord: state.wordAndDefinitions.wordAndDefinitions.currentWord,
+  definitions: state.wordAndDefinitions.wordAndDefinitions.definitions
 })
 
 const mapDispatchToProps = dispatch => {

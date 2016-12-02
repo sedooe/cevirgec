@@ -96,7 +96,7 @@ class OnlineSources extends Component {
 
 
 const mapStateToProps = state => ({
-  onlineSources: state.onlineSources
+  onlineSources: state.onlineSource.onlineSources
 })
 
 const mapDispatchToProps = dispatch => ({

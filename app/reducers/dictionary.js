@@ -1,7 +1,7 @@
 // @flow
 import * as actions from '../actions/constants/dictionary';
 
-export default function dictionaries(state: Object = {}, action: Object) {
+export function dictionaries(state: Object = {}, action: Object) {
   switch (action.type) {
     case actions.DICTIONARIES_LOADED: { //action.data: dictionaries
       const dictionaries = {};
@@ -26,6 +26,26 @@ export default function dictionaries(state: Object = {}, action: Object) {
     }
     case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
       return action.dictionariesObject;
+    default:
+      return state;
+  }
+}
+
+export function isFetching(state: boolean = false, action: Object) {
+  switch (action.type) {
+    case actions.REQUEST_CREATE_DICTIONARY:
+    case actions.REQUEST_DELETE_DICTIONARY:
+    case actions.REQUEST_EDIT_DICTIONARY:
+    case actions.REQUEST_CHANGE_ACTIVENESS_OF_DICTIONARY:
+    case actions.REQUEST_LOAD_DICTIONARIES:
+    case actions.REQUEST_LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES:
+      return true;
+    case actions.DICTIONARY_CREATED:
+    case actions.DICTIONARY_DELETED:
+    case actions.DICTIONARY_EDITED:
+    case actions.DICTIONARY_ACTIVENESS_CHANGED:
+    case actions.DICTIONARIES_LOADED:
+      return false;
     default:
       return state;
   }
