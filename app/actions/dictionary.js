@@ -79,7 +79,6 @@ export const activeDictionariesSelectAll = (dictionaries: Object, word: String) 
     dictionaries
   });
 
-  console.log("zaaaa", typeof Object.keys(dictionaries)[0]);
   const dictionaryIds = Object.keys(dictionaries).map(key => key.toString());
   dispatch(lookForDefinitions(word, dictionaryIds));
 }
