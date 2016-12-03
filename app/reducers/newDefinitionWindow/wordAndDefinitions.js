@@ -17,6 +17,8 @@ export function wordAndDefinitions(state: Object = initialState, action: Object)
         definitions[definition.id] = definition;
       });
       return {...state, definitions }
+    case actions.DEFINITION_EDITED: //action.data: definition
+      return {...state, definitions: {...state.definitions, [action.data.id]: action.data } };
     case actions.DEFINITION_DELETED: //action.data: definitionId
       const newState = Object.assign({}, state);
       newState.definitions = Object.assign({}, state.definitions);
@@ -32,10 +34,12 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.REQUEST_SAVE_DEFINITION:
     case actions.REQUEST_FIND_DEFINITIONS_OF_WORD:
     case actions.REQUEST_DELETE_DEFINITION:
+    case actions.REQUEST_EDIT_DEFINITION:
       return true;
     case actions.DEFINITION_SAVED:
     case actions.FOUND_DEFINITIONS_OF_WORD:
     case actions.DEFINITION_DELETED:
+    case actions.DEFINITION_EDITED:
       return false;
     default:
       return state;

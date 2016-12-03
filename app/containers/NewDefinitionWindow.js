@@ -117,6 +117,7 @@ class NewDefinitionWindow extends Component {
               dictionaries={this.props.dictionaries}              
               currentWord={this.props.currentWord}
               onDefinitionDelete={this.props.onDefinitionDelete}
+              onDefinitionEdit={this.props.onDefinitionEdit}
             />
           </Grid.Column>
 
@@ -168,7 +169,8 @@ const mapDispatchToProps = dispatch => {
     changeActiveDictionaries: dictionaryActions.changeActiveDictionaries,
     changeCurrentWordAndLookForDefinitions: definitionActions.changeCurrentWordAndLookForDefinitions,
     saveDefinition: definitionActions.saveDefinition,
-    onDefinitionDelete: definitionActions.deleteDefinition
+    onDefinitionDelete: definitionActions.deleteDefinition,
+    onDefinitionEdit: definitionActions.editDefinition
   }
 }
 

@@ -33,3 +33,12 @@ export const deleteDefinition = (definitionId: number) => (dispatch: Function) =
   dispatch(requestDeleteDefinition());
   ipcRenderer.send(actions.DELETE_DEFINITION, definitionId);
 }
+
+const requestEditDefinition = () => ({
+  type: actions.REQUEST_EDIT_DEFINITION
+})
+
+export const editDefinition = (definition: Object) => (dispatch: Function) => {
+  dispatch(requestEditDefinition());
+  ipcRenderer.send(actions.EDIT_DEFINITION, definition);
+}

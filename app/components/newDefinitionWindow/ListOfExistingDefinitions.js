@@ -1,11 +1,11 @@
 // @flow
 
-import React, { Component } from 'react';
-import { Button, Label, List, Message, Segment } from 'semantic-ui-react';
+import React from 'react';
+import { Label, List, Message, Segment } from 'semantic-ui-react';
 import DefinitionListItem from './DefinitionListItem';
 import tr from '../../utils/Translation';
 
-const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete}) => (
+const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete, onDefinitionEdit}) => (
   <Segment disabled={!Object.keys(definitions).length}>
     <Label attached='top'>{tr(`Definitions for ${currentWord}`)}</Label>
     <List divided relaxed verticalAlign='middle' >
@@ -15,6 +15,7 @@ const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDe
                    definition={definitions[key]}
                    dictionary={dictionaries[definitions[key].dictionaryId]}
                    onDefinitionDelete={onDefinitionDelete}
+                   onDefinitionEdit={onDefinitionEdit}
                    key={index + '_df_' + definitions[key].id } />
         })
         :

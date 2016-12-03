@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {Button, Icon, Label, List, Segment} from 'semantic-ui-react';
+import { Button, Icon, Label, List, Segment } from 'semantic-ui-react';
 import ButtonToggle from './ButtonToggle';
+import DefinitionModal from './DefinitionModal';
 import tr from '../../utils/Translation';
 
 export default class DefinitionListItem extends Component {
   state = {
-    detailsShown: false
+    detailsShown: false,
+    definitionModalOpen: false
   }
 
   toggleDetails = (active) => {
@@ -14,7 +16,8 @@ export default class DefinitionListItem extends Component {
 
   static propTypes = {
     definition: React.PropTypes.object.isRequired,
-    dictionary: React.PropTypes.object.isRequired
+    dictionary: React.PropTypes.object.isRequired,
+    onDefinitionEdit: React.PropTypes.func.isRequired
   };
 
   iconValue = sex => {
@@ -34,6 +37,23 @@ export default class DefinitionListItem extends Component {
     }
   }
 
+  openDefinitionModal = () => {
+    this.setState({
+      definitionModalOpen: true
+    });
+  }
+
+  hideDefinitionModal = () => {
+    this.setState({
+      definitionModalOpen: false
+    });
+  }
+
+  editDefinition = (definition: Object) => {
+    this.hideDefinitionModal();
+    this.props.onDefinitionEdit(definition);
+  }
+
   render () {
     const { definition, dictionary } = this.props;
 
@@ -46,22 +66,22 @@ export default class DefinitionListItem extends Component {
           <span>{definition.value}</span>
         </List.Content>
         <List.Content style={{marginTop: '10px'}}>
-            <Label basic size='tiny'>
-              <Icon name='browser' />
-              {dictionary.context || 'No Context'}
-            </Label>
-            <Label basic size='tiny'>
-              <Icon name='book' />
-              {dictionary.name}
-            </Label>
-            <Button basic compact size='tiny' icon='edit' floated='right' />
-            <Button onClick={this.deleteDefinition} basic compact size='tiny' icon='trash' floated='right' />
-            <ButtonToggle basic compact size='tiny'
-              icon={this.state.detailsShown ? 'angle up' : 'angle down'}
-              content={this.state.detailsShown ? tr('Less') : tr('More')}
-              floated='right'
-              onToggle={this.toggleDetails}
-            />
+          <Label basic size='tiny'>
+            <Icon name='browser' />
+            {dictionary.context || 'No Context'}
+          </Label>
+          <Label basic size='tiny'>
+            <Icon name='book' />
+            {dictionary.name}
+          </Label>
+          <Button onClick={this.openDefinitionModal} basic compact size='tiny' icon='edit' floated='right' />
+          <Button onClick={this.deleteDefinition} basic compact size='tiny' icon='trash' floated='right' />
+          <ButtonToggle basic compact size='tiny'
+            icon={this.state.detailsShown ? 'angle up' : 'angle down'}
+            content={this.state.detailsShown ? tr('Less') : tr('More')}
+            floated='right'
+            onToggle={this.toggleDetails}
+          />
         </List.Content>
         {this.state.detailsShown && <List.Content>
           <Segment basic className='no-side-padding'>
@@ -75,6 +95,15 @@ export default class DefinitionListItem extends Component {
             </Segment>
           </Segment>
         </List.Content>}
+
+        <DefinitionModal
+          open={this.state.definitionModalOpen}
+          onHide={this.hideDefinitionModal}
+          onSave={this.editDefinition}
+          definition={definition}
+          dictionary={dictionary}
+        />
+
       </List.Item>
     );
   }
