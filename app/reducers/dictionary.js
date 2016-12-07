@@ -45,6 +45,7 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.DICTIONARY_EDITED:
     case actions.DICTIONARY_ACTIVENESS_CHANGED:
     case actions.DICTIONARIES_LOADED:
+    case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
       return false;
     default:
       return state;

@@ -11,6 +11,8 @@ export default function activeDictionaries(state: Array<String> = [], action: Ob
       return [];
     case actions.CHANGE_ACTIVE_DICTIONARIES:
       return action.dictionaryIds;
+    case actions.DICTIONARY_CREATED: //action.data: dictionary
+      return action.data.active ? [action.data.id.toString()] : [];
     default:
       return state;
   }

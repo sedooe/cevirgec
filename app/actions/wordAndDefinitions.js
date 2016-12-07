@@ -11,6 +11,17 @@ export const lookForDefinitions = (word: String, activeDictionaryIds: Array<Stri
   ipcRenderer.send(actions.FIND_DEFINITIONS_OF_WORD, word, activeDictionaryIds);
 }
 
+export const lookForDefinitionsOnWindowOpen = (activeDictionaryIds: Array<String>) => (dispatch: Function, getState: Function) => {
+  const word = getState().wordAndDefinitions.wordAndDefinitions.currentWord;
+  dispatch(lookForDefinitions(word, activeDictionaryIds));
+}
+
+export const lookForDefinitionsWhenNewDefinitionCreated = () => (dispatch: Function, getState: Function) => {
+  const word = getState().wordAndDefinitions.wordAndDefinitions.currentWord;
+  const activeDictionaryIds = getState().dictionary.activeDictionaries;
+  dispatch(lookForDefinitions(word, activeDictionaryIds));
+}
+
 export const changeCurrentWordAndLookForDefinitions = (word: String, activeDictionaryIds: Array<String>) => (dispatch: Function) => {
   dispatch({ type: actions.CHANGE_CURRENT_WORD, word });
   dispatch(lookForDefinitions(word, activeDictionaryIds));
@@ -41,4 +52,8 @@ const requestEditDefinition = () => ({
 export const editDefinition = (definition: Object) => (dispatch: Function) => {
   dispatch(requestEditDefinition());
   ipcRenderer.send(actions.EDIT_DEFINITION, definition);
+}
+
+export const mergeDefinitions = (definitions: Array<Object>) => (dispatch: Function) => {
+  dispatch({ type: actions.MERGE_DEFINITIONS_RESULT, definitions });
 }

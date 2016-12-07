@@ -13,6 +13,7 @@ ipc.removeAllListeners(actions.LOAD_DICTIONARIES);
 ipc.removeAllListeners(actions.CREATE_DICTIONARY);
 ipc.removeAllListeners(actions.EDIT_DICTIONARY);
 ipc.removeAllListeners(actions.CHANGE_ACTIVENESS_OF_DICTIONARY);
+ipc.removeAllListeners(actions.CHANGE_ACTIVENESS_OF_DICTIONARIES);
 ipc.removeAllListeners(actions.DELETE_DICTIONARY);
 
 ipc.on(actions.LOAD_DICTIONARIES, (event) => {
@@ -49,6 +50,18 @@ ipc.on(actions.CHANGE_ACTIVENESS_OF_DICTIONARY, (event, dictionaryId) => {
     dictionary.update({ active: !dictionary.active }).then(editedDictionary => {
       event.sender.send(actions.DICTIONARY_ACTIVENESS_CHANGED, editedDictionary.id);
     }).catch(e => debug(e));
+  }).catch(e => debug(e));
+});
+
+ipc.on(actions.CHANGE_ACTIVENESS_OF_DICTIONARIES, (event, dictionaryIds) => {
+  debug(actions.CHANGE_ACTIVENESS_OF_DICTIONARIES, dictionaryIds);
+
+  Dictionary.findAll().then(dictionaries => {
+    const promises = dictionaries.map(dict => dict.update({ active: dictionaryIds.indexOf(dict.id.toString()) > -1 }));
+
+    Promise.all(promises).then(() => {
+      event.sender.send(actions.DICTIONARIES_ACTIVENESS_CHANGED);
+    });
   }).catch(e => debug(e));
 });
 

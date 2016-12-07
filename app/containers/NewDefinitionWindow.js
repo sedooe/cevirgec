@@ -17,26 +17,9 @@ import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
 import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
 
-function getEmptyDefinitionForWord(word) {
-  return {
-    key: word,
-    value: '',
-    sex: 'NEUTER',
-    type: 'NONE',
-    usage: '',
-    notes: ''
-  }
-}
-
 class NewDefinitionWindow extends Component {
 
   state = {
-    currentWord: 'computer',
-    currentDefinition: getEmptyDefinitionForWord('computer'), //this is the definition being edited
-    dictionaries: [],
-    definitions: Array(3).fill({}),
-    onlineDictionaries: [],//[{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
-    loading: false,
     dictionaryModalOpen: false,
     onlineSourceModalOpen: false
   }
@@ -55,7 +38,7 @@ class NewDefinitionWindow extends Component {
 
   saveDictionary = dictionary => {
     this.hideDictionaryModal();
-    this.props.actions.createDictionary(dictionary);
+    this.props.createDictionary(dictionary);
   }
 
   saveOnlineSource = onlineSource => {
@@ -63,10 +46,18 @@ class NewDefinitionWindow extends Component {
     //TODO call action
   }
 
+  changeCurrentWord = (word: String) => {
+    this.props.changeCurrentWordAndLookForDefinitions(word, this.props.activeDictionaryIds);
+  }
+
   onCurrentWordChange = event => {
     if (event.keyCode === 13) {
-      this.props.changeCurrentWordAndLookForDefinitions(event.target.value, this.props.activeDictionaryIds);
+      this.changeCurrentWord(event.target.value);
     }
+  }
+
+  handleBlur = event => {
+    this.changeCurrentWord(event.target.value);
   }
 
   onSaveDefinition = (definition: Object) => {
@@ -97,18 +88,17 @@ class NewDefinitionWindow extends Component {
             />
 
             <Input fluid
-              disabled={this.state.loading}
+              defaultValue={this.props.currentWord}
               icon='search'
               placeholder={tr('Search a word...')}
               label={tr('Word/Phrase')}
-              loading={this.state.loading}
-              className={ this.state.loading ? 'no-padding no-border' : 'no-padding no-border raised segment' }
+              className='no-padding no-border'
               onKeyUp={this.onCurrentWordChange}
+              onBlur={this.handleBlur}
             />
 
             <NewDefinitionForm
               currentWord={this.props.currentWord}            
-              definition={this.state.currentDefinition}
               onSaveDefinition={this.onSaveDefinition}
             />
 
@@ -118,6 +108,7 @@ class NewDefinitionWindow extends Component {
               currentWord={this.props.currentWord}
               onDefinitionDelete={this.props.onDefinitionDelete}
               onDefinitionEdit={this.props.onDefinitionEdit}
+              freshDefinitions={this.props.freshDefinitions}
             />
           </Grid.Column>
 
@@ -155,7 +146,8 @@ const mapStateToProps = state => ({
   activeDictionaryIds: state.dictionary.activeDictionaries,
   onlineSources: state.onlineSource.onlineSources,
   currentWord: state.wordAndDefinitions.wordAndDefinitions.currentWord,
-  definitions: state.wordAndDefinitions.wordAndDefinitions.definitions
+  definitions: state.wordAndDefinitions.wordAndDefinitions.definitions,
+  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions
 })
 
 const mapDispatchToProps = dispatch => {
@@ -164,6 +156,7 @@ const mapDispatchToProps = dispatch => {
 
   return {
     loadDictionaries: dictionaryActions.loadDictionaries,
+    createDictionary: dictionaryActions.createDictionary,
     activeDictionariesSelectAll: dictionaryActions.activeDictionariesSelectAll,
     activeDictionariesClearAll: dictionaryActions.activeDictionariesClearAll,
     changeActiveDictionaries: dictionaryActions.changeActiveDictionaries,

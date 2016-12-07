@@ -197,7 +197,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user.user
+  user: state.user.user.user
 })
 
 const mapDispatchToProps = dispatch => {

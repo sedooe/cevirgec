@@ -5,17 +5,18 @@ import { Label, List, Message, Segment } from 'semantic-ui-react';
 import DefinitionListItem from './DefinitionListItem';
 import tr from '../../utils/Translation';
 
-const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete, onDefinitionEdit}) => (
+const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete, onDefinitionEdit, freshDefinitions}) => (
   <Segment disabled={!Object.keys(definitions).length}>
     <Label attached='top'>{tr(`Definitions for ${currentWord}`)}</Label>
     <List divided relaxed verticalAlign='middle' >
       {Object.keys(definitions).length ?
-        Object.keys(definitions).map((key, index) => {
+        Object.keys(definitions).reverse().map((key, index) => {
           return <DefinitionListItem 
                    definition={definitions[key]}
                    dictionary={dictionaries[definitions[key].dictionaryId]}
                    onDefinitionDelete={onDefinitionDelete}
                    onDefinitionEdit={onDefinitionEdit}
+                   freshDefinitions={freshDefinitions}
                    key={index + '_df_' + definitions[key].id } />
         })
         :
@@ -36,7 +37,8 @@ ListOfExistingDefinitions.propTypes = {
   definitions: React.PropTypes.object.isRequired,
   currentWord: React.PropTypes.string.isRequired,
   dictionaries: React.PropTypes.object.isRequired,
-  onDefinitionDelete: React.PropTypes.func.isRequired
+  onDefinitionDelete: React.PropTypes.func.isRequired,
+  freshDefinitions: React.PropTypes.object.isRequired
 };
 
 export default ListOfExistingDefinitions;

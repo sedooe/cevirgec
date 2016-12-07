@@ -24,10 +24,10 @@ export default class NewDefinitionForm extends Component {
   state = {
     detailsShown: false,
     definition: {
-      key: 'computer',
-      value: 'bilgisayar',
-      sex: 'NEUTER',
-      type: 'NOUN',
+      key: '',
+      value: '',
+      sex: '',
+      type: '',
       usage: '',
       notes: ''
     }
@@ -89,7 +89,6 @@ export default class NewDefinitionForm extends Component {
 
 NewDefinitionForm.propTypes = {
   currentWord: React.PropTypes.string.isRequired,
-  definition: React.PropTypes.object.isRequired,
   onSaveDefinition: React.PropTypes.func.isRequired
 }
 

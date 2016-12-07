@@ -18,9 +18,11 @@ export const dbCallbacks = [
 
 export const dbCallbacksNewDefWindow = [
   dictionaryActions.DICTIONARIES_LOADED,
+  dictionaryActions.DICTIONARY_CREATED,
   onlineSourceActions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED,
   definitionActions.DEFINITION_SAVED,
   definitionActions.FOUND_DEFINITIONS_OF_WORD,
   definitionActions.DEFINITION_DELETED,
-  definitionActions.DEFINITION_EDITED
+  definitionActions.DEFINITION_EDITED,
+  dictionaryActions.DICTIONARIES_ACTIVENESS_CHANGED
 ];

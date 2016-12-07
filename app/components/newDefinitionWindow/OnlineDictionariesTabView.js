@@ -41,9 +41,11 @@ export default class OnlineDictionariesTabView extends Component {
     });
 
     const content = Object.keys(onlineSources).map((key, index) => {
-      let url = onlineSources[key].url;
+      let url = new URL(onlineSources[key].url);
       if (this.props.currentWord) {
-        url = onlineSources[key].url.replace('abcxyz', this.props.currentWord);
+        url = url.href.replace('abcxyz', this.props.currentWord);
+      } else {
+        url = url.origin;
       }
       return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} />
     });

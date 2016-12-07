@@ -17,7 +17,8 @@ export default class DefinitionListItem extends Component {
   static propTypes = {
     definition: React.PropTypes.object.isRequired,
     dictionary: React.PropTypes.object.isRequired,
-    onDefinitionEdit: React.PropTypes.func.isRequired
+    onDefinitionEdit: React.PropTypes.func.isRequired,
+    freshDefinitions: React.PropTypes.object.isRequired
   };
 
   iconValue = sex => {
@@ -60,7 +61,7 @@ export default class DefinitionListItem extends Component {
     return (
       <List.Item className='no-side-padding'>
         <List.Content>
-          <Label ribbon color='blue' size='mini'>{tr('new')}</Label>
+          {this.props.freshDefinitions[definition.id] ? <Label ribbon color='blue' size='mini'>{tr('new')}</Label> : null}
           <Icon name={this.iconValue(definition.sex)} />
           <em>n.&nbsp;</em>  {/* FIXME: use real value of it. noun, verb, phrase etc. */}
           <span>{definition.value}</span>
