@@ -20,7 +20,7 @@ var OnlineSource = sequelize.define('onlineSource', {
   url: {
     type: Sequelize.STRING
   },
-  sourceLang: {
+  sourceLanguage: {
     type: Sequelize.STRING
   },
   index: {

@@ -1,5 +1,5 @@
 // @flow
-import * as actions from '../actions/constants/user';
+import * as actions from '../../actions/constants/user';
 
 export function user(state: Object = {}, action: Object) {
   switch (action.type) {

@@ -1,24 +1,24 @@
 // @flow
 import { combineReducers } from 'redux';
 import { routerReducer as routing } from 'react-router-redux';
-import { dictionaries, isFetching as isDictionariesFetching } from './dictionary';
-import { onlineSources, isFetching as isOnlineSourcesFetching } from './onlineSource';
+import { dictionaries, isFetching as isDictionaryFetching } from '../dictionary';
+import { onlineSources, isFetching as isOnlineSourceFetching } from '../onlineSource';
 import { user, isFetching as isUserFetching } from './user';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   dictionary: combineReducers({
     dictionaries,
-    isFetching: isDictionariesFetching
+    isDictionaryFetching
   }),
   onlineSource: combineReducers({
     onlineSources,
-    isFetching: isOnlineSourcesFetching
+    isOnlineSourceFetching
   }),
   user: combineReducers({
     user,
-    isFetching: isUserFetching
+    isUserFetching
   }),
   routing
 });
 
-export default rootReducer;
+export default appReducer;

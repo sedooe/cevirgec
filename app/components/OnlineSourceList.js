@@ -30,7 +30,7 @@ const OnlineSourceList = (props: Props) => {
               </List.Content>
 
               <List.Content>
-                <List.Header><Flag name={onlineSource.sourceLang} /> {onlineSource.name}</List.Header>
+                <List.Header><Flag name={onlineSource.sourceLanguage} /> {onlineSource.name}</List.Header>
                 <List.Description>{onlineSource.url}</List.Description>
               </List.Content>
             </List.Item>

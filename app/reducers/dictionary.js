@@ -24,6 +24,8 @@ export function dictionaries(state: Object = {}, action: Object) {
       delete newState[action.data];
       return Object.assign({}, newState);
     }
+    case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
+      return action.dictionariesObject;
     default:
       return state;
   }
@@ -36,12 +38,14 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.REQUEST_EDIT_DICTIONARY:
     case actions.REQUEST_CHANGE_ACTIVENESS_OF_DICTIONARY:
     case actions.REQUEST_LOAD_DICTIONARIES:
+    case actions.REQUEST_LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES:
       return true;
     case actions.DICTIONARY_CREATED:
     case actions.DICTIONARY_DELETED:
     case actions.DICTIONARY_EDITED:
     case actions.DICTIONARY_ACTIVENESS_CHANGED:
     case actions.DICTIONARIES_LOADED:
+    case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
       return false;
     default:
       return state;

@@ -25,37 +25,47 @@ export default class OnlineDictionariesTabView extends Component {
   setActiveTab = (newIndex) => this.setState({activeTabIndex: newIndex})
 
   render() {
-    const that = this;
+    const { onlineSources } = this.props;
 
-    if(!this.props.onlineDictionaries.length) {
+    if (!Object.keys(onlineSources).length) {
       return <NoDictWarning onAddOnlineSource={this.props.onAddOnlineSource} />
     }
 
-    let title = this.props.onlineDictionaries.map( (onlineDictionary, index) => {
+    const title = Object.keys(onlineSources).map((key, index) => {
       return <Menu.Item
-                name={onlineDictionary.name}
-                active={index == that.state.activeTabIndex}
-                onClick={that.setActiveTab.bind(that, index)}
+                key={key}
+                name={onlineSources[key].name}
+                active={index == this.state.activeTabIndex}
+                onClick={() => this.setActiveTab(index)}
               />
-    } );
+    });
 
-    let content = this.props.onlineDictionaries.map((onlineDictionary, index) => <WordBrowser url={onlineDictionary.url} active={index == that.state.activeTabIndex} />)
+    const content = Object.keys(onlineSources).map((key, index) => {
+      let url = new URL(onlineSources[key].url);
+      if (this.props.currentWord) {
+        url = url.href.replace('abcxyz', this.props.currentWord);
+      } else {
+        url = url.origin;
+      }
+      return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} />
+    });
 
     return (
-        <span style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
-          <Menu attached='top' tabular>
-            {title}
-          </Menu>
+      <span style={{display:'flex', flexDirection: 'column', flexGrow: 1}} className='full-height'>
+        <Menu attached='top' tabular>
+          {title}
+        </Menu>
 
-          <Segment attached='bottom' style={{display:'flex', flexDirection: 'column', flexGrow: 1}}>
-            {content}
-          </Segment>
-        </span>
+        <Segment attached='bottom' style={{display:'flex', flexDirection: 'column', flexGrow: 1}}>
+          {content}
+        </Segment>
+      </span>
     );
   }
 }
 
 OnlineDictionariesTabView.propTypes = {
-  onlineDictionaries: React.PropTypes.array.isRequired,
-  onAddOnlineSource: React.PropTypes.func.isRequired
+  onlineSources: React.PropTypes.object.isRequired,
+  onAddOnlineSource: React.PropTypes.func.isRequired,
+  currentWord: React.PropTypes.string.isRequired
 }
