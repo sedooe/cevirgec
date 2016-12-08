@@ -27,6 +27,10 @@ export default class OnlineDictionariesTabView extends Component {
   render() {
     const { onlineSources } = this.props;
 
+    if (!this.props.dictionaryExist) {
+      return null; 
+    }
+
     if (!Object.keys(onlineSources).length) {
       return <NoDictWarning onAddOnlineSource={this.props.onAddOnlineSource} />
     }
@@ -65,6 +69,7 @@ export default class OnlineDictionariesTabView extends Component {
 }
 
 OnlineDictionariesTabView.propTypes = {
+  dictionaryExist: React.PropTypes.bool.isRequired,
   onlineSources: React.PropTypes.object.isRequired,
   onAddOnlineSource: React.PropTypes.func.isRequired,
   currentWord: React.PropTypes.string.isRequired

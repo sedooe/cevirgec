@@ -117,6 +117,7 @@ class NewDefinitionWindow extends Component {
 
           <Grid.Column width={10} className='no-bottom-padding'>
             <OnlineDictionariesTabView
+              dictionaryExist={Object.keys(this.props.dictionaries).length ? true : false}
               onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
               currentWord={this.props.currentWord}

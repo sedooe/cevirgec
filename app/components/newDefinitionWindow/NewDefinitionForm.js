@@ -18,19 +18,22 @@ const wordTypes = [
   {value: 'PHRASAL_VERB', text: tr('Phrasal Verb')},
   {value: 'IDIOM', text: tr('Idiom')},
   {value: 'PHRASE', text: tr('Phrase')}
-]
+];
+
+const initialDefinition = {
+  key: '',
+  value: '',
+  sex: '',
+  type: '',
+  usage: '',
+  notes: ''
+};
 
 export default class NewDefinitionForm extends Component {
+
   state = {
     detailsShown: false,
-    definition: {
-      key: '',
-      value: '',
-      sex: '',
-      type: '',
-      usage: '',
-      notes: ''
-    }
+    definition: initialDefinition
   }
 
   onSubmit = (event, serializedForm) => {
@@ -43,6 +46,11 @@ export default class NewDefinitionForm extends Component {
   onInputChange = (name, e) => this.setState({definition: Object.assign({}, this.state.definition, {[name]: e.target.value} )} )
 
   onCheckableInputChange = (name, e, {value}) => this.setState({definition: Object.assign({}, this.state.definition, {[name]: value} )} )
+
+  clearForm = (event) => {
+    event.preventDefault();
+    this.setState({ definition: initialDefinition });
+  }
 
   render () {
 
@@ -74,10 +82,11 @@ export default class NewDefinitionForm extends Component {
                 <Form.Radio name='sex' label='♂' value='MASCULINE' checked={this.state.definition.sex == 'MASCULINE'} className='big-label' onChange={this.onCheckableInputChange.bind(this, 'sex')} />
                 <Form.Radio name='sex' label='♀' value='FEMININE' checked={this.state.definition.sex == 'FEMININE'} className='big-label' onChange={this.onCheckableInputChange.bind(this, 'sex')} />
               </Form.Group>
-              <Form.TextArea name='usage' rows='3' label={tr('Usage Examples')} placeholder={tr('Usage Examples')} />
-              <Form.TextArea name='notes' rows='3' label={tr('Notes')} placeholder={tr('Notes')} />
+              <Form.TextArea name='usage' rows='3' value={this.state.definition.usage} onChange={this.onInputChange.bind(this, 'usage')} label={tr('Usage Examples')} placeholder={tr('Usage Examples')} />
+              <Form.TextArea name='notes' rows='3' value={this.state.definition.notes} onChange={this.onInputChange.bind(this, 'notes')} label={tr('Notes')} placeholder={tr('Notes')} />
               <Form.Group inline className='no-margin'>
-                <Button primary content={tr('Save')} style={{marginLeft: 'auto'}} />
+                <Button content={tr('Clear')} style={{marginLeft: 'auto'}} onClick={this.clearForm} />              
+                <Button primary content={tr('Save')} />
               </Form.Group>
             </span>
           }

@@ -55,3 +55,8 @@ export const loadOnlineSourcesOfActiveDictionaries = (dictionaries: Object) => (
 
   ipcRenderer.send(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES, Array.from(sourceLanguages));
 }
+
+export const loadOnlineSourcesOfDictionary = (dictionary: Object) => (dispatch: Function) => {
+  dispatch(requestLoadOnlineSourcesOfActiveDictionaries());
+  ipcRenderer.send(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES, dictionary.sourceLanguage);
+}
