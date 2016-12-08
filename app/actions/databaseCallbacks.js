@@ -24,5 +24,6 @@ export const dbCallbacksNewDefWindow = [
   definitionActions.FOUND_DEFINITIONS_OF_WORD,
   definitionActions.DEFINITION_DELETED,
   definitionActions.DEFINITION_EDITED,
-  dictionaryActions.DICTIONARIES_ACTIVENESS_CHANGED
+  dictionaryActions.DICTIONARIES_ACTIVENESS_CHANGED,
+  onlineSourceActions.ONLINE_SOURCE_CREATED
 ];

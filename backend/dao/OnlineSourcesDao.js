@@ -41,11 +41,11 @@ ipc.on(actions.UPSERT_ONLINE_SOURCE, (event, data) => {
     OnlineSources.update(data, { where: { id: data.id } }).then(() => {
       // in update affacted row cannot be returened due to sqlite limitation, an array of count is returened instead.
       // See http://docs.sequelizejs.com/en/latest/api/model/#updatevalues-options-promisearrayaffectedcount-affectedrows
-      event.sender.send(actions.ONLINE_SOURCE_CREATED, data);
+      event.sender.send(actions.ONLINE_SOURCE_EDITED, data);
     }).catch(e => debug(e));
   } else {
     OnlineSources.create(data).then(createdModel => {
-      event.sender.send(actions.ONLINE_SOURCE_EDITED, createdModel.toJSON());
+      event.sender.send(actions.ONLINE_SOURCE_CREATED, createdModel.toJSON());
     }).catch(e => debug(e));
   }
 });

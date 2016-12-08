@@ -16,6 +16,7 @@ import DictionaryModal from '../components/DictionaryModal';
 import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
 import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
+import * as OnlineSourceActions from '../actions/onlineSource';
 
 class NewDefinitionWindow extends Component {
 
@@ -43,7 +44,7 @@ class NewDefinitionWindow extends Component {
 
   saveOnlineSource = onlineSource => {
     this.hideOnlineSourceModal();
-    //TODO call action
+    this.props.createOnlineSource(onlineSource);
   }
 
   changeCurrentWord = (word: String) => {
@@ -153,6 +154,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   const dictionaryActions = bindActionCreators(DictionaryActions, dispatch);
   const definitionActions = bindActionCreators(WordAndDefinitionActions, dispatch);
+  const onlineSourceActions = bindActionCreators(OnlineSourceActions, dispatch);
 
   return {
     loadDictionaries: dictionaryActions.loadDictionaries,
@@ -163,7 +165,8 @@ const mapDispatchToProps = dispatch => {
     changeCurrentWordAndLookForDefinitions: definitionActions.changeCurrentWordAndLookForDefinitions,
     saveDefinition: definitionActions.saveDefinition,
     onDefinitionDelete: definitionActions.deleteDefinition,
-    onDefinitionEdit: definitionActions.editDefinition
+    onDefinitionEdit: definitionActions.editDefinition,
+    createOnlineSource: onlineSourceActions.createOnlineSource
   }
 }
 
