@@ -13,17 +13,18 @@ const config = validate(merge(baseConfig, {
 
   entry: {
     app: [
-      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      //webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr
+      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/index'
     ],
     add_definition_popup: [
-      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/add_definition_popup'
     ],
     result_popup: [
-      `webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`,
+      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/result_popup'
     ]
@@ -51,7 +52,8 @@ const config = validate(merge(baseConfig, {
           'style-loader',
           'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
         )
-      }
+      },
+      { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.ttf$|\.eot$|\.woff$|\.woff2$|\.png$/i, loader: "file-loader" }
     ]
   },
 
