@@ -40,3 +40,23 @@ export const deleteOnlineSource = (onlineSourceId: number) => (dispatch: Functio
   dispatch(requestDeleteOnlineSource(onlineSourceId));
   ipcRenderer.send(actions.DELETE_ONLINE_SOURCE, onlineSourceId);
 }
+
+const requestLoadOnlineSourcesOfActiveDictionaries = () => ({
+  type: actions.REQUEST_LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES
+})
+
+export const loadOnlineSourcesOfActiveDictionaries = (dictionaries: Object) => (dispatch: Function) => {
+  dispatch(requestLoadOnlineSourcesOfActiveDictionaries());
+
+  const sourceLanguages = new Set();
+  Object.keys(dictionaries).forEach(key => {
+    sourceLanguages.add(dictionaries[key].sourceLanguage);
+  })
+
+  ipcRenderer.send(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES, Array.from(sourceLanguages));
+}
+
+export const loadOnlineSourcesOfDictionary = (dictionary: Object) => (dispatch: Function) => {
+  dispatch(requestLoadOnlineSourcesOfActiveDictionaries());
+  ipcRenderer.send(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES, dictionary.sourceLanguage);
+}

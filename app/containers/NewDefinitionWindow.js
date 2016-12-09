@@ -1,3 +1,5 @@
+// @flow
+
 'use strict';
 
 import React, { Component } from 'react'
@@ -13,29 +15,18 @@ import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfE
 import DictionaryModal from '../components/DictionaryModal';
 import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
-
-function getEmptyDefinitionForWord(word) {
-  return {
-    key: word,
-    value: '',
-    sex: 'NEUTER',
-    type: 'NONE',
-    usage: '',
-    notes: ''
-  }
-}
+import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
+import * as OnlineSourceActions from '../actions/onlineSource';
 
 class NewDefinitionWindow extends Component {
 
   state = {
-    currentWord: 'computer',
-    currentDefinition: getEmptyDefinitionForWord('computer'), //this is the definition being edited
-    dictionaries: [],
-    definitions: Array(3).fill({}),
-    onlineDictionaries: [],//[{name: 'test 1', url: 'http://www.tureng.com'}, {name: 'test 2', url: 'http://www.thefreedictionary.com'}],
-    loading: false,
     dictionaryModalOpen: false,
     onlineSourceModalOpen: false
+  }
+
+  componentDidMount = () => {
+    this.props.loadDictionaries();
   }
 
   openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
@@ -48,34 +39,77 @@ class NewDefinitionWindow extends Component {
 
   saveDictionary = dictionary => {
     this.hideDictionaryModal();
-    this.props.actions.createDictionary(dictionary);
+    this.props.createDictionary(dictionary);
   }
 
   saveOnlineSource = onlineSource => {
     this.hideOnlineSourceModal();
-    //TODO call action
+    this.props.createOnlineSource(onlineSource);
+  }
+
+  changeCurrentWord = (word: String) => {
+    this.props.changeCurrentWordAndLookForDefinitions(word, this.props.activeDictionaryIds);
+  }
+
+  onCurrentWordChange = event => {
+    if (event.keyCode === 13) {
+      this.changeCurrentWord(event.target.value);
+    }
+  }
+
+  handleBlur = event => {
+    this.changeCurrentWord(event.target.value);
+  }
+
+  onSaveDefinition = (definition: Object) => {
+    this.props.saveDefinition(definition, this.props.activeDictionaryIds);
+  }
+
+  onDictionariesSelectAll = (dictionaries: Object) => {
+    this.props.activeDictionariesSelectAll(dictionaries, this.props.currentWord);
+  }
+
+  onActiveDictionariesChange = (dictionaryIds: Array<String>, dictionaries: Object) => {
+    this.props.changeActiveDictionaries(dictionaryIds, dictionaries, this.props.currentWord);
   }
 
   render() {
+    
     return (
       <main className='full-height no-bottom-padding'>
         <Grid className='full-height'>
           <Grid.Column width={6} className='no-bottom-padding'>
             <ActiveDictionarySelector
-              dictionaries={this.state.dictionaries}
+              dictionaries={this.props.dictionaries}
+              activeDictionaryIds={this.props.activeDictionaryIds}
               onAddDictionary={this.openDictionaryModal}
+              onSelectAll={this.onDictionariesSelectAll}
+              onClearAll={this.props.activeDictionariesClearAll}
+              onActiveDictionariesChange={this.onActiveDictionariesChange}
             />
 
-            <WordSearchInput
-              loading={this.state.loading}
+            <Input fluid
+              defaultValue={this.props.currentWord}
+              icon='search'
+              placeholder={tr('Search a word...')}
+              label={tr('Word/Phrase')}
+              className='no-padding no-border'
+              onKeyUp={this.onCurrentWordChange}
+              onBlur={this.handleBlur}
             />
 
             <NewDefinitionForm
-              definition={this.state.currentDefinition}
+              currentWord={this.props.currentWord}            
+              onSaveDefinition={this.onSaveDefinition}
             />
 
             <ListOfExistingDefinitions
-              definitions={this.state.definitions}
+              definitions={this.props.definitions}
+              dictionaries={this.props.dictionaries}              
+              currentWord={this.props.currentWord}
+              onDefinitionDelete={this.props.onDefinitionDelete}
+              onDefinitionEdit={this.props.onDefinitionEdit}
+              freshDefinitions={this.props.freshDefinitions}
             />
           </Grid.Column>
 
@@ -83,37 +117,59 @@ class NewDefinitionWindow extends Component {
 
           <Grid.Column width={10} className='no-bottom-padding'>
             <OnlineDictionariesTabView
-              onlineDictionaries={this.state.onlineDictionaries}
+              dictionaryExist={Object.keys(this.props.dictionaries).length ? true : false}
+              onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
+              currentWord={this.props.currentWord}
             />
           </Grid.Column>
         </Grid>
 
         <DictionaryModal
-            open={this.state.dictionaryModalOpen}
-            onHide={this.hideDictionaryModal}
-            onSave={this.saveDictionary}
-            dictionary={{}}
-          />
+          open={this.state.dictionaryModalOpen}
+          onHide={this.hideDictionaryModal}
+          onSave={this.saveDictionary}
+          dictionary={{}}
+        />
 
         <OnlineSourceModal
-            open={this.state.onlineSourceModalOpen}
-            onHide={this.hideOnlineSourceModal}
-            onSave={this.saveOnlineSource}
-            onlineSource={{}}
-          />
+          open={this.state.onlineSourceModalOpen}
+          onHide={this.hideOnlineSourceModal}
+          onSave={this.saveOnlineSource}
+          onlineSource={{}}
+        />
       </main>
     )
   }
 }
 
 const mapStateToProps = state => ({
-
+  dictionaries: state.dictionary.dictionaries,
+  activeDictionaryIds: state.dictionary.activeDictionaries,
+  onlineSources: state.onlineSource.onlineSources,
+  currentWord: state.wordAndDefinitions.wordAndDefinitions.currentWord,
+  definitions: state.wordAndDefinitions.wordAndDefinitions.definitions,
+  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions
 })
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(DictionaryActions, dispatch)
-})
+const mapDispatchToProps = dispatch => {
+  const dictionaryActions = bindActionCreators(DictionaryActions, dispatch);
+  const definitionActions = bindActionCreators(WordAndDefinitionActions, dispatch);
+  const onlineSourceActions = bindActionCreators(OnlineSourceActions, dispatch);
+
+  return {
+    loadDictionaries: dictionaryActions.loadDictionaries,
+    createDictionary: dictionaryActions.createDictionary,
+    activeDictionariesSelectAll: dictionaryActions.activeDictionariesSelectAll,
+    activeDictionariesClearAll: dictionaryActions.activeDictionariesClearAll,
+    changeActiveDictionaries: dictionaryActions.changeActiveDictionaries,
+    changeCurrentWordAndLookForDefinitions: definitionActions.changeCurrentWordAndLookForDefinitions,
+    saveDefinition: definitionActions.saveDefinition,
+    onDefinitionDelete: definitionActions.deleteDefinition,
+    onDefinitionEdit: definitionActions.editDefinition,
+    createOnlineSource: onlineSourceActions.createOnlineSource
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewDefinitionWindow)
 
@@ -127,14 +183,4 @@ const VerticalDivider = () => (
       <Icon name='square outline' style={{color: '#aaa'}} />
     </Divider>
   </div>
-);
-
-const WordSearchInput = ({loading}) => (
-  <Input fluid disabled={loading}
-    icon='search'
-    placeholder={tr('Search a word...')}
-    label={tr('Word/Phrase')}
-    loading={loading}
-    className={ loading ? 'no-padding no-border' : 'no-padding no-border raised segment' }
-  />
 );

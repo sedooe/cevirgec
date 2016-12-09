@@ -9,9 +9,9 @@ const actions = require('../../app/actions/constants/onlineSource');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.LOAD_ONLINE_SOURCES);
-ipc.removeAllListeners(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE);
 ipc.removeAllListeners(actions.DELETE_ONLINE_SOURCE);
 ipc.removeAllListeners(actions.UPSERT_ONLINE_SOURCE);
+ipc.removeAllListeners(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES);
 
 ipc.on(actions.LOAD_ONLINE_SOURCES, (event) => {
   debug(actions.LOAD_ONLINE_SOURCES);
@@ -20,20 +20,6 @@ ipc.on(actions.LOAD_ONLINE_SOURCES, (event) => {
     const onlineSources = resultSet.map(onlineSource => onlineSource.toJSON());
     event.sender.send(actions.ONLINE_SOURCES_LOADED, onlineSources);
   }).catch(e => debug(e));
-});
-
-
-ipc.on(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE, function(event, data) {
-  debug(actions.LOAD_ONLINE_SOURCES_BY_LANGUAGE);
-
-  OnlineSources.findAll({where: {sourceLang: data}})
-    .then((resultArray)=>{
-      let values = resultArray.map(function (entity) {
-        return entity.toJSON();
-      });
-
-      event.sender.send(actions.ONLINE_SOURCES_BY_LANGUAGE_LOADED, values);
-    });
 });
 
 
@@ -55,13 +41,23 @@ ipc.on(actions.UPSERT_ONLINE_SOURCE, (event, data) => {
     OnlineSources.update(data, { where: { id: data.id } }).then(() => {
       // in update affacted row cannot be returened due to sqlite limitation, an array of count is returened instead.
       // See http://docs.sequelizejs.com/en/latest/api/model/#updatevalues-options-promisearrayaffectedcount-affectedrows
-      event.sender.send(actions.ONLINE_SOURCE_CREATED, data);
+      event.sender.send(actions.ONLINE_SOURCE_EDITED, data);
     }).catch(e => debug(e));
   } else {
     OnlineSources.create(data).then(createdModel => {
-      event.sender.send(actions.ONLINE_SOURCE_EDITED, createdModel.toJSON());
+      event.sender.send(actions.ONLINE_SOURCE_CREATED, createdModel.toJSON());
     }).catch(e => debug(e));
   }
+});
+
+
+ipc.on(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES, (event, sourceLanguages) => {
+  debug(actions.LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES);
+
+  OnlineSources.findAll({ where: { sourceLanguage: sourceLanguages } }).then(resultSet => {
+    const onlineSources = resultSet.map(onlineSource => onlineSource.toJSON());
+    event.sender.send(actions.ONLINE_SOURCES_OF_DICTIONARIES_LOADED, onlineSources);
+  }).catch(e => debug(e));
 });
 
 

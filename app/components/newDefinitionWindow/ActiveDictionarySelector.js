@@ -15,30 +15,61 @@ const verticallyCenteredContainerStyle = {
 export default class ActiveDictionarySelector extends Component {
 
   static propTypes = {
-    dictionaries: React.PropTypes.array.isRequired,
+    dictionaries: React.PropTypes.object.isRequired,
     activeDictionaryIds: React.PropTypes.array.isRequired,
     onAddDictionary: React.PropTypes.func.isRequired,
-    onActiveDictionariesChanged: React.PropTypes.func
+    onSelectAll: React.PropTypes.func.isRequired,
+    onClearAll: React.PropTypes.func.isRequired,
+    onActiveDictionariesChange: React.PropTypes.func
   };
 
-  render() {
+  onClearAll = event => {
+    event.preventDefault();
+    this.props.onClearAll();
+  }
 
-    return (
-      this.props.dictionaries.length ?
-        <Segment>
-          <Form>
-            <Form.Select label={tr('Active Dictionaries')} name='activeDictionaries' options={this.props.dictionaries} fluid multiple search selection />
-            <Button content={tr('Clear All')} icon='trash'/>
-            <Button content={tr('Select All')} icon='checkmark'/>
-          </Form>
-        </Segment>
-      :
-        <Segment>
-          <Segment basic style={verticallyCenteredContainerStyle}>
-            <span style={verticallyCenteredTextStyle}>{tr('You have no dictionaries')}</span>
-            <Button content={tr('Add a dictionary')} icon='plus' floated='right' onClick={this.props.onAddDictionary} />
-          </Segment>
-        </Segment>
+  onSelectAll = event => {
+    event.preventDefault();
+    this.props.onSelectAll(this.props.dictionaries);
+  }
+
+  handleChange = (event, inputObject) => {
+    this.props.onActiveDictionariesChange(inputObject.value, this.props.dictionaries);
+  }
+
+  render() {
+    const { dictionaries } = this.props;
+
+    const options = [];
+    Object.keys(dictionaries).forEach(key => {
+      options.push({ text: dictionaries[key].name, value: key });
+    });
+
+    const dropdown = (
+      <Segment>
+        <Form>
+          <Form.Select fluid multiple search selection
+            label={tr('Active Dictionaries')} 
+            name='activeDictionaries'
+            options={options}
+            value={this.props.activeDictionaryIds}
+            onChange={this.handleChange}
+          />
+          <Button content={tr('Clear All')} icon='trash' onClick={this.onClearAll} />
+          <Button content={tr('Select All')} icon='checkmark' onClick={this.onSelectAll} />
+        </Form>
+      </Segment>
     );
+
+    const noDictionary = (
+      <Segment>
+        <Segment basic style={verticallyCenteredContainerStyle}>
+          <span style={verticallyCenteredTextStyle}>{tr('You have no dictionaries')}</span>
+          <Button content={tr('Add a dictionary')} icon='plus' floated='right' onClick={this.props.onAddDictionary} />
+        </Segment>
+      </Segment>
+    );
+
+    return Object.keys(dictionaries).length ? dropdown : noDictionary;
   }
 }

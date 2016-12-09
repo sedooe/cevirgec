@@ -1,18 +1,26 @@
-import React, { Component } from 'react';
-import {Button, Label, List, Segment} from 'semantic-ui-react';
+// @flow
+
+import React from 'react';
+import { Label, List, Message, Segment } from 'semantic-ui-react';
 import DefinitionListItem from './DefinitionListItem';
 import tr from '../../utils/Translation';
 
-const ListOfExistingDefinitions = ({definitions}) => (
-  <Segment disabled={!definitions.length}>
-    <Label attached='top'>{tr('Definitions for $1', 'the word')}</Label>
+const ListOfExistingDefinitions = ({definitions, dictionaries, currentWord, onDefinitionDelete, onDefinitionEdit, freshDefinitions}) => (
+  <Segment disabled={!Object.keys(definitions).length}>
+    <Label attached='top'>{tr(`Definitions for ${currentWord}`)}</Label>
     <List divided relaxed verticalAlign='middle' >
-      {definitions.length ?
-        definitions.map(function (definition, index) {
-          return <DefinitionListItem definition={definition} key={index + '_df_' + definition.id } />
+      {Object.keys(definitions).length ?
+        Object.keys(definitions).reverse().map((key, index) => {
+          return <DefinitionListItem 
+                   definition={definitions[key]}
+                   dictionary={dictionaries[definitions[key].dictionaryId]}
+                   onDefinitionDelete={onDefinitionDelete}
+                   onDefinitionEdit={onDefinitionEdit}
+                   freshDefinitions={freshDefinitions}
+                   key={index + '_df_' + definitions[key].id } />
         })
         :
-        <List.Item style={noSidePadding}>
+        <List.Item className='no-side-padding'>
           <List.Content>
             <Message
               header={tr('There are no definitoins for this word yet.')}
@@ -26,7 +34,11 @@ const ListOfExistingDefinitions = ({definitions}) => (
 )
 
 ListOfExistingDefinitions.propTypes = {
-  definitions: React.PropTypes.array.isRequired,
+  definitions: React.PropTypes.object.isRequired,
+  currentWord: React.PropTypes.string.isRequired,
+  dictionaries: React.PropTypes.object.isRequired,
+  onDefinitionDelete: React.PropTypes.func.isRequired,
+  freshDefinitions: React.PropTypes.object.isRequired
 };
 
 export default ListOfExistingDefinitions;
