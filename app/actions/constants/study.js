@@ -1,0 +1,3 @@
+export const REQUEST_START_STUDY = 'REQUEST_START_STUDY';
+export const START_STUDY = 'START_STUDY';
+export const STUDY_STARTED = 'STUDY_STARTED';

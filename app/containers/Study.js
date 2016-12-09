@@ -1,15 +1,16 @@
+// @flow
+
 /* Copyright (c) 2015 Kod Gemisi Ltd.
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// @flow
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
 import * as DictionaryActions from '../actions/dictionary';
-
+import * as StudyActions from '../actions/study';
 import { Button, Label, Segment } from 'semantic-ui-react'
 import tr from '../utils/Translation';
 import Slider from 'react-slick';
@@ -44,10 +45,16 @@ const settings = {
 
 class Study extends Component {
 
+  componentDidMount = () => {
+    this.props.loadDictionaries();
+  }
+
   state = {
-    dictionaries: [],
+    dictionary: 0,
     studyStarted: false,
     currentSlideIndex: 0,
+    isLastSlide: false,
+    showResults: false,
     results: {}
   }
 
@@ -55,13 +62,17 @@ class Study extends Component {
 
   previous = () => this.refs.slider.slickPrev()
 
-  startStudy = () => this.setState({
-    studyStarted: true,
-    isLastSlide: false,
-    currentSlideIndex: 0,
-    showResults: false,
-    results: {}
-  })
+  startStudy = () => {
+    this.setState({
+      studyStarted: true,
+      isLastSlide: false,
+      currentSlideIndex: 0,
+      showResults: false,
+      results: {}
+    });
+
+    this.props.startStudy(this.state.dictionary);
+  }
 
   finishStudy = () => {
     if(this.state.isLastSlide ||
@@ -84,6 +95,8 @@ class Study extends Component {
 
   studyFinished = () => this.state.isLastSlide && typeof this.state.results[this.props.definitions[this.props.definitions.length-1].id] == 'boolean'
 
+  changeSelectedDictionary = (dictionaryId: number) => this.setState({ dictionary: dictionaryId })
+
   render() {
     return (
       <DocumentTitle title={tr('Cevirgec › Study')}>
@@ -91,13 +104,8 @@ class Study extends Component {
           <FlipCardFullWidthStyle />
 
             <DefinitionSourceDictionarySelector
-              dictionaries = {Array(5).fill().map(() => ({
-                id: Math.ceil(Math.random()*1000),
-                name: Math.random().toString(36).substr(2, 6),
-                value: Math.random().toString(36).substr(2, 6),
-                text: Math.random().toString(36).substr(2, 6)
-              }))}
-              onSelectedDictionaryChanged={()=>{}}
+              dictionaries={this.props.dictionaries}
+              onSelectedDictionaryChange={this.changeSelectedDictionary}
             />
 
             <div style={{maxWidth: '800px',margin: 'auto'}}>
@@ -165,14 +173,19 @@ class Study extends Component {
   }
 }
 
-
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
   definitions: Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
 })
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(DictionaryActions, dispatch)
-})
+const mapDispatchToProps = dispatch => {
+  const dictionaryActions = bindActionCreators(DictionaryActions, dispatch);
+  const studyActions = bindActionCreators(StudyActions, dispatch);
+
+  return {
+    loadDictionaries: dictionaryActions.loadDictionaries,
+    startStudy: studyActions.startStudy
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Study)

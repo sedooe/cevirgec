@@ -15,22 +15,33 @@ const verticallyCenteredContainerStyle = {
 export default class DefinitionSourceDictionarySelector extends Component {
 
   static propTypes = {
-    dictionaries: React.PropTypes.array.isRequired,
+    dictionaries: React.PropTypes.object.isRequired,
     selectedDictionaryId: React.PropTypes.number,
-    onSelectedDictionaryChanged: React.PropTypes.func.isRequired
+    onSelectedDictionaryChange: React.PropTypes.func.isRequired
   };
 
+  handleChange = (event, inputObject) => {
+    this.props.onSelectedDictionaryChange(parseInt(inputObject.value));
+  }
+
   render() {
+    const { dictionaries } = this.props;
+
+    const options = [];
+    Object.keys(dictionaries).forEach(key => {
+      options.push({ text: dictionaries[key].name, value: key });
+    });
 
     return (
-      this.props.dictionaries.length ?
+      options.length ?
         <Segment>
           <Form>
-            <Form.Select label={tr('Selected Dictionary')} name='selectedDictionaries' options={this.props.dictionaries} fluid search selection />
-            {/**
-              <Button content={tr('Clear All')} icon='trash'/>
-              <Button content={tr('Select All')} icon='checkmark'/>
-            **/}
+            <Form.Select fluid search selection
+              label={tr('Selected Dictionary')} 
+              name='selectedDictionaries' 
+              options={options}
+              onChange={this.handleChange}
+            />
           </Form>
         </Segment>
       :

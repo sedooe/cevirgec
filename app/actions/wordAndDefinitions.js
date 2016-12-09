@@ -1,6 +1,6 @@
 // @flow
+import { ipcRenderer } from 'electron';
 import * as actions from './constants/newDefinitionWindow';
-const { ipcRenderer } = require('electron');
 
 const requestFindDefinitionsOfWord = () => ({
   type: actions.REQUEST_FIND_DEFINITIONS_OF_WORD

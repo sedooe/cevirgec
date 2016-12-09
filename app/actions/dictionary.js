@@ -1,8 +1,8 @@
 // @flow
+import { ipcRenderer } from 'electron';
 import * as actions from './constants/dictionary';
 import { lookForDefinitions } from './wordAndDefinitions';
 import { loadOnlineSourcesOfActiveDictionaries } from './onlineSource';
-const { ipcRenderer } = require('electron');
 
 const requestLoadDictionaries = () => ({
   type: actions.REQUEST_LOAD_DICTIONARIES
