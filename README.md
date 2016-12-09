@@ -30,6 +30,7 @@ you can also use `tmux`
 
 ## sqlite3 problem
 
+```
 	Error: Please install sqlite3 package manually
 			at new ConnectionManager (/home/sedat/Desktop/projects/cevirgec-rewrite/node_modules/sequelize/lib/dialects/sqlite/connection-manager.js:25:13)
 			at new SqliteDialect (/home/sedat/Desktop/projects/cevirgec-rewrite/node_modules/sequelize/lib/dialects/sqlite/index.js:12:28)
@@ -53,6 +54,7 @@ you can also use `tmux`
 			at Module.require (module.js:483:17)
 			at require (internal/module.js:20:19)
 			at Object.<anonymous> (/home/sedat/Desktop/projects/cevirgec-rewrite/backend/dao/UserDao.js:9:14)
+```
 
 Solution:
 
@@ -73,7 +75,7 @@ possible causes:
 
 ![screenshot](electron-version.png)
 
-We use the same `node` version as our `electron` dependency's to prevent native module problems. See https://github.com/electron-userland/electron-builder/issues/39#issuecomment-145970010 
+We use the same `node` version as our `electron` dependency's to prevent native module problems. See https://github.com/electron-userland/electron-builder/issues/39#issuecomment-145970010
 
 1. Use storybook to design UI:
 `$ npm run storybook`
@@ -83,6 +85,7 @@ We use the same `node` version as our `electron` dependency's to prevent native 
 
 ## Error: Module did not self-register
 
+```
 		Uncaught Exception:
 		Error: Module did not self-register.
 		    at Error (native)
@@ -119,6 +122,7 @@ We use the same `node` version as our `electron` dependency's to prevent native 
 		    at Module._compile (module.js:556:32)
 		    at loader (/home/destan/development/workspaces/cevirgec/node_modules/babel-register/lib/node.js:144:5)
 		    at Object.require.extensions.(anonymous function) [as .js] (/home/destan/development/workspaces/cevirgec/node_modules/babel-register/lib/node.js:154:7)
+```
 
 Solution:
 
@@ -126,6 +130,10 @@ Solution:
 		rm -rf node_modules
 		npm i
 		./node_modules/.bin/electron-rebuild
+
+# Releasing
+
+When released `Cevirgec` binary requires `resources/images` folder to be same level with itself because of this line: `trayIcon = new Tray('resources/images/trayIcon.png');`
 
 # Boilerplate Repo
 
