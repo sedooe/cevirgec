@@ -10,12 +10,21 @@ import { BrowserWindow, Menu, ipcMain, screen as electronScreen } from 'electron
 const windowStateKeeper = require('electron-window-state');
 const menuHelper = require('./MenuHelper');
 const wordUtils = require('./WordUtils');
-//const UiEvents = require('../app/events/UiEvents');
+const path = require('path');
 const debug = require('debug')(__filename.split('/').pop());
 
 const OPEN_MAIN_PAGE = 'OPEN_MAIN_PAGE';
 const OPEN_REGISTER_PAGE = 'OPEN_REGISTER_PAGE';
 const OPEN_LOGIN_PAGE = 'OPEN_LOGIN_PAGE';
+
+// HTML file paths
+// ===============
+
+// in production require.main.filename is undefined
+const PROJECT_HOME = require.main.filename ? path.dirname(require.main.filename) : __dirname;
+const MAIN_HTML_PATH = path.join('file://', PROJECT_HOME, 'app', 'app.html');
+const NEW_DEFINITION_WINDOW_HTML_PATH = path.join('file://', PROJECT_HOME, 'app', 'add_definition_popup.html');
+const RESULT_POPUP_HTML_PATH = path.join('file://', PROJECT_HOME, 'app', 'result_popup.html');
 
 let mainWindow = null;
 let mainWindowState;
@@ -23,6 +32,7 @@ let mainWindowState;
 let newDefinitionWindow = null;
 let resultsWindow = null;
 let contextWindow = null;
+
 
 // When a word is couldn't found in verbose mode, the button to open
 // AddDefinitionWindow triggers this callback
@@ -74,7 +84,7 @@ function openDashboardWindow() {
   mainWindowState.manage(mainWindow);
   menuHelper.createApplicationMenu(mainWindow);
 
-  mainWindow.loadURL(`file://${__dirname}/../app/app.html`);
+  mainWindow.loadURL(MAIN_HTML_PATH);
 
   mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.show();
@@ -124,7 +134,7 @@ function _openNewDefinitionCommonWindow(queryString) {
 
     newDefinitionWindow = new BrowserWindow(windowOptions);
 
-    newDefinitionWindow.loadURL(`file://${__dirname}/../app/add_definition_popup.html?${queryString}`);
+    newDefinitionWindow.loadURL(`${NEW_DEFINITION_WINDOW_HTML_PATH}?${queryString}`);
 
     if (process.env.NODE_ENV === 'development') {
       // newDefinitionWindow.openDevTools();
@@ -175,9 +185,9 @@ function openResultPopup(selectedText, definitionsObj) {
 
   resultsWindow = new BrowserWindow(windowOptions);
 
-  let urlQueryPart = `?selectedText=${selectedText}&results=${JSON.stringify(definitionsObj)}`;
+  let urlQueryPart = `selectedText=${selectedText}&results=${JSON.stringify(definitionsObj)}`;
 
-  resultsWindow.loadURL(`file://${__dirname}/../app/result_popup.html${urlQueryPart}`);
+  resultsWindow.loadURL(`${RESULT_POPUP_HTML_PATH}?${urlQueryPart}`);
 
   if (process.env.NODE_ENV === 'development') {
     resultsWindow.webContents.on('context-menu', (e, props) => {
@@ -201,7 +211,10 @@ function openResultPopup(selectedText, definitionsObj) {
   });
 }
 
+//FIXME remove this. this is dormant
 function openContextWindow(selectedText) {
+
+  throw('DEPRECATED')
 
   if (contextWindow != null){
     contextWindow.close();

@@ -69,6 +69,12 @@ possible causes:
 
 # Development Notes
 
+## Versions
+
+![screenshot](electron-version.png)
+
+We use the same `node` version as our `electron` dependency's to prevent native module problems. See https://github.com/electron-userland/electron-builder/issues/39#issuecomment-145970010 
+
 1. Use storybook to design UI:
 `$ npm run storybook`
 
@@ -76,7 +82,6 @@ possible causes:
 3. This can be used for sqlite3 viewing [SQLite Browser](http://sqlitestudio.pl/?act=download)
 
 ## Error: Module did not self-register
-
 
 		Uncaught Exception:
 		Error: Module did not self-register.

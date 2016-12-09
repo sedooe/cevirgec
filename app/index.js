@@ -6,7 +6,6 @@ import { Router, hashHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import routes from './routes';
 import configureStore from './store/app/configureStore';
-import './app.global.css';
 import './index.scss';
 import { listenDbEvents } from './actions/databaseCallbacks';
 

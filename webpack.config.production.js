@@ -13,18 +13,14 @@ const config = validate(merge(baseConfig, {
 
   entry: {
     app: [
-      //webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr
-      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/index'
     ],
     add_definition_popup: [
-      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/add_definition_popup'
     ],
     result_popup: [
-      `webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr`,
       'babel-polyfill',
       './app/result_popup'
     ]
@@ -68,12 +64,12 @@ const config = validate(merge(baseConfig, {
     }),
 
     // Minify without warning messages and IE8 support
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        screw_ie8: true,
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compressor: {
+    //     screw_ie8: true,
+    //     warnings: false
+    //   }
+    // }),
 
     // Set the ExtractTextPlugin output filename
     new ExtractTextPlugin('style.css', { allChunks: true })
