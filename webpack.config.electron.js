@@ -7,18 +7,18 @@ import validate from 'webpack-validator';
 import merge from 'webpack-merge';
 import baseConfig from './webpack.config.base';
 
-//
-// var fs = require('fs');
-// var nodeModules = {};
-// fs.readdirSync('node_modules')
-//   .filter(function(x) {
-//     return ['.bin'].indexOf(x) === -1;
-//   })
-//   .forEach(function(mod) {
-//     nodeModules[mod] = 'commonjs ' + mod;
-//   });
-//
-//   console.log('nodeModules', nodeModules);
+
+var fs = require('fs');
+var nodeModules = {};
+fs.readdirSync('node_modules')
+  .filter(function(x) {
+    return ['.bin'].indexOf(x) === -1;
+  })
+  .forEach(function(mod) {
+    nodeModules[mod] = 'commonjs ' + mod;
+  });
+
+  console.log('nodeModules', nodeModules);
 
 export default validate(merge(baseConfig, {
   devtool: 'source-map',
@@ -74,9 +74,6 @@ export default validate(merge(baseConfig, {
   externals: [
     'font-awesome',
     'source-map-support',
-    {
-      request: 'commonjs request',
-      sqlite3: 'commonjs sqlite3'
-    }
+    nodeModules
   ]
 }));

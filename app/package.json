@@ -2,6 +2,62 @@
   "name": "Cevirgec",
   "productName": "Cevirgec",
   "version": "0.0.1",
+  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "main": "main.js",
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/webpack.config.test.js",
+      "<rootDir>/node_modules/"
+    ],
+    "testResultsProcessor": "node_modules/jest-bamboo-formatter"
+  },
+  "scripts": {
+    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest",
+    "test-watch": "npm test -- --watch",
+    "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 mocha --compilers js:babel-register --require ./test/setup.js ./test/e2e.js",
+    "lint": "eslint --format=node_modules/eslint-formatter-pretty app test *.js",
+    "hot-server": "cross-env NODE_ENV=development node -r babel-register server.js",
+    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
+    "build": "npm run build-main && npm run build-renderer",
+    "start": "cross-env NODE_ENV=production electron ./",
+    "start-hot": "cross-env HOT=1 NODE_ENV=development electron --debug=5858 -r babel-register -r babel-polyfill ./main.development",
+    "package": "npm run build && build --publish never",
+    "package-win": "npm run build && build --win --x64",
+    "package-linux": "npm run build && build --linux",
+    "package-all": "npm run build && build -mwl",
+    "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\"",
+    "cleanup": "mop -v",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "bin": {
+    "electron": "./node_modules/.bin/electron"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chentsulin/electron-react-boilerplate.git"
+  },
+  "author": {
+    "name": "C. T. Lin",
+    "email": "chentsulin@gmail.com",
+    "url": "https://github.com/chentsulin"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chentsulin/electron-react-boilerplate/issues"
+  },
+  "keywords": [
+    "electron",
+    "boilerplate",
+    "react",
+    "react-router",
+    "flux",
+    "webpack",
+    "react-hot"
+  ],
+  "homepage": "https://github.com/chentsulin/electron-react-boilerplate#readme",
+  "postinstall": "install-app-deps",
   "dependencies": {
     "css-modules-require-hook": "^4.0.5",
     "electron-debug": "^1.0.1",
