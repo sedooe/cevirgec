@@ -28,7 +28,7 @@ export default class OnlineDictionariesTabView extends Component {
     const { onlineSources } = this.props;
 
     if (!this.props.dictionaryExist) {
-      return null; 
+      return null;
     }
 
     if (!Object.keys(onlineSources).length) {
@@ -45,6 +45,8 @@ export default class OnlineDictionariesTabView extends Component {
     });
 
     const content = Object.keys(onlineSources).map((key, index) => {
+
+      // if there is no currentWord then show online source web site w/o any word attached.
       let url = new URL(onlineSources[key].url);
       if (this.props.currentWord) {
         url = url.href.replace('abcxyz', this.props.currentWord);
