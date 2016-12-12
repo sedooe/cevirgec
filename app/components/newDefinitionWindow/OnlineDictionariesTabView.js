@@ -53,7 +53,7 @@ export default class OnlineDictionariesTabView extends Component {
       } else {
         url = url.origin;
       }
-      return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} />
+      return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} setCurrentDefinition={this.props.setCurrentDefinition} />
     });
 
     return (
@@ -74,5 +74,6 @@ OnlineDictionariesTabView.propTypes = {
   dictionaryExist: React.PropTypes.bool.isRequired,
   onlineSources: React.PropTypes.object.isRequired,
   onAddOnlineSource: React.PropTypes.func.isRequired,
-  currentWord: React.PropTypes.string.isRequired
+  currentWord: React.PropTypes.string.isRequired,
+  setCurrentDefinition: React.PropTypes.func.isRequired
 }

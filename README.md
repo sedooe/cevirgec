@@ -4,6 +4,10 @@ Personal Vocabulary Trainer
 
 # Run the App on Development
 
+First *make sure that you are using the right `node` version*. It is strongly advised to use NVM.
+
+If you're using `nvm` then execute `nvm use` to switch to right version. It uses `.nvmrc`.
+
 Enable debug output:
 
 	export DEBUG=*,-babel
@@ -27,6 +31,8 @@ you can also use `tmux`
 		tmux attach
 
 # Development Installation
+
+
 
 ## sqlite3 problem
 
