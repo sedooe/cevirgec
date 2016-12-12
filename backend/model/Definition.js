@@ -3,12 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
+const Sequelize = require('sequelize');
+const sequelize = require('../Sequelize');
 
-var Sequelize = require('sequelize');
-var sequelize = require('../Sequelize');
-
-var Type = [
+const Type = [
   'NONE',
   'NOUN',
   'VERB',
@@ -25,13 +23,13 @@ var Type = [
   'PHRASE'
 ];
 
-var Sex = [
+const Sex = [
   'NEUTER',
   'MASCULINE',
   'FEMININE'
 ];
 
-var Definition = sequelize.define('definition', {
+const Definition = sequelize.define('definition', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

@@ -127,6 +127,8 @@ class ApplicationHelper {
   }
 
   clipboardChangeHandler(data) {
+    const { upsertSearchCount } = require('./dao/UserSearchCountDao');
+
     if (!preferencesHelper.isVerbose() || !userStatusHelper.isAuthenticated()) {
       debug('clipboardChangeHandler ignored', data.text);
       return;
@@ -137,7 +139,7 @@ class ApplicationHelper {
       return;
     }
 
-    let text = wordUtils.normalize(data.text);
+    const text = wordUtils.normalize(data.text);
 
     if (wordUtils.shouldTriggerContextRecognition(text)) {
       debug('context popup', text);
@@ -148,6 +150,13 @@ class ApplicationHelper {
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
         debug('clipboardChangeHandler', 'number of definitions found:', groupedDefinitions.length);
+        const dictionaryIds = [];
+        if (groupedDefinitions.length > 0) {
+          groupedDefinitions.forEach(result => {
+            dictionaryIds.push(result.dataValues.id);
+          });
+          upsertSearchCount(text, dictionaryIds);
+        }
         windowHelper.openResultPopup(text, groupedDefinitions);
       });
     }

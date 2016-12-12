@@ -151,7 +151,6 @@ function _openNewDefinitionCommonWindow(queryString) {
 }
 
 function openResultPopup(selectedText, definitionsObj) {
-
   if (resultsWindow != null) {
     resultsWindow.close();
     resultsWindow = null;

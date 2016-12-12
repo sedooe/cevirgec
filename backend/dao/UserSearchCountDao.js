@@ -34,4 +34,22 @@ function upsert(word, dictionaryId) {
     });
 }
 
-module.exports = 'DAOs are event based so we just initialize them on main.js but not need to expilictly use them';
+const upsertSearchCount = (word, dictionaryIds) => {
+  UserSearchCount.findAll({ where: { definition: word, dictionaryId: dictionaryIds } }).then(resultSet => {
+
+    // update
+    resultSet.forEach(searchCount => {
+      debug('dictionaryId', searchCount.getDataValue('dictionaryId'));
+      const index = dictionaryIds.indexOf(searchCount.getDataValue('dictionaryId'));
+      dictionaryIds.splice(index, 1); // delete updated ones
+      const incrementedValue = searchCount.getDataValue('count') + 1;
+      searchCount.setDataValue('count', incrementedValue);
+      searchCount.save();
+    });
+
+    // create
+    dictionaryIds.forEach(id => UserSearchCount.create({ definition: word, dictionaryId: id }));
+  }).catch(e => debug(e));
+};
+
+module.exports = { upsertSearchCount: upsertSearchCount };

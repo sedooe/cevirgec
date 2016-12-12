@@ -32,7 +32,7 @@ const noContentWarning = {
 export default class ResultList extends Component {
 
   static propTypes = {
-    definitions: React.PropTypes.array.isRequired
+    results: React.PropTypes.array.isRequired
   }
 
   render() {
@@ -40,7 +40,7 @@ export default class ResultList extends Component {
 
     let liElements = [];
 
-    this.props.definitions.forEach((dictionary, index, array)=>{
+    this.props.results.forEach((dictionary, index, array)=>{
       let unique = (index + dictionary.name).replace(/\s/g, '');
       liElements.push( (
         <li key={unique} className='dictionary' onClick={that.toggleExpand.bind(that, unique + '')}>
