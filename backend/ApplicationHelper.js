@@ -34,6 +34,7 @@ function initializeDaos() {
   require('./dao/OnlineSourcesDao');
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
+  require('./dao/StudyQuizResultsDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
   debug('End of initializeDaos');
 }
@@ -211,6 +212,7 @@ function reloadDbModules() {
   decache('./model/SoldListing')
   decache('./model/User')
   decache('./model/UserSearchCount')
+  decache('./model/StudyQuizResults')
 
   decache('./dao/UserDao');
   decache('./dao/DictionaryDao');

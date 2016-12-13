@@ -3,36 +3,46 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
-
-const ipc = require("electron").ipcMain;
+const ipc = require('electron').ipcMain;
+const actions = require('../../app/actions/constants/study');
 const UserSearchCount = require('../model/UserSearchCount');
-const DatabaseEvents = {};
-const UiEvents = {};
+const Definition = require('../model/Definition');
 const debug = require('debug')(__filename.split('/').pop());
 
-ipc.on(UiEvents.UPSERT_SEARCH_COUNT, function(event, word, activeDictionaryIds) {
-  debug(UiEvents.UPSERT_SEARCH_COUNT, word, activeDictionaryIds);
+ipc.removeAllListeners(actions.START_STUDY);
 
-  activeDictionaryIds.forEach((dictionaryId)=>{
-    upsert(word, dictionaryId);
-  });
-
-  let userSearchCount = {'definition': word, 'dictionaryId': activeDictionaryIds[0]};
+ipc.on(actions.START_STUDY, (event, dictionaryId) => {
+  getStudyWordsBySearchCount(dictionaryId).then(words => {
+    const promises = [];
+    words.forEach(word => {
+      debug('definition', word.getDataValue('definition'));
+      promises.push(getDefinitionsByDictionaryAndWord(word.getDataValue('definition'), dictionaryId));
+    });
+    Promise.all(promises).then(definitions => {
+      const definitionObj = {};
+      definitions.forEach(definition => {
+        definitionObj[definition.getDataValue('id')] = definition.toJSON();
+      });
+      debug('study definitions', definitionObj);
+      event.sender.send(actions.STUDY_READY, definitionObj);
+    });
+  }).catch(e => debug(e));
 });
 
-function upsert(word, dictionaryId) {
-  UserSearchCount.findOne({where: {definition: word, dictionaryId: dictionaryId}})
-    .then(function (userSearchCount) {
-      if (userSearchCount == null) {
-        UserSearchCount.create({'definition': word, 'dictionaryId': dictionaryId});
-      } else {
-        let incrementedValue = userSearchCount.getDataValue('count') + 1;
-        userSearchCount.setDataValue('count', incrementedValue);
-        userSearchCount.save();
-      }
-    });
-}
+const getDefinitionsByDictionaryAndWord = (word, dictionaryId) => {
+  return Definition.findOne({
+    where: { key: word, dictionaryId },
+    order: [['createdAt', 'ASC']]
+  });
+};
+
+const getStudyWordsBySearchCount = (dictionaryId) => {
+  return UserSearchCount.findAll({
+    attributes: ['definition'],
+    where: { dictionaryId },
+    order: [['count', 'DESC']]
+  });
+};
 
 const upsertSearchCount = (word, dictionaryIds) => {
   UserSearchCount.findAll({ where: { definition: word, dictionaryId: dictionaryIds } }).then(resultSet => {

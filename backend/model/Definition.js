@@ -5,6 +5,7 @@
 
 const Sequelize = require('sequelize');
 const sequelize = require('../Sequelize');
+const StudyQuizResults = require('./StudyQuizResults');
 
 const Type = [
   'NONE',
@@ -64,5 +65,8 @@ Definition.beforeCreate(function(definition, options) {
   // FIXME use a key-maker function
   definition.key = definition.key.toLowerCase().trim();
 });
+
+StudyQuizResults.belongsTo(Definition);
+StudyQuizResults.sync();
 
 module.exports = Definition;

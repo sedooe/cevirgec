@@ -38,6 +38,8 @@ export default class StudyCardForSlider extends Component {
   makeSelection = () => {throw 'Not implemented, TODO read selected radio input'}
 
   render () {
+    const { definition } = this.props;
+
     return (
         <FlipCard disabled={true} flipped={this.state.isFlipped}>
           <Card color='grey' fluid>
@@ -47,19 +49,18 @@ export default class StudyCardForSlider extends Component {
                 message={tr('See meaning')}
               />
               <Card.Header>
-                Steve wants to add you to
+                {definition.key}
               </Card.Header>
               <Card.Description>
-                Steve wants to add you to the group best friends
+                <ul>
+                  <li>Usage: {definition.usage || 'no usage'}</li>
+                  <li>Notes: {definition.notes || 'no notes'}</li>
+                </ul>
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
               <Icon name='man' />
               <em>n.&nbsp;</em>
-              <Label basic size='tiny' style={{float: 'right'}}>
-                <Icon name='book' />
-                Science Dictionary
-              </Label>
             </Card.Content>
           </Card>
 
@@ -70,14 +71,8 @@ export default class StudyCardForSlider extends Component {
                 message={tr('See the word')}
               />
               <Card.Header>
-                Molly Thomas
+                {definition.value}
               </Card.Header>
-              <Card.Meta>
-                New User
-              </Card.Meta>
-              <Card.Description>
-                Molly wants to add you to the group <strong>musicians</strong>
-              </Card.Description>
             </Card.Content>
             <Card.Content extra>
               <div className='ui two buttons'>

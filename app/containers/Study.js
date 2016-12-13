@@ -50,7 +50,7 @@ class Study extends Component {
   }
 
   state = {
-    dictionary: 0,
+    dictionaryId: 0,
     studyStarted: false,
     currentSlideIndex: 0,
     isLastSlide: false,
@@ -71,33 +71,42 @@ class Study extends Component {
       results: {}
     });
 
-    this.props.startStudy(this.state.dictionary);
+    this.props.startStudy(this.state.dictionaryId);
   }
 
   finishStudy = () => {
-    if(this.state.isLastSlide ||
+    if (this.state.isLastSlide ||
        (!this.state.isLastSlide && confirm(tr('Do you want to end studying now?'), tr('Confirm early finish')))
     ) {
       this.setState({studyStarted: false, showResults: true})
     }
+    console.log(this.state.results);
   }
 
   afterSlideChange = (currentSlide) => {
-    this.setState({currentSlideIndex: currentSlide})
-    this.setState({isLastSlide: currentSlide == this.props.definitions.length - 1})
+    this.setState({
+      currentSlideIndex: currentSlide,
+      isLastSlide: currentSlide == Object.keys(this.props.studyDefinitions).length - 1
+    });
   }
 
   onCardMarked = (definition) => {
     this.setState({results: Object.assign({}, this.state.results, {[definition.id]: definition.isCorrect})})
     // if timeout is not set, it slides without animation
-    setTimeout(() => this.next(), 0)
+    setTimeout(() => this.next(), 0);      
   }
 
-  studyFinished = () => this.state.isLastSlide && typeof this.state.results[this.props.definitions[this.props.definitions.length-1].id] == 'boolean'
+  studyFinished = () => {
+    return this.state.isLastSlide && 
+    typeof this.state.results[this.props.definitions[this.props.definitions.length-1].id] == 'boolean';
+  }
 
-  changeSelectedDictionary = (dictionaryId: number) => this.setState({ dictionary: dictionaryId })
+  changeSelectedDictionary = (dictionaryId: number) => this.setState({ dictionaryId })
 
   render() {
+    const { studyDefinitions } = this.props;
+    const studyDefinitionsIds = Object.keys(studyDefinitions);
+
     return (
       <DocumentTitle title={tr('Cevirgec › Study')}>
         <div>
@@ -115,20 +124,21 @@ class Study extends Component {
                 <Segment padded attached key='flipCardsContainerSegment'>
                   <Label attached='top'>
                     {tr('Study Your Words')}
-                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{this.props.definitions.length}</span>
+                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{studyDefinitionsIds.length}</span>
                   </Label>
-
-                  <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
-                    {this.props.definitions.map((definition, index) => (
-                      <div style={{height: '170px', padding: '0 15px'}} key={definition.id + '_' + index}>
+                  
+                  {studyDefinitionsIds.length && <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
+                    {studyDefinitionsIds.map((definitionId, index) => (
+                      <div style={{height: '170px', padding: '0 15px'}} key={definitionId + '_' + index}>
                         <StudyCardForSlider
                           onMark={this.onCardMarked}
-                          definition={definition}
-                          isCorrect={this.state.results[definition.id]}
+                          definition={studyDefinitions[definitionId]}
+                          isCorrect={true}
                         />
                       </div>
                     ))}
-                  </Slider>
+                  </Slider>}
+                  
                 </Segment>,
                 <Button.Group attached='bottom' key='buttonGroup'>
                   {/**<Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />}
@@ -161,7 +171,7 @@ class Study extends Component {
               <Segment>
                 <Label attached='top'>{tr('My Results')}</Label>
                 <StudyResults
-                  definitions={this.props.definitions}
+                  definitions={this.props.studyDefinitions}
                   results={this.state.results}
                 />
               </Segment>
@@ -175,6 +185,7 @@ class Study extends Component {
 
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
+  studyDefinitions: state.study.study,
   definitions: Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
 })
 
