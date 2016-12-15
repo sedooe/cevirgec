@@ -64,6 +64,10 @@ ipc.on(actions.EDIT_DEFINITION, (event, definition) => {
   }).catch(e => debug(e));
 });
 
+const getDefinitionsByDictionaryAndWord = (word, dictionaryId) => {
+  return Definition.findAll({ where: { key: word, dictionaryId } });
+};
+
 
 // This function is used when NewDefinitionWindow active
 // ipc.on(UiEvents.SEARCH_WORD, function(event, data) {
@@ -184,4 +188,6 @@ function clone(a) {
   return JSON.parse(JSON.stringify(a));
 }
 
-module.exports = 'DAOs are event based so we just initialize them on main.js but not need to expilictly use them';
+module.exports = {
+  getDefinitionsByDictionaryAndWord: getDefinitionsByDictionaryAndWord
+}

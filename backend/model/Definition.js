@@ -67,6 +67,7 @@ Definition.beforeCreate(function(definition, options) {
 });
 
 StudyQuizResults.belongsTo(Definition);
+Definition.hasOne(StudyQuizResults);
 StudyQuizResults.sync();
 
 module.exports = Definition;

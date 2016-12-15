@@ -5,6 +5,8 @@
 
 const Sequelize = require('sequelize');
 const sequelize = require('../Sequelize');
+const debug = require('debug')(__filename.split('/').pop());
+const { triggerChangeDefinitionPoint } = require('../dao/StudyQuizResultsDao');
 
 const UserSearchCount = sequelize.define('userSearchCount', {
   id: {
@@ -21,6 +23,15 @@ const UserSearchCount = sequelize.define('userSearchCount', {
   }
 },
 {
+  hooks: {
+    afterUpdate: (searchCount) => {
+      if (searchCount.changed('count')) {
+        debug('definition', searchCount.definition);
+        debug('dictionaryId', searchCount.dictionaryId);
+        triggerChangeDefinitionPoint(searchCount.definition, searchCount.dictionaryId);
+      }
+    }
+  },
   freezeTableName: true
 });
 

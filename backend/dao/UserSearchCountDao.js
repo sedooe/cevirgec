@@ -3,53 +3,86 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+const Sequelize = require('sequelize');
 const ipc = require('electron').ipcMain;
 const actions = require('../../app/actions/constants/study');
 const UserSearchCount = require('../model/UserSearchCount');
+const StudyQuizResults = require('../model/StudyQuizResults');
+const Dictionary = require('../model/Dictionary');
 const Definition = require('../model/Definition');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.START_STUDY);
 
 ipc.on(actions.START_STUDY, (event, dictionaryId) => {
-  getStudyWordsBySearchCount(dictionaryId).then(words => {
-    const promises = [];
-    words.forEach(word => {
-      debug('definition', word.getDataValue('definition'));
-      promises.push(getDefinitionsByDictionaryAndWord(word.getDataValue('definition'), dictionaryId));
-    });
-    Promise.all(promises).then(definitions => {
-      const definitionObj = {};
-      definitions.forEach(definition => {
-        definitionObj[definition.getDataValue('id')] = definition.toJSON();
-      });
-      debug('study definitions', definitionObj);
-      event.sender.send(actions.STUDY_READY, definitionObj);
-    });
+  debug(actions.START_STUDY, dictionaryId);
+
+  getStudyDefinitionsByPoint(dictionaryId).then(pointBasedDefinitions => {
+    getStudyDefinitionsRandomly(dictionaryId, pointBasedDefinitions.definitionIds).then(randomDefinitions => {
+      const studyDefinitions = Object.assign({}, pointBasedDefinitions.definitionsObj, randomDefinitions);
+      debug('studyDefinitions', studyDefinitions);
+      event.sender.send(actions.STUDY_READY, studyDefinitions);
+    }).catch(e => debug(e));
   }).catch(e => debug(e));
 });
 
-const getDefinitionsByDictionaryAndWord = (word, dictionaryId) => {
-  return Definition.findOne({
-    where: { key: word, dictionaryId },
-    order: [['createdAt', 'ASC']]
-  });
-};
+const getStudyDefinitionsRandomly = (dictionaryId, definitionIds) => {
+  return new Promise(resolve => {
+    Dictionary.findOne({
+      where: { id: dictionaryId },
+      include: [{
+        model: Definition,
+        where: { id: { $notIn: definitionIds } }
+      }],
+      order: [
+        [Sequelize.fn('RANDOM')]
+      ]
+    }).then(dictionary => {
+      const definitionsObj = {};
+      dictionary.definitions.some((definition, index) => {
+        definitionsObj[definition.getDataValue('id')] = definition.toJSON();
+        return index === 4;
+      });
+      resolve(definitionsObj);
+    });
+  }).catch(e => debug(e));
+}
 
-const getStudyWordsBySearchCount = (dictionaryId) => {
-  return UserSearchCount.findAll({
-    attributes: ['definition'],
-    where: { dictionaryId },
-    order: [['count', 'DESC']]
-  });
+const getStudyDefinitionsByPoint = (dictionaryId) => {
+  return new Promise(resolve => {
+    Dictionary.findOne({
+      where: { id: dictionaryId },
+      include: [{
+        model: Definition, // no need to write {where: dictionaryId}
+        include: [{
+          model: StudyQuizResults,
+          required: true,
+          attributes: []
+        }],
+      }],
+      order: [
+        [Definition, StudyQuizResults, 'point', 'DESC']
+      ]
+    }).then(dictionary => {
+      const definitionIds = [];
+      const definitionsObj = {};
+      dictionary.getDataValue('definitions').some((definition, index) => {
+        const id = definition.getDataValue('id');
+        definitionIds.push(id);
+        definitionsObj[id] = definition.toJSON();
+        return index === 4; // sequelize's limit is problematic inside include: https://github.com/sequelize/sequelize/issues/1897
+      });
+      resolve({ definitionIds, definitionsObj });
+    });
+  }).catch(e => debug(e));
 };
 
 const upsertSearchCount = (word, dictionaryIds) => {
+  debug('UserSearchCount', UserSearchCount);
   UserSearchCount.findAll({ where: { definition: word, dictionaryId: dictionaryIds } }).then(resultSet => {
 
     // update
     resultSet.forEach(searchCount => {
-      debug('dictionaryId', searchCount.getDataValue('dictionaryId'));
       const index = dictionaryIds.indexOf(searchCount.getDataValue('dictionaryId'));
       dictionaryIds.splice(index, 1); // delete updated ones
       const incrementedValue = searchCount.getDataValue('count') + 1;

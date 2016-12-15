@@ -79,8 +79,8 @@ class Study extends Component {
        (!this.state.isLastSlide && confirm(tr('Do you want to end studying now?'), tr('Confirm early finish')))
     ) {
       this.setState({studyStarted: false, showResults: true})
+      this.props.finishStudy(this.state.results);
     }
-    console.log(this.state.results);
   }
 
   afterSlideChange = (currentSlide) => {
@@ -195,7 +195,8 @@ const mapDispatchToProps = dispatch => {
 
   return {
     loadDictionaries: dictionaryActions.loadDictionaries,
-    startStudy: studyActions.startStudy
+    startStudy: studyActions.startStudy,
+    finishStudy: studyActions.finishStudy
   }
 }
 
