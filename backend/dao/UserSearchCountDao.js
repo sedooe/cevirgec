@@ -10,6 +10,7 @@ const UserSearchCount = require('../model/UserSearchCount');
 const StudyQuizResults = require('../model/StudyQuizResults');
 const Dictionary = require('../model/Dictionary');
 const Definition = require('../model/Definition');
+const { numberOfDefinitionsByDictionary } = require('./DefinitionDao');
 const debug = require('debug')(__filename.split('/').pop());
 
 ipc.removeAllListeners(actions.START_STUDY);
@@ -17,36 +18,48 @@ ipc.removeAllListeners(actions.START_STUDY);
 ipc.on(actions.START_STUDY, (event, dictionaryId) => {
   debug(actions.START_STUDY, dictionaryId);
 
-  getStudyDefinitionsByPoint(dictionaryId).then(pointBasedDefinitions => {
-    getStudyDefinitionsRandomly(dictionaryId, pointBasedDefinitions.definitionIds).then(randomDefinitions => {
-      const studyDefinitions = Object.assign({}, pointBasedDefinitions.definitionsObj, randomDefinitions);
-      debug('studyDefinitions', studyDefinitions);
-      event.sender.send(actions.STUDY_READY, studyDefinitions);
-    }).catch(e => debug(e));
+  numberOfDefinitionsByDictionary(dictionaryId).then(count => {
+    debug('count', count);
+    if (count < 5) {
+      event.sender.send(actions.STUDY_REJECTED, 'To study/quiz you must have at least 5 definitions in the selected dictionary.');
+    } else {
+      getStudyDefinitionsByPoint(dictionaryId).then(pointBasedDefinitions => {
+        getStudyDefinitionsRandomly(dictionaryId, pointBasedDefinitions.definitionIds).then(randomDefinitions => {
+          const studyDefinitions = Object.assign({}, pointBasedDefinitions.definitionsObj, randomDefinitions);
+          debug('studyDefinitions', studyDefinitions);
+          event.sender.send(actions.STUDY_READY, studyDefinitions);
+        }).catch(e => debug(e));
+      }).catch(e => debug(e));
+    }
   }).catch(e => debug(e));
 });
 
 const getStudyDefinitionsRandomly = (dictionaryId, definitionIds) => {
+  const includeObject = { model: Definition };
+  if (Object.keys(definitionIds).length) {
+    includeObject.where = { id: { $notIn: definitionIds } };
+  }
   return new Promise(resolve => {
     Dictionary.findOne({
       where: { id: dictionaryId },
-      include: [{
-        model: Definition,
-        where: { id: { $notIn: definitionIds } }
-      }],
+      include: [includeObject],
       order: [
         [Sequelize.fn('RANDOM')]
       ]
     }).then(dictionary => {
+      if (!dictionary) {
+        resolve({});
+        return;
+      }
       const definitionsObj = {};
       dictionary.definitions.some((definition, index) => {
         definitionsObj[definition.getDataValue('id')] = definition.toJSON();
         return index === 4;
       });
       resolve(definitionsObj);
-    });
-  }).catch(e => debug(e));
-}
+    }).catch(e => debug(e));
+  });
+};
 
 const getStudyDefinitionsByPoint = (dictionaryId) => {
   return new Promise(resolve => {
@@ -64,6 +77,10 @@ const getStudyDefinitionsByPoint = (dictionaryId) => {
         [Definition, StudyQuizResults, 'point', 'DESC']
       ]
     }).then(dictionary => {
+      if (!dictionary) { // dictionary is null when there is no studyQuizResult associated to one of its definitions. because of {required: true}
+        resolve({ definitionIds: {}, definitionsObj: {} });
+        return;
+      }
       const definitionIds = [];
       const definitionsObj = {};
       dictionary.getDataValue('definitions').some((definition, index) => {

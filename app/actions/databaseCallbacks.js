@@ -24,7 +24,8 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCE_CREATED,
   onlineSourceActions.ONLINE_SOURCE_EDITED,
   onlineSourceActions.ONLINE_SOURCE_DELETED,
-  studyActions.STUDY_READY
+  studyActions.STUDY_READY,
+  studyActions.STUDY_REJECTED
 ];
 
 export const listenDbEvents = store => {

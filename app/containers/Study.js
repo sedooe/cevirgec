@@ -119,9 +119,8 @@ class Study extends Component {
 
             <div style={{maxWidth: '800px',margin: 'auto'}}>
             {
-              this.state.studyStarted &&
-              [
-                <Segment padded attached key='flipCardsContainerSegment'>
+              this.state.studyStarted ? (studyDefinitions.error ? <h3>{studyDefinitions.error}</h3> :
+                [<Segment padded attached key='flipCardsContainerSegment'>
                   <Label attached='top'>
                     {tr('Study Your Words')}
                     <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{studyDefinitionsIds.length}</span>
@@ -144,14 +143,14 @@ class Study extends Component {
                   {/**<Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />}
                   <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Next')} /> **/}
                   <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Skip')} />
-                </Button.Group>
-              ]
+                </Button.Group>]
+              ) : null
             }
             </div>
 
             <Segment basic className='no-padding'>
               {
-                this.state.studyStarted ?
+                this.state.studyStarted && !studyDefinitions.error ?
                 <Button fluid
                   color={this.studyFinished() ? 'blue' : null}
                   content={tr('Finish study')}

@@ -3,8 +3,12 @@ import * as actions from '../../actions/constants/study';
 
 export function study(state: Object = {}, action: Object) {
   switch (action.type) {
-    case actions.STUDY_READY: //action.data: wordsAndDefinitions for study
+    case actions.REQUEST_START_STUDY: // clear previous study's state.
+      return {};
+    case actions.STUDY_READY: // action.data: wordsAndDefinitions for study
       return action.data;
+    case actions.STUDY_REJECTED: // action.data: error message
+      return { error: action.data };
     default:
       return state;
   }

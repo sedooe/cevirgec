@@ -68,6 +68,10 @@ const getDefinitionsByDictionaryAndWord = (word, dictionaryId) => {
   return Definition.findAll({ where: { key: word, dictionaryId } });
 };
 
+const numberOfDefinitionsByDictionary = (dictionaryId) => {
+  return Definition.count({ where: { dictionaryId } });
+};
+
 
 // This function is used when NewDefinitionWindow active
 // ipc.on(UiEvents.SEARCH_WORD, function(event, data) {
@@ -189,5 +193,6 @@ function clone(a) {
 }
 
 module.exports = {
-  getDefinitionsByDictionaryAndWord: getDefinitionsByDictionaryAndWord
+  getDefinitionsByDictionaryAndWord: getDefinitionsByDictionaryAndWord,
+  numberOfDefinitionsByDictionary: numberOfDefinitionsByDictionary
 }
