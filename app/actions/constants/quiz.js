@@ -1,0 +1,7 @@
+export const REQUEST_START_QUIZ = 'REQUEST_START_QUIZ';
+export const START_QUIZ = 'START_QUIZ';
+export const QUIZ_READY = 'QUIZ_READY';
+
+export const REQUEST_FINISIH_QUIZ = 'REQUEST_FINISIH_QUIZ';
+export const QUIZ_FINISHED = 'QUIZ_FINISHED';
+export const QUIZ_REJECTED = 'QUIZ_REJECTED';

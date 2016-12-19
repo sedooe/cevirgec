@@ -12,8 +12,9 @@ const QuizResults = ({definitions, results}) => {
       skipped = 0;
   return (
     <List divided relaxed>
-      {definitions.map((definition) => {
-        let isCorrect = results[definition.id];
+      {Object.keys(definitions).map((definitionId) => {
+        const definition = definitions[definitionId];
+        let isCorrect = results[definitionId];
         if(typeof isCorrect != 'boolean') {
           ++skipped;
         }
@@ -29,8 +30,8 @@ const QuizResults = ({definitions, results}) => {
               color={results[definition.id] ? 'green' : (results[definition.id] === false ? 'red' : 'grey')}
             />
             <List.Content>
-              <List.Header>[{definition.id}] Semantic-Org/Semantic-UI</List.Header>
-              <List.Description >Updated 10 mins ago</List.Description>
+              <List.Header>{definition.key}</List.Header>
+              <List.Description>{definition.value}</List.Description>
             </List.Content>
           </List.Item>
         );
@@ -41,7 +42,7 @@ const QuizResults = ({definitions, results}) => {
 }
 
 QuizResults.propTypes = {
-  definitions: React.PropTypes.array.isRequired,
+  definitions: React.PropTypes.object.isRequired,
   results: React.PropTypes.object.isRequired
 }
 

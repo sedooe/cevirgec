@@ -7,16 +7,16 @@ export default class QuizCardForSlider extends Component {
 
   static propTypes = {
     onMark: React.PropTypes.func.isRequired,
-    question: React.PropTypes.object.isRequired,
+    definition: React.PropTypes.object.isRequired,
     isCorrect: React.PropTypes.bool
   };
 
   state = {}
 
   makeSelection = (event, {value}) => {
-    let isCorrect = !!this.props.question.choices[value].isCorrect;
+    const isCorrect = value === this.props.definition.value;
     this.setState({selected: value})
-    this.props.onMark(Object.assign({}, this.props.question, {isCorrect}))
+    this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}))
   }
 
   render () {
@@ -30,13 +30,13 @@ export default class QuizCardForSlider extends Component {
             Steve wants to add you to the group best friends
           </Card.Description>
           <Form>
-            {Object.values(this.props.question.choices).map((choice) => (
-              <Form.Field key={'answer_' + choice.id}>
+            {this.props.definition.choices.map(choice => (
+              <Form.Field key={'answer_' + choice}>
                 <Radio
-                  label={choice.text}
+                  label={choice}
                   name='answer'
-                  value={choice.id + ''}
-                  checked={this.state.selected == choice.id}
+                  value={choice}
+                  checked={this.state.selected == choice}
                   onChange={this.makeSelection}
                 />
               </Form.Field>

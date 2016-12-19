@@ -5,6 +5,7 @@ import { dictionaries, isFetching as isDictionaryFetching } from '../dictionary'
 import { onlineSources, isFetching as isOnlineSourceFetching } from '../onlineSource';
 import { user, isFetching as isUserFetching } from './user';
 import { study, isFetching as isStudyFetching } from './study';
+import { quiz, isFetching as isQuizFetching } from './quiz';
 
 const appReducer = combineReducers({
   dictionary: combineReducers({
@@ -22,6 +23,10 @@ const appReducer = combineReducers({
   study: combineReducers({
     study,
     isStudyFetching
+  }),
+  quiz: combineReducers({
+    quiz,
+    isQuizFetching
   }),
   routing
 });

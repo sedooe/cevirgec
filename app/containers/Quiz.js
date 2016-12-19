@@ -8,8 +8,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import DocumentTitle from 'react-document-title';
+import * as QuizActions from '../actions/quiz';
 import * as DictionaryActions from '../actions/dictionary';
-
 import { Button, Card, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Popup, Radio, Segment } from 'semantic-ui-react'
 import tr from '../utils/Translation';
 import Slider from 'react-slick';
@@ -45,10 +45,16 @@ const settings = {
 // alternative DIY: https://www.codementor.io/reactjs/tutorial/building-a-flipper-using-react-js-and-less-css
 class Quiz extends Component {
 
+  componentDidMount = () => {
+    this.props.loadDictionaries();
+  }
+
   state = {
-    dictionaries: [],
-    studyStarted: false,
+    dictionaryId: 0,
+    quizStarted: false,
     currentSlideIndex: 0,
+    isLastSlide: false,
+    showResults: false,
     results: {}
   }
 
@@ -56,76 +62,85 @@ class Quiz extends Component {
 
   previous = () => this.refs.slider.slickPrev()
 
-  startStudy = () => this.setState({
-    studyStarted: true,
-    isLastSlide: false,
-    currentSlideIndex: 0,
-    showResults: false,
-    results: {}
-  })
+  startQuiz = () => {
+    this.setState({
+      quizStarted: true,
+      isLastSlide: false,
+      currentSlideIndex: 0,
+      showResults: false,
+      results: {}
+    });
 
-  finishStudy = () => {
-    if(this.state.isLastSlide ||
-       (!this.state.isLastSlide && confirm(tr('Do you want to end studying now?'), tr('Confirm early finish')))
+    this.props.startQuiz(this.state.dictionaryId);
+  }
+
+  finishQuiz = () => {
+    if (this.state.isLastSlide ||
+       (!this.state.isLastSlide && confirm(tr('Do you want to end quiz now?'), tr('Confirm early finish')))
     ) {
-      this.setState({studyStarted: false, showResults: true})
+      this.setState({quizStarted: false, showResults: true});
+      this.props.finishQuiz(this.state.results);
     }
   }
 
   afterSlideChange = (currentSlide) => {
-    this.setState({currentSlideIndex: currentSlide})
-    this.setState({isLastSlide: currentSlide == this.props.questions.length - 1})
+    this.setState({
+      currentSlideIndex: currentSlide,
+      isLastSlide: currentSlide == Object.keys(this.props.quizDefinitions).length - 1
+    });
   }
 
   onCardMarked = (definition) => {
     this.setState({results: Object.assign({}, this.state.results, {[definition.id]: definition.isCorrect})})
     // if timeout is not set, it slides without animation
-    setTimeout(() => this.next(), 0)
+    setTimeout(() => this.next(), 0);      
   }
 
-  studyFinished = () => this.state.isLastSlide && typeof this.state.results[this.props.questions[this.props.questions.length-1].id] == 'boolean'
+  quizFinished = () => {
+    return this.state.isLastSlide;
+  }
+
+  changeSelectedDictionary = (dictionaryId: number) => this.setState({ dictionaryId })
 
   render() {
+    const { quizDefinitions } = this.props;
+    const quizDefinitionsIds = Object.keys(quizDefinitions);
+
     return (
       <DocumentTitle title={tr('Cevirgec › Quiz')}>
         <div>
           <FlipCardFullWidthStyle />
 
             <DefinitionSourceDictionarySelector
-              dictionaries = {Array(5).fill().map(() => ({
-                id: Math.ceil(Math.random()*1000),
-                name: Math.random().toString(36).substr(2, 6),
-                value: Math.random().toString(36).substr(2, 6),
-                text: Math.random().toString(36).substr(2, 6)
-              }))}
-              onSelectedDictionaryChanged={()=>{}}
+              dictionaries={this.props.dictionaries}
+              onSelectedDictionaryChange={this.changeSelectedDictionary}
             />
 
             <div style={{maxWidth: '800px',margin: 'auto'}}>
             {
-              this.state.studyStarted &&
+              this.state.quizStarted ? (quizDefinitions.error ? <h3>{quizDefinitions.error}</h3> :
               [
                 <Segment padded attached key='flipCardsContainerSegment'>
                   <Label attached='top'>
-                    {tr('Study Your Words')}
-                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{this.props.questions.length}</span>
+                    {tr('Quiz Your Words')}
+                    <span style={{float: 'right'}}>{this.state.currentSlideIndex + 1}/{quizDefinitionsIds.length}</span>
                   </Label>
 
-                  <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
-                    {this.props.questions.map((question, index) => (
+                  {quizDefinitionsIds.length && <Slider {...settings} afterChange={this.afterSlideChange} ref='slider'>
+                    {quizDefinitionsIds.map((definitionId, index) => (
                       /*
                         1px top padding ensures card's top border to be visible otherwise it's hidden.
                         This is only valid for QuizCardForSlider not for Study page
                       */
-                      <div style={{height: '250px', padding: '1px 15px'}} key={question.id + '_' + index}>
+                      <div style={{height: '250px', padding: '1px 15px'}} key={definitionId + '_' + index}>
                         <QuizCardForSlider
                           onMark={this.onCardMarked}
-                          question={question}
-                          isCorrect={this.state.results[question.id]}
+                          definition={quizDefinitions[definitionId]}
+                          isCorrect={true}
                         />
                       </div>
                     ))}
-                  </Slider>
+                  </Slider>}
                 </Segment>,
                 <Button.Group attached='bottom' key='buttonGroup'>
                   {/**<Button onClick={this.previous} icon='left arrow' labelPosition='left' content={tr('Previous')} />}
@@ -134,21 +149,22 @@ class Quiz extends Component {
                   <Button onClick={this.next} icon='arrow right' labelPosition='right' content={tr('Skip')} />
                 </Button.Group>
               ]
+              ) : null
             }
             </div>
 
             <Segment basic className='no-padding'>
               {
-                this.state.studyStarted ?
+                this.state.quizStarted && !quizDefinitions.error ?
                 <Button fluid
-                  color={this.studyFinished() ? 'blue' : null}
+                  color={this.quizFinished() ? 'blue' : null}
                   content={tr('End Quiz')}
-                  onClick={this.finishStudy}
+                  onClick={this.finishQuiz}
                 />
                 :
                 <Button fluid color='green'
-                  content={tr('Start study')}
-                  onClick={this.startStudy}
+                  content={tr('Start quiz')}
+                  onClick={this.startQuiz}
                 />
               }
             </Segment>
@@ -159,7 +175,7 @@ class Quiz extends Component {
               <Segment>
                 <Label attached='top'>{tr('My Results')}</Label>
                 <QuizResults
-                  definitions={this.props.questions}
+                  definitions={this.props.quizDefinitions}
                   results={this.state.results}
                 />
               </Segment>
@@ -171,23 +187,20 @@ class Quiz extends Component {
   }
 }
 
-
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
-  questions: Array(5).fill().map(() => ({
-    id: Math.ceil(Math.random()*1000),
-    choices: {
-      11: {id: 11, text: 'Lorem ipsum'},
-      12: {id: 12, text: 'Dolor sit amed'},
-      13: {id: 13, text: 'Naquem ip sumat', isCorrect: true},
-      14: {id: 14, text: 'Ra qel out enum'}
-    },
-    definition: {}
-  }))
+  quizDefinitions: state.quiz.quiz
 })
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(DictionaryActions, dispatch)
-})
+const mapDispatchToProps = dispatch => {
+  const dictionaryActions = bindActionCreators(DictionaryActions, dispatch);
+  const quizActions = bindActionCreators(QuizActions, dispatch);
+
+  return {
+    loadDictionaries: dictionaryActions.loadDictionaries,
+    startQuiz: quizActions.startQuiz,
+    finishQuiz: quizActions.finishQuiz
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Quiz)

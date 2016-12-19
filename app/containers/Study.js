@@ -97,8 +97,7 @@ class Study extends Component {
   }
 
   studyFinished = () => {
-    return this.state.isLastSlide && 
-    typeof this.state.results[this.props.definitions[this.props.definitions.length-1].id] == 'boolean';
+    return this.state.isLastSlide;
   }
 
   changeSelectedDictionary = (dictionaryId: number) => this.setState({ dictionaryId })
@@ -184,8 +183,7 @@ class Study extends Component {
 
 const mapStateToProps = state => ({
   dictionaries: state.dictionary.dictionaries,
-  studyDefinitions: state.study.study,
-  definitions: Array(5).fill().map(() => ({id: Math.ceil(Math.random()*1000)}))
+  studyDefinitions: state.study.study
 })
 
 const mapDispatchToProps = dispatch => {

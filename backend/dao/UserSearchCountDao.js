@@ -5,34 +5,65 @@
 
 const Sequelize = require('sequelize');
 const ipc = require('electron').ipcMain;
-const actions = require('../../app/actions/constants/study');
+const studyActions = require('../../app/actions/constants/study');
+const quizActions = require('../../app/actions/constants/quiz');
 const UserSearchCount = require('../model/UserSearchCount');
 const StudyQuizResults = require('../model/StudyQuizResults');
 const Dictionary = require('../model/Dictionary');
 const Definition = require('../model/Definition');
-const { numberOfDefinitionsByDictionary } = require('./DefinitionDao');
+const { numberOfDefinitionsByDictionary, produceWrongChoicesForQuiz } = require('./DefinitionDao');
 const debug = require('debug')(__filename.split('/').pop());
 
-ipc.removeAllListeners(actions.START_STUDY);
+ipc.removeAllListeners(studyActions.START_STUDY);
+ipc.removeAllListeners(quizActions.START_QUIZ);
 
-ipc.on(actions.START_STUDY, (event, dictionaryId) => {
-  debug(actions.START_STUDY, dictionaryId);
+ipc.on(studyActions.START_STUDY, (event, dictionaryId) => {
+  debug(studyActions.START_STUDY, dictionaryId);
 
-  numberOfDefinitionsByDictionary(dictionaryId).then(count => {
-    debug('count', count);
-    if (count < 5) {
-      event.sender.send(actions.STUDY_REJECTED, 'To study/quiz you must have at least 5 definitions in the selected dictionary.');
-    } else {
-      getStudyDefinitionsByPoint(dictionaryId).then(pointBasedDefinitions => {
-        getStudyDefinitionsRandomly(dictionaryId, pointBasedDefinitions.definitionIds).then(randomDefinitions => {
-          const studyDefinitions = Object.assign({}, pointBasedDefinitions.definitionsObj, randomDefinitions);
-          debug('studyDefinitions', studyDefinitions);
-          event.sender.send(actions.STUDY_READY, studyDefinitions);
-        }).catch(e => debug(e));
-      }).catch(e => debug(e));
-    }
-  }).catch(e => debug(e));
+  produceStudyQuizDefinitions(dictionaryId).then(definitions => {
+    debug('studyDefinitions', definitions);
+    event.sender.send(studyActions.STUDY_READY, definitions);
+  }).catch(e => event.sender.send(studyActions.STUDY_REJECTED, e));
 });
+
+ipc.on(quizActions.START_QUIZ, (event, dictionaryId) => {
+  debug(quizActions.START_QUIZ, dictionaryId);
+
+  produceStudyQuizDefinitions(dictionaryId).then(definitions => {
+    debug('quizDefinitions', definitions);
+    const promises = [];
+    Object.keys(definitions).forEach(key => {
+      promises.push(produceWrongChoicesForQuiz(definitions[key]));
+    });
+    Promise.all(promises).then(quizChoicesOfAllDefinitions => {
+      quizChoicesOfAllDefinitions.forEach(quizChoicesOfDefinition => {
+        Object.keys(quizChoicesOfDefinition).forEach(key => {
+          quizChoicesOfDefinition[key].push(definitions[key].value); // pushing correct answer into choices
+          shuffle(quizChoicesOfDefinition[key]);
+          definitions[key].choices = quizChoicesOfDefinition[key];
+        });
+        debug('quizDefinitions', definitions);
+      });
+      event.sender.send(quizActions.QUIZ_READY, definitions);      
+    }).catch(e => debug(e));
+  }).catch(e => event.sender.send(quizActions.QUIZ_REJECTED, e));
+});
+
+const produceStudyQuizDefinitions = (dictionaryId) => {
+  return new Promise((resolve, reject) => {
+    numberOfDefinitionsByDictionary(dictionaryId).then(count => {
+      if (count < 5) {
+        reject('To study/quiz you must have at least 5 definitions in the selected dictionary.');
+      } else {
+        getStudyDefinitionsByPoint(dictionaryId).then(pointBasedDefinitions => {
+          getStudyDefinitionsRandomly(dictionaryId, pointBasedDefinitions.definitionIds).then(randomDefinitions => {
+            resolve(Object.assign({}, pointBasedDefinitions.definitionsObj, randomDefinitions));
+          }).catch(e => debug(e));
+        }).catch(e => debug(e));
+      }
+    }).catch(e => debug(e));
+  })
+}
 
 const getStudyDefinitionsRandomly = (dictionaryId, definitionIds) => {
   const includeObject = { model: Definition };
@@ -111,5 +142,16 @@ const upsertSearchCount = (word, dictionaryIds) => {
     dictionaryIds.forEach(id => UserSearchCount.create({ definition: word, dictionaryId: id }));
   }).catch(e => debug(e));
 };
+
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items The array containing the items.
+ */
+const shuffle = a => {
+  for (let i = a.length; i; i--) {
+    const j = Math.floor(Math.random() * i);
+    [a[i - 1], a[j]] = [a[j], a[i - 1]];
+  }
+}
 
 module.exports = { upsertSearchCount: upsertSearchCount };
