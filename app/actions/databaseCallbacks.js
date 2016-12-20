@@ -3,6 +3,7 @@ import * as userActions from './constants/user';
 import * as dictionaryActions from './constants/dictionary';
 import * as onlineSourceActions from './constants/onlineSource';
 import * as definitionActions from './constants/newDefinitionWindow';
+import * as settingsActions from './constants/settings';
 import { loginSuccess } from './user';
 import { dictionariesAndActiveDictionariesLoaded } from './dictionary';
 import { loadOnlineSourcesOfDictionary } from './onlineSource';
@@ -22,7 +23,9 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCES_LOADED,
   onlineSourceActions.ONLINE_SOURCE_CREATED,
   onlineSourceActions.ONLINE_SOURCE_EDITED,
-  onlineSourceActions.ONLINE_SOURCE_DELETED
+  onlineSourceActions.ONLINE_SOURCE_DELETED,
+  settingsActions.ALL_SETTINGS_LOADED,
+  settingsActions.VERBOSITY_CHANGED
 ];
 
 export const listenDbEvents = store => {

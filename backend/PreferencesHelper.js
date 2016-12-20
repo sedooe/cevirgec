@@ -3,8 +3,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
-
 const jetpack = require('fs-jetpack');
 const firstRunHelper = require('./FirstRunHelper');
 const filePathHelper = require('./FilePathHelper');
@@ -57,6 +55,11 @@ class PreferencesHelper {
     this.saveSettings();
   }
 
+  toggleVerbosity() {
+    settings.verbose = !settings.verbose;
+    this.saveSettings();
+  }
+
   isVerbose() {
     return settings.verbose;
   }
@@ -67,21 +70,3 @@ class PreferencesHelper {
 }
 
 module.exports = new PreferencesHelper();
-
-//  ipc.on(Actions.LOAD_ALL_SETTINGS, function(event) {
-//    debug(Actions.LOAD_ALL_SETTINGS);
-//
-//    let settings = PreferencesHelper.getSettings();
-//
-//    event.sender.send(DatabaseEvents.LOAD_ALL_SETTINGS_READY, settings);
-//  });
-//
-// ipc.on(Actions.UPDATE_ALL_SETTINGS, function(event, data) {
-//   debug(Actions.UPDATE_ALL_SETTINGS, data);
-//
-//   PreferencesHelper.updateSettings(data);
-//   let settings = PreferencesHelper.getSettings();
-//
-//   // need to send callback since we don't use optimistic ui
-//   event.sender.send(DatabaseEvents.LOAD_ALL_SETTINGS_READY, settings);
-// });

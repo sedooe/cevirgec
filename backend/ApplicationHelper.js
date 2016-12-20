@@ -34,6 +34,7 @@ function initializeDaos() {
   require('./dao/OnlineSourcesDao');
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
+  require('./dao/SettingsDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
   debug('End of initializeDaos');
 }
@@ -210,6 +211,7 @@ function reloadDbModules() {
   decache('./dao/UserSearchCountDao');
   decache('./dao/QuizDao');
   decache('./dao/SearchQueryHelper');
+  decache('./dao/SettingsDao');
 
   var Sequelize = require('sequelize');
   var sequelize = require('./Sequelize');
