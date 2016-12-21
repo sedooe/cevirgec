@@ -3,6 +3,8 @@ import * as userActions from './constants/user';
 import * as dictionaryActions from './constants/dictionary';
 import * as onlineSourceActions from './constants/onlineSource';
 import * as definitionActions from './constants/newDefinitionWindow';
+import * as studyActions from './constants/study';
+import * as quizActions from './constants/quiz';
 import { loginSuccess } from './user';
 import { dictionariesAndActiveDictionariesLoaded } from './dictionary';
 import { loadOnlineSourcesOfDictionary } from './onlineSource';
@@ -22,7 +24,11 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCES_LOADED,
   onlineSourceActions.ONLINE_SOURCE_CREATED,
   onlineSourceActions.ONLINE_SOURCE_EDITED,
-  onlineSourceActions.ONLINE_SOURCE_DELETED
+  onlineSourceActions.ONLINE_SOURCE_DELETED,
+  studyActions.STUDY_READY,
+  studyActions.STUDY_REJECTED,
+  quizActions.QUIZ_READY,
+  quizActions.QUIZ_REJECTED
 ];
 
 export const listenDbEvents = store => {

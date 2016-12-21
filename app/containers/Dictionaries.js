@@ -67,7 +67,7 @@ class Dictionaries extends Component {
   render() {
     return (
       <DocumentTitle title={tr('Cevirgec › Dictionaries')}>
-        <div>
+        <div className='main-flex-container'>
           <div className="ui segments">
             <div className="ui clearing segment">
               <h3 className="ui left floated header">{tr('Dictionaries')}</h3>

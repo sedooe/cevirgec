@@ -10,7 +10,7 @@ export default class App extends Component {
   //this div will have id="data-reactroot"
   render() {
     return (
-      <main>
+      <main className='full-height'>
 
         {(
           this.props.location.pathname == "/" ?

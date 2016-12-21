@@ -3,12 +3,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
+const Sequelize = require('sequelize');
+const sequelize = require('../Sequelize');
+const StudyQuizResults = require('./StudyQuizResults');
 
-var Sequelize = require('sequelize');
-var sequelize = require('../Sequelize');
-
-var Type = [
+const Type = [
   'NONE',
   'NOUN',
   'VERB',
@@ -25,13 +24,13 @@ var Type = [
   'PHRASE'
 ];
 
-var Sex = [
+const Sex = [
   'NEUTER',
   'MASCULINE',
   'FEMININE'
 ];
 
-var Definition = sequelize.define('definition', {
+const Definition = sequelize.define('definition', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -66,5 +65,9 @@ Definition.beforeCreate(function(definition, options) {
   // FIXME use a key-maker function
   definition.key = definition.key.toLowerCase().trim();
 });
+
+StudyQuizResults.belongsTo(Definition);
+Definition.hasOne(StudyQuizResults);
+StudyQuizResults.sync();
 
 module.exports = Definition;

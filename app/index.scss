@@ -72,6 +72,19 @@ main {
 	box-shadow: none !important;
 }
 
+.white-bg {
+	background-color: white;
+}
+
+.main-flex-container {
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 34px);
+	&>div {
+		flex: 1;
+	}
+}
+
 // Study page
 // FIXME move into the component
 .carousel-item {

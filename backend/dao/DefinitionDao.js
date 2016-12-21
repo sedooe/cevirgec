@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+const Sequelize = require('sequelize');
 const ipc = require('electron').ipcMain;
 const actions = require('../../app/actions/constants/newDefinitionWindow');
 const Definition = require('../model/Definition');
@@ -63,6 +64,36 @@ ipc.on(actions.EDIT_DEFINITION, (event, definition) => {
     }).catch(e => debug(e));
   }).catch(e => debug(e));
 });
+
+const produceWrongChoicesForQuiz = (definition) => {
+  return new Promise(resolve => {
+    Definition.findAll({
+      attributes: ['value'],
+      where: {
+        key: { $not: definition.key },
+        value: { $not: definition.value }
+      },
+      order: [
+        [Sequelize.fn('RANDOM')]
+      ],
+      limit: 3
+    }).then(definitions => {
+      const obj = { [definition.id]: [] };
+      definitions.forEach(def => {
+        obj[definition.id].push(def.getDataValue('value'));
+      });
+      resolve(obj);
+    });
+  });
+};
+
+const getDefinitionsByDictionaryAndWord = (word, dictionaryId) => {
+  return Definition.findAll({ where: { key: word, dictionaryId } });
+};
+
+const numberOfDefinitionsByDictionary = (dictionaryId) => {
+  return Definition.count({ where: { dictionaryId } });
+};
 
 
 // This function is used when NewDefinitionWindow active
@@ -184,4 +215,8 @@ function clone(a) {
   return JSON.parse(JSON.stringify(a));
 }
 
-module.exports = 'DAOs are event based so we just initialize them on main.js but not need to expilictly use them';
+module.exports = {
+  getDefinitionsByDictionaryAndWord: getDefinitionsByDictionaryAndWord,
+  numberOfDefinitionsByDictionary: numberOfDefinitionsByDictionary,
+  produceWrongChoicesForQuiz: produceWrongChoicesForQuiz
+}
