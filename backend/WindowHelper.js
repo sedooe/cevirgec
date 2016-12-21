@@ -110,54 +110,54 @@ function openNewDefinitionWindowForDictionary(dictionaryIds) {
 
 function _openNewDefinitionCommonWindow(queryString) {
 
-    if(newDefinitionWindow != null){
+  if (newDefinitionWindow != null) {
 
-      // TODO verbose functionality must be suspended when this window is open
+    // TODO verbose functionality must be suspended when this window is open
 
-      newDefinitionWindow.show();
-      newDefinitionWindow.restore();
-      return;
-    }
+    newDefinitionWindow.show();
+    newDefinitionWindow.restore();
+    return;
+  }
 
-    // const position = electronScreen.getCursorScreenPoint();
-    const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  // const position = electronScreen.getCursorScreenPoint();
+  const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
-    let windowOptions = {
-      // x: position.x,
-      // y: position.y,
-      width: size.width,
-      height: size.height,
-      minHeight: 500,
-      minWidth: 1300,
-      show: false
-    };
+  let windowOptions = {
+    // x: position.x,
+    // y: position.y,
+    width: size.width,
+    height: size.height,
+    minHeight: 500,
+    minWidth: 1300,
+    show: false
+  };
 
-    newDefinitionWindow = new BrowserWindow(windowOptions);
+  newDefinitionWindow = new BrowserWindow(windowOptions);
 
-    newDefinitionWindow.loadURL(`${NEW_DEFINITION_WINDOW_HTML_PATH}?${queryString}`);
+  newDefinitionWindow.loadURL(`${NEW_DEFINITION_WINDOW_HTML_PATH}?${queryString}`);
 
-    if (process.env.NODE_ENV === 'development') {
-      // newDefinitionWindow.openDevTools();
-      newDefinitionWindow.webContents.on('context-menu', (e, props) => {
-        const { x, y } = props;
+  if (process.env.NODE_ENV === 'development') {
+    // newDefinitionWindow.openDevTools();
+    newDefinitionWindow.webContents.on('context-menu', (e, props) => {
+      const { x, y } = props;
 
-        Menu.buildFromTemplate([{
-          label: 'Inspect element',
-          click() {
-            newDefinitionWindow.inspectElement(x, y);
-          }
-        }]).popup(newDefinitionWindow);
-      });
-    }
-
-    newDefinitionWindow.webContents.on('dom-ready', function() {
-      newDefinitionWindow.maximize();
-      newDefinitionWindow.show();
+      Menu.buildFromTemplate([{
+        label: 'Inspect element',
+        click() {
+          newDefinitionWindow.inspectElement(x, y);
+        }
+      }]).popup(newDefinitionWindow);
     });
+  }
 
-    newDefinitionWindow.on('close', function () {
-      newDefinitionWindow = null;
-    });
+  newDefinitionWindow.webContents.on('dom-ready', function() {
+    newDefinitionWindow.maximize();
+    newDefinitionWindow.show();
+  });
+
+  newDefinitionWindow.on('close', function () {
+    newDefinitionWindow = null;
+  });
 }
 
 function openResultPopup(selectedText, definitionsObj) {

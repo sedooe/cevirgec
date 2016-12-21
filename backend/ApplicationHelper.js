@@ -140,11 +140,11 @@ class ApplicationHelper {
 
     let text = wordUtils.normalize(data.text);
 
-    if (wordUtils.shouldTriggerContextRecognition(text)) {
-      debug('context popup', text);
-      windowHelper.openContextWindow(text);
-      return;
-    }
+    // if (wordUtils.shouldTriggerContextRecognition(text)) {
+    //   debug('context popup', text);
+    //   windowHelper.openContextWindow(text);
+    //   return;
+    // }
 
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
