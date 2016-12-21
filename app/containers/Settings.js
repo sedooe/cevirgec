@@ -40,7 +40,8 @@ class Settings extends Component {
 }
 
 const mapStateToProps = state => ({
-  settings: state.settings.settings
+  verbose: state.settings.settings.verbose,
+  shortcuts: { shortcuts: state.settings.settings.shortcuts }  // shortcuts: child component name
 })
 
 const mapDispatchToProps = dispatch => {
@@ -55,12 +56,11 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const { settings } = stateProps;
   const mergedOptionsProps = {
     ...dispatchProps,
     options: {
       ...dispatchProps.options,
-      verbose: settings.verbose
+      verbose: stateProps.verbose
     }
   };
   return Object.assign({}, ownProps, stateProps, mergedOptionsProps);

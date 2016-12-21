@@ -7,80 +7,86 @@
 
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
+import { Header, Icon, List, Segment } from 'semantic-ui-react';
 import tr from '../utils/Translation';
 //import ShortcutEditModal from './ShortcutEditModal';
-//import KeyCombinater from '../KeyCombinater';
+import KeyCombinater from './KeyCombinater';
 import '../shortcuts.scss';
 
 export default class Shortcuts extends Component {
 
   state = {};
 
-  componentWillMount() {
-    dispatch({
-      type: UiEvents.NEW_ROUTE_AVAILABLE,
-      data: this.props.routes
-    });
-  }
-
   render() {
 
     return (
       <DocumentTitle title={tr('Cevirgec › Settings › Shortcuts')}>
-        <div className="ui segments">
-          <div className="ui segment">
-            <h3>{tr('Global Shortcuts')}</h3>
-          </div>
-          <div id="shortcuts" className="ui grey segment">
-            <div className="ui middle aligned divided list">
-              <div className="item">
-                <div className="right floated content">
+        <Segment.Group>
+          <Segment>
+            <Header as="h3" content={tr('Global Shortcuts')} />
+          </Segment>
+          <Segment color="grey" id="shortcuts">
+            <List divided verticalAlign="middle">
+              <List.Item>
+                <List.Content floated="right">
                   <KeyCombinater shortcut={!this.props.shortcuts ? 'Loading...' : this.props.shortcuts.wordAdd} />
                   {/*<button className="ui icon button"> <i className="edit icon"></i> </button>*/}
-                </div>
-                <i className="plus icon"></i>
-                <div className="content">
-                  <div className="header">Add new word</div>
-                  <div className="description">{tr('Binding result:')} <h5 className="ui green header">Successful</h5></div>
-                </div>
-              </div>
-              <div className="item">
-                <div className="right floated content">
+                </List.Content>
+                <Icon name="plus" />
+                <List.Content>
+                  <List.Header>Add new word</List.Header>
+                  <List.Description>
+                    {tr('Binding result: ')}
+                    <Header as="h5" color="green">Successful</Header>
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item>
+                <List.Content floated="right">
                   <KeyCombinater shortcut={!this.props.shortcuts ? 'Loading...' : this.props.shortcuts.lookUp} />
                   {/*<button className="ui icon button"> <i className="edit icon"></i> </button>*/}
-                </div>
-                <i className="search icon"></i>
-                <div className="content">
-                  <div className="header">Check for a word</div>
-                  <div className="description">{tr('Binding result:')} <h5 className="ui green header">Successful</h5></div>
-                </div>
-              </div>
-              <div className="item">
-                <div className="right floated content">
+                </List.Content>
+                <Icon name="search" />
+                <List.Content>
+                  <List.Header>Check for a word</List.Header>
+                  <List.Description>
+                    {tr('Binding result: ')}
+                    <Header as="h5" color="green">Successful</Header>
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item>
+                <List.Content floated="right">
                   <KeyCombinater shortcut={!this.props.shortcuts ? 'Loading...' : this.props.shortcuts.openDashboard} />
                   {/*<button className="ui icon button"> <i className="edit icon"></i> </button>*/}
-                </div>
-                <i className="dashboard icon"></i>
-                <div className="content">
-                  <div className="header">Open dashboard</div>
-                  <div className="description">{tr('Binding result:')} <h5 className="ui green header">Successful</h5></div>
-                </div>
-              </div>
-              <div className="item">
-                <div className="right floated content">
+                </List.Content>
+                <Icon name="dashboard"/>
+                <List.Content>
+                  <List.Header>Open dashboard</List.Header>
+                  <List.Description>
+                    {tr('Binding result: ')}
+                    <Header as="h5" color="green">Successful</Header>
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+              <List.Item>
+                <List.Content floated="right">
                   <KeyCombinater shortcut={!this.props.shortcuts ? 'Loading...' : this.props.shortcuts.toggleVerbosity} />
-                  {/*<button className="ui icon button" onClick={this.openModal.bind(this, 'TOGGLE_VERBOSE')}> <i className="edit icon"></i> </button>*/}
-                </div>
-                <i className="announcement icon"></i>
-                <div className="content">
-                  <div className="header">Toggle verbosity</div>
-                  <div className="description">{tr('Binding result:')} <h5 className="ui green header">Successful</h5></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <ShortcutEditModal key={this.state.selectedShortcutKey} name={this.state.selectedShortcutName} show={this.state.showShortcutEditModal} />
-        </div>
+                  {/*<button className="ui icon button"> <i className="edit icon"></i> </button>*/}
+                </List.Content>
+                <Icon name="announcement" />
+                <List.Content>
+                  <List.Header>Toggle verbosity</List.Header>
+                  <List.Description>
+                    {tr('Binding result: ')}
+                    <Header as="h5" color="green">Successful</Header>
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+            </List>
+          </Segment>
+          {/* <ShortcutEditModal key={this.state.selectedShortcutKey} name={this.state.selectedShortcutName} show={this.state.showShortcutEditModal} /> */}
+        </Segment.Group>
       </DocumentTitle>
     );
   }
