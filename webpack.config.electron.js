@@ -7,6 +7,19 @@ import validate from 'webpack-validator';
 import merge from 'webpack-merge';
 import baseConfig from './webpack.config.base';
 
+//
+// var fs = require('fs');
+// var nodeModules = {};
+// fs.readdirSync('node_modules')
+//   .filter(function(x) {
+//     return ['.bin'].indexOf(x) === -1;
+//   })
+//   .forEach(function(mod) {
+//     nodeModules[mod] = 'commonjs ' + mod;
+//   });
+//
+//   console.log('nodeModules', nodeModules);
+
 export default validate(merge(baseConfig, {
   devtool: 'source-map',
 
@@ -20,11 +33,11 @@ export default validate(merge(baseConfig, {
 
   plugins: [
     // Minify the output
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compressor: {
+    //     warnings: false
+    //   }
+    // }),
 
     // Add source map support for stack traces in node
     // https://github.com/evanw/node-source-map-support
@@ -57,8 +70,13 @@ export default validate(merge(baseConfig, {
     __filename: false
   },
 
+  //http://stackoverflow.com/a/34912845/878361
   externals: [
     'font-awesome',
-    'source-map-support'
+    'source-map-support',
+    {
+      request: 'commonjs request',
+      sqlite3: 'commonjs sqlite3'
+    }
   ]
 }));

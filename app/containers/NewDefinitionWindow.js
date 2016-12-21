@@ -73,8 +73,10 @@ class NewDefinitionWindow extends Component {
     this.props.changeActiveDictionaries(dictionaryIds, dictionaries, this.props.currentWord);
   }
 
+  setCurrentDefinition = (definition: Object) => this.setState({currentDefinition: definition})
+
   render() {
-    
+
     return (
       <main className='full-height no-bottom-padding'>
         <Grid className='full-height'>
@@ -99,13 +101,14 @@ class NewDefinitionWindow extends Component {
             />
 
             <NewDefinitionForm
-              currentWord={this.props.currentWord}            
+              definition={this.state.currentDefinition}
+              currentWord={this.props.currentWord}
               onSaveDefinition={this.onSaveDefinition}
             />
 
             <ListOfExistingDefinitions
               definitions={this.props.definitions}
-              dictionaries={this.props.dictionaries}              
+              dictionaries={this.props.dictionaries}
               currentWord={this.props.currentWord}
               onDefinitionDelete={this.props.onDefinitionDelete}
               onDefinitionEdit={this.props.onDefinitionEdit}
@@ -121,6 +124,7 @@ class NewDefinitionWindow extends Component {
               onlineSources={this.props.onlineSources}
               onAddOnlineSource={this.openOnlineSourceModal}
               currentWord={this.props.currentWord}
+              setCurrentDefinition={this.setCurrentDefinition}
             />
           </Grid.Column>
         </Grid>

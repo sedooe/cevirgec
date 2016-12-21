@@ -28,7 +28,7 @@ export default class OnlineDictionariesTabView extends Component {
     const { onlineSources } = this.props;
 
     if (!this.props.dictionaryExist) {
-      return null; 
+      return null;
     }
 
     if (!Object.keys(onlineSources).length) {
@@ -45,13 +45,15 @@ export default class OnlineDictionariesTabView extends Component {
     });
 
     const content = Object.keys(onlineSources).map((key, index) => {
+
+      // if there is no currentWord then show online source web site w/o any word attached.
       let url = new URL(onlineSources[key].url);
       if (this.props.currentWord) {
         url = url.href.replace('abcxyz', this.props.currentWord);
       } else {
         url = url.origin;
       }
-      return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} />
+      return <WordBrowser key={key} url={url} active={index == this.state.activeTabIndex} setCurrentDefinition={this.props.setCurrentDefinition} />
     });
 
     return (
@@ -72,5 +74,6 @@ OnlineDictionariesTabView.propTypes = {
   dictionaryExist: React.PropTypes.bool.isRequired,
   onlineSources: React.PropTypes.object.isRequired,
   onAddOnlineSource: React.PropTypes.func.isRequired,
-  currentWord: React.PropTypes.string.isRequired
+  currentWord: React.PropTypes.string.isRequired,
+  setCurrentDefinition: React.PropTypes.func.isRequired
 }

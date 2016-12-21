@@ -92,7 +92,7 @@ function createApplicationMenu (mainWindow) {
         label: 'Reload',
         accelerator: 'Command+R',
         click: function() {
-          mainWindow.restart();
+
         }
       }, {
         label: 'Toggle Full Screen',
@@ -169,7 +169,7 @@ function createApplicationMenu (mainWindow) {
         label: '&Reload',
         accelerator: 'Ctrl+R',
         click: function() {
-          mainWindow.restart();
+          
         }
       }, {
         label: 'Toggle &Full Screen',

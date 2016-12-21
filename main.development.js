@@ -5,7 +5,6 @@ const shortcutHelper = require('./backend/ShortcutHelper');
 const clipboardEventEmitter = require('./backend/ClipboardEventEmitter');
 const windowHelper = require('./backend/WindowHelper');
 const userStatusHelper = require('./backend/UserStatusHelper');
-// const sync = require('./backend/Sync');
 
 let menu;
 let template;
