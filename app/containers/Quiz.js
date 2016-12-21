@@ -55,7 +55,8 @@ class Quiz extends Component {
     currentSlideIndex: 0,
     isLastSlide: false,
     showResults: false,
-    results: {}
+    results: {},
+    userChoices: {}
   }
 
   next = () => this.refs.slider.slickNext()
@@ -90,8 +91,12 @@ class Quiz extends Component {
     });
   }
 
-  onCardMarked = (definition) => {
-    this.setState({results: Object.assign({}, this.state.results, {[definition.id]: definition.isCorrect})})
+  onCardMarked = (definition, userChoice) => {
+    this.setState({
+      results: Object.assign({}, this.state.results, {[definition.id]: definition.isCorrect}),
+      userChoices: Object.assign({}, this.state.userChoices, {[definition.id]: userChoice})
+    });
+      
     // if timeout is not set, it slides without animation
     setTimeout(() => this.next(), 0);      
   }
@@ -177,6 +182,7 @@ class Quiz extends Component {
                 <QuizResults
                   definitions={this.props.quizDefinitions}
                   results={this.state.results}
+                  userChoices={this.state.userChoices}
                 />
               </Segment>
             }

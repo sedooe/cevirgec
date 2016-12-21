@@ -15,8 +15,8 @@ export default class QuizCardForSlider extends Component {
 
   makeSelection = (event, {value}) => {
     const isCorrect = value === this.props.definition.value;
-    this.setState({selected: value})
-    this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}))
+    this.setState({selected: value});
+    this.props.onMark(Object.assign({}, this.props.definition, {isCorrect}), value);
   }
 
   render () {
@@ -24,11 +24,8 @@ export default class QuizCardForSlider extends Component {
       <Card color='grey' fluid>
         <Card.Content>
           <Card.Header>
-            Steve wants to add you to
+            {this.props.definition.key}
           </Card.Header>
-          <Card.Description>
-            Steve wants to add you to the group best friends
-          </Card.Description>
           <Form>
             {this.props.definition.choices.map(choice => (
               <Form.Field key={'answer_' + choice}>
@@ -42,14 +39,6 @@ export default class QuizCardForSlider extends Component {
               </Form.Field>
             ))}
           </Form>
-        </Card.Content>
-        <Card.Content extra>
-          <Icon name='man' />
-          <em>n.&nbsp;</em>
-          <Label basic size='tiny' style={{float: 'right'}}>
-            <Icon name='book' />
-            Science Dictionary
-          </Label>
         </Card.Content>
       </Card>
     )
