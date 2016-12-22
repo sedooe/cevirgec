@@ -1,9 +1,8 @@
 // @flow
+import { ipcRenderer } from 'electron';
 import * as actions from './constants/user';
 import fetch from 'isomorphic-fetch';
 import { hashHistory } from 'react-router';
-
-const {ipcRenderer} = require('electron')
 
 const requestRegister = () => ({
   type: actions.REQUEST_REGISTER

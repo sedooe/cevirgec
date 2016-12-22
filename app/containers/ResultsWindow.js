@@ -87,7 +87,7 @@ export default class ResultsWindow extends Component {
         <div className="ui basic segment" style={containerStyle} ref={c => {this.containerElement = c}}>
           {
             this.props.results.length ?
-            <ResultList definitions={this.props.results} />
+            <ResultList results={this.props.results} />
             :
             <div className="ui center aligned basic segment">
               <p style={{color: '#555'}}>{tr('You have no saved meaning for ')} <br/> <br/>  <strong style={currentWordStyle}>{this.props.selectedText}</strong> </p>

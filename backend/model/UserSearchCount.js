@@ -3,12 +3,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-'use strict';
+const Sequelize = require('sequelize');
+const sequelize = require('../Sequelize');
+const debug = require('debug')(__filename.split('/').pop());
+const { triggerChangeDefinitionPoint } = require('../dao/StudyQuizResultsDao');
 
-var Sequelize = require('sequelize');
-var sequelize = require('../Sequelize');
-
-var UserSearchCount = sequelize.define('userSearchCount', {
+const UserSearchCount = sequelize.define('userSearchCount', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -23,6 +23,15 @@ var UserSearchCount = sequelize.define('userSearchCount', {
   }
 },
 {
+  hooks: {
+    afterUpdate: (searchCount) => {
+      if (searchCount.changed('count')) {
+        debug('definition', searchCount.definition);
+        debug('dictionaryId', searchCount.dictionaryId);
+        triggerChangeDefinitionPoint(searchCount.definition, searchCount.dictionaryId);
+      }
+    }
+  },
   freezeTableName: true
 });
 

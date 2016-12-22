@@ -35,6 +35,7 @@ function initializeDaos() {
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
   require('./dao/SettingsDao');
+  require('./dao/StudyQuizResultsDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
   debug('End of initializeDaos');
 }
@@ -128,6 +129,8 @@ class ApplicationHelper {
   }
 
   clipboardChangeHandler(data) {
+    const { upsertSearchCount } = require('./dao/UserSearchCountDao');
+
     if (!preferencesHelper.isVerbose() || !userStatusHelper.isAuthenticated()) {
       debug('clipboardChangeHandler ignored', data.text);
       return;
@@ -138,7 +141,7 @@ class ApplicationHelper {
       return;
     }
 
-    let text = wordUtils.normalize(data.text);
+    const text = wordUtils.normalize(data.text);
 
     // if (wordUtils.shouldTriggerContextRecognition(text)) {
     //   debug('context popup', text);
@@ -149,6 +152,13 @@ class ApplicationHelper {
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
         debug('clipboardChangeHandler', 'number of definitions found:', groupedDefinitions.length);
+        const dictionaryIds = [];
+        if (groupedDefinitions.length > 0) {
+          groupedDefinitions.forEach(result => {
+            dictionaryIds.push(result.dataValues.id);
+          });
+          upsertSearchCount(text, dictionaryIds);
+        }
         windowHelper.openResultPopup(text, groupedDefinitions);
       });
     }
@@ -203,6 +213,7 @@ function reloadDbModules() {
   decache('./model/SoldListing')
   decache('./model/User')
   decache('./model/UserSearchCount')
+  decache('./model/StudyQuizResults')
 
   decache('./dao/UserDao');
   decache('./dao/DictionaryDao');
