@@ -27,7 +27,7 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCE_EDITED,
   onlineSourceActions.ONLINE_SOURCE_DELETED,
   settingsActions.ALL_SETTINGS_LOADED,
-  settingsActions.VERBOSITY_CHANGED
+  settingsActions.VERBOSITY_CHANGED,
   studyActions.STUDY_READY,
   studyActions.STUDY_REJECTED,
   quizActions.QUIZ_READY,
