@@ -12,6 +12,9 @@ import Quiz from './containers/Quiz';
 import Help from './containers/Help';
 import Register from './components/Register';
 import Login from './components/Login';
+import Settings from './containers/Settings';
+import Options from './components/Options';
+import Shortcuts from './components/Shortcuts';
 
 
 // Taken from https://github.com/ReactTraining/react-router/blob/cbd1a95b2d9a75febb3eb58d2f9d5a513e432540/examples/auth-flow/app.js#L120
@@ -35,6 +38,11 @@ export default (
       <IndexRedirect to="register" />
       <Route path="register" component={Register} name="Register" />
       <Route path="login" component={Login} name="Login" />
+    </Route>
+    <Route name="Settings" path="/settings" component={Settings}>
+      <IndexRedirect to="options" />
+      <Route path="options" component={Options} name="Options" />
+      <Route path="shortcuts" component={Shortcuts} name="Shortcuts" />
     </Route>
     <Route name="Help" path="/help" component={Help} onEnter={requireAuth} />
   </Route>

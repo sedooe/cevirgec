@@ -34,6 +34,7 @@ function initializeDaos() {
   require('./dao/OnlineSourcesDao');
   require('./dao/UserSearchCountDao');
   require('./dao/QuizDao');
+  require('./dao/SettingsDao');
   require('./dao/StudyQuizResultsDao');
   searchQueryHelper = require('./dao/SearchQueryHelper');
   debug('End of initializeDaos');
@@ -142,11 +143,11 @@ class ApplicationHelper {
 
     const text = wordUtils.normalize(data.text);
 
-    if (wordUtils.shouldTriggerContextRecognition(text)) {
-      debug('context popup', text);
-      windowHelper.openContextWindow(text);
-      return;
-    }
+    // if (wordUtils.shouldTriggerContextRecognition(text)) {
+    //   debug('context popup', text);
+    //   windowHelper.openContextWindow(text);
+    //   return;
+    // }
 
     if (wordUtils.shouldTriggerSearch(text)) {
       searchQueryHelper.searchWordInActiveDictionaries(text, (groupedDefinitions)=>{
@@ -221,6 +222,7 @@ function reloadDbModules() {
   decache('./dao/UserSearchCountDao');
   decache('./dao/QuizDao');
   decache('./dao/SearchQueryHelper');
+  decache('./dao/SettingsDao');
 
   var Sequelize = require('sequelize');
   var sequelize = require('./Sequelize');

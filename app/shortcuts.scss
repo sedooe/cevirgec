@@ -1,0 +1,32 @@
+#shortcuts {
+    kbd {
+        padding: .1em .6em;
+        border: 1px solid #ccc;
+        font-size: 11px;
+        font-family: Arial,Helvetica,sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.2),0 0 0 2px #fff inset;
+        border-radius: 3px;
+        display: inline-block;
+        margin: 0 .1em;
+        text-shadow: 0 1px 0 #fff;
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+
+    h5.ui.header {
+        font-size: 1rem;
+        display: inline;
+        font-weight: normal;
+    }
+
+    button {
+        margin-left: 10px;
+    }
+
+    // temporary, need to delete after edit buttons re-enabled
+    .ui.list[class*="middle aligned"] .image, .ui.list[class*="middle aligned"] .content, .ui.list [class*="middle aligned"] {
+      margin-top: 7px;
+    }
+}

@@ -3,6 +3,7 @@ import * as userActions from './constants/user';
 import * as dictionaryActions from './constants/dictionary';
 import * as onlineSourceActions from './constants/onlineSource';
 import * as definitionActions from './constants/newDefinitionWindow';
+import * as settingsActions from './constants/settings';
 import * as studyActions from './constants/study';
 import * as quizActions from './constants/quiz';
 import { loginSuccess } from './user';
@@ -25,6 +26,8 @@ const dbCallbacks = [
   onlineSourceActions.ONLINE_SOURCE_CREATED,
   onlineSourceActions.ONLINE_SOURCE_EDITED,
   onlineSourceActions.ONLINE_SOURCE_DELETED,
+  settingsActions.ALL_SETTINGS_LOADED,
+  settingsActions.VERBOSITY_CHANGED
   studyActions.STUDY_READY,
   studyActions.STUDY_REJECTED,
   quizActions.QUIZ_READY,

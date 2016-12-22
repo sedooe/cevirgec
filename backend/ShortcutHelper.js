@@ -27,7 +27,7 @@ const shortcutCallbacks = {
 
     // if triggered via a shortcut instead of clipboard change
     // show last clipboard content
-    let text = clipboard.readText();
+    let text = clipboard.readText('selection');
     text = wordUtils.normalize(text);
     windowHelper.openNewDefinitionWindowForWord(text);
   },
