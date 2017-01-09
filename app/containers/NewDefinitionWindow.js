@@ -30,8 +30,6 @@ class NewDefinitionWindow extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    console.log('prev', prevProps.isFetching);
-    console.log('now', this.props.isFetching);
     if (prevProps.isFetching && !this.props.isFetching) {
       alert('Definition(s) saved!');
     }
