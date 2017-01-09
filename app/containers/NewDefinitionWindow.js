@@ -29,6 +29,14 @@ class NewDefinitionWindow extends Component {
     this.props.loadDictionaries();
   }
 
+  componentDidUpdate = (prevProps, prevState) => {
+    console.log('prev', prevProps.isFetching);
+    console.log('now', this.props.isFetching);
+    if (prevProps.isFetching && !this.props.isFetching) {
+      alert('Definition(s) saved!');
+    }
+  }
+
   openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
 
   hideDictionaryModal = () => this.setState({dictionaryModalOpen: false})
@@ -153,7 +161,8 @@ const mapStateToProps = state => ({
   onlineSources: state.onlineSource.onlineSources,
   currentWord: state.wordAndDefinitions.wordAndDefinitions.currentWord,
   definitions: state.wordAndDefinitions.wordAndDefinitions.definitions,
-  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions
+  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions,
+  isFetching: state.wordAndDefinitions.wordAndDefinitions.isDefinitionSaveFetching
 })
 
 const mapDispatchToProps = dispatch => {
