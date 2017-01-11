@@ -5,11 +5,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Button, Divider, Grid, Form, Header, Label, List, Icon, Image, Input, Menu, Message, Segment } from 'semantic-ui-react'
+import { Divider, Grid, Icon, Input, Message } from 'semantic-ui-react';
 import tr from '../utils/Translation';
 import ActiveDictionarySelector from '../components/newDefinitionWindow/ActiveDictionarySelector';
 import OnlineDictionariesTabView from '../components/newDefinitionWindow/OnlineDictionariesTabView';
-import ButtonToggle from '../components/newDefinitionWindow/ButtonToggle';
 import NewDefinitionForm from '../components/newDefinitionWindow/NewDefinitionForm';
 import ListOfExistingDefinitions from '../components/newDefinitionWindow/ListOfExistingDefinitions';
 import DictionaryModal from '../components/DictionaryModal';
@@ -17,6 +16,13 @@ import OnlineSourceModal from '../components/OnlineSourceModal';
 import * as DictionaryActions from '../actions/dictionary';
 import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
 import * as OnlineSourceActions from '../actions/onlineSource';
+
+const definitionSavedMessageStyle = {
+  position: 'fixed',
+  zIndex: 1,
+  margin: 'auto',
+  width: '400px'
+};
 
 class NewDefinitionWindow extends Component {
 
@@ -27,6 +33,14 @@ class NewDefinitionWindow extends Component {
 
   componentDidMount = () => {
     this.props.loadDictionaries();
+  }
+
+  componentDidUpdate = () => {
+    if (this.props.showDefinitionSavedMessage) {
+      setTimeout(() => {
+        this.props.hideDefinitionSaveMessage();
+      }, 3000);
+    }
   }
 
   openDictionaryModal = () => this.setState({dictionaryModalOpen: true})
@@ -89,6 +103,15 @@ class NewDefinitionWindow extends Component {
               onClearAll={this.props.activeDictionariesClearAll}
               onActiveDictionariesChange={this.onActiveDictionariesChange}
             />
+
+            {this.props.showDefinitionSavedMessage ?
+              <Message
+                success
+                style={definitionSavedMessageStyle}
+                header="Your definition(s) saved!"
+              />
+              : null
+            }
 
             <Input fluid
               defaultValue={this.props.currentWord}
@@ -153,7 +176,8 @@ const mapStateToProps = state => ({
   onlineSources: state.onlineSource.onlineSources,
   currentWord: state.wordAndDefinitions.wordAndDefinitions.currentWord,
   definitions: state.wordAndDefinitions.wordAndDefinitions.definitions,
-  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions
+  freshDefinitions: state.wordAndDefinitions.wordAndDefinitions.freshDefinitions,
+  showDefinitionSavedMessage: state.wordAndDefinitions.wordAndDefinitions.showDefinitionSavedMessage
 })
 
 const mapDispatchToProps = dispatch => {
@@ -171,6 +195,7 @@ const mapDispatchToProps = dispatch => {
     saveDefinition: definitionActions.saveDefinition,
     onDefinitionDelete: definitionActions.deleteDefinition,
     onDefinitionEdit: definitionActions.editDefinition,
+    hideDefinitionSaveMessage: definitionActions.hideDefinitionSaveMessage,
     createOnlineSource: onlineSourceActions.createOnlineSource
   }
 }

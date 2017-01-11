@@ -18,7 +18,8 @@ const getParameterByName = (name, url) => {
 const initialState = {
   currentWord: getParameterByName('currentWord', window.location.search),
   definitions: {},
-  freshDefinitions: {}
+  freshDefinitions: {},
+  showDefinitionSavedMessage: false
 };
 
 export function wordAndDefinitions(state: Object = initialState, action: Object) {
@@ -51,8 +52,11 @@ export function wordAndDefinitions(state: Object = initialState, action: Object)
       return {
         ...state,
         definitions: {...state.definitions, ...newDefinitionsObject },
-        freshDefinitions: {...state.freshDefinitions, ...freshDefinitions }
-      };      
+        freshDefinitions: {...state.freshDefinitions, ...freshDefinitions },
+        showDefinitionSavedMessage: true
+      };
+    case actions.HIDE_DEFINITION_SAVE_MESSAGE:
+      return {...state, showDefinitionSavedMessage: false };
     default:
       return state;
   }
@@ -66,10 +70,10 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.REQUEST_EDIT_DEFINITION:
     case REQUEST_CHANGE_ACTIVENESS_OF_DICTIONARY:
       return true;
-    case actions.DEFINITION_SAVED:
     case actions.FOUND_DEFINITIONS_OF_WORD:
     case actions.DEFINITION_DELETED:
     case actions.DEFINITION_EDITED:
+    case actions.MERGE_DEFINITIONS_RESULT: //definition saved
     case DICTIONARIES_ACTIVENESS_CHANGED:
       return false;
     default:

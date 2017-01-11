@@ -57,3 +57,7 @@ export const editDefinition = (definition: Object) => (dispatch: Function) => {
 export const mergeDefinitions = (definitions: Array<Object>) => (dispatch: Function) => {
   dispatch({ type: actions.MERGE_DEFINITIONS_RESULT, definitions });
 }
+
+export const hideDefinitionSaveMessage = () => ({
+  type: actions.HIDE_DEFINITION_SAVE_MESSAGE
+})
