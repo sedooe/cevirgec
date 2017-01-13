@@ -11,6 +11,7 @@ import DocumentTitle from 'react-document-title';
 import tr from '../utils/Translation';
 import DictionaryList from '../components/DictionaryList';
 import DictionaryModal from '../components/DictionaryModal';
+import DefinitionListModal from '../components/DefinitionListModal';
 import * as DictionaryActions from '../actions/dictionary';
 import { Button, Popup } from 'semantic-ui-react';
 
@@ -23,7 +24,8 @@ class Dictionaries extends Component {
 
   state = {
     currentDictionary: {},
-    dictionaryModalOpen: false
+    dictionaryModalOpen: false,
+    definitionListModalOpen: false
   }
 
   componentDidMount = () => { //see: https://twitter.com/dan_abramov/status/790581793397305345
@@ -40,6 +42,20 @@ class Dictionaries extends Component {
   hideDictionaryModal = () => {
     this.setState({
       dictionaryModalOpen: false,
+      currentDictionary: {}
+    });
+  }
+
+  openDefinitionListModal = (dictionary: Object) => {
+    this.setState({
+      definitionListModalOpen: true,
+      currentDictionary: dictionary
+    });
+  }
+
+  hideDefinitionListModal = () => {
+    this.setState({
+      definitionListModalOpen: false,
       currentDictionary: {}
     });
   }
@@ -77,6 +93,7 @@ class Dictionaries extends Component {
             <div className="ui grey segment">
               <DictionaryList
                 dictionaries={this.props.dictionaries}
+                onView={this.openDefinitionListModal}
                 onEdit={this.openDictionaryModal}
                 onDelete={this.deleteDictionary}
                 onCheckboxToggle={this.handleCheckboxToggle}
@@ -90,6 +107,17 @@ class Dictionaries extends Component {
             onSave={this.saveDictionary}
             dictionary={this.state.currentDictionary}
           />
+
+          {this.state.definitionListModalOpen ?
+            <DefinitionListModal 
+              open={this.state.definitionListModalOpen}
+              loadDefinitions={this.props.actions.loadDefinitionsByDictionaryId}
+              definitions={this.props.dictionaries.definitions || []}                      
+              onHide={this.hideDefinitionListModal}
+              dictionary={this.state.currentDictionary}
+            />
+            : null
+          }
         </div>
       </DocumentTitle>
     );

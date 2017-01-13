@@ -105,3 +105,12 @@ export const changeActiveDictionaries = (dictionaryIds: Array<String>, dictionar
   });
   dispatch(lookForDefinitions(word, dictionaryIds));
 }
+
+const requestLoadDefinitionsByDictionaryId = () => ({
+  type: actions.REQUEST_LOAD_DEFINITIONS_BY_DICTIONARY_ID
+})
+
+export const loadDefinitionsByDictionaryId = (dictionaryId: number) => (dispatch: Function) => {
+  dispatch(requestLoadDefinitionsByDictionaryId());
+  ipcRenderer.send(actions.LOAD_DEFINITIONS_BY_DICTIONARY_ID, dictionaryId);
+}

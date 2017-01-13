@@ -15,6 +15,7 @@ ipc.removeAllListeners(actions.EDIT_DICTIONARY);
 ipc.removeAllListeners(actions.CHANGE_ACTIVENESS_OF_DICTIONARY);
 ipc.removeAllListeners(actions.CHANGE_ACTIVENESS_OF_DICTIONARIES);
 ipc.removeAllListeners(actions.DELETE_DICTIONARY);
+ipc.removeAllListeners(actions.LOAD_DEFINITIONS_BY_DICTIONARY_ID);
 
 ipc.on(actions.LOAD_DICTIONARIES, (event) => {
   debug(actions.LOAD_DICTIONARIES);
@@ -74,6 +75,17 @@ ipc.on(actions.DELETE_DICTIONARY, (event, dictionaryId) => {
     }).catch(e => debug(e));
   }).catch(e => debug(e));
 });
+
+ipc.on(actions.LOAD_DEFINITIONS_BY_DICTIONARY_ID, (event, dictionaryId) => {
+  debug(actions.LOAD_DEFINITIONS_BY_DICTIONARY_ID, dictionaryId);
+
+  Dictionary.findById(dictionaryId).then(dictionary => {
+    dictionary.getDefinitions().then(definitions => {
+      event.sender.send(actions.DEFINITIONS_BY_DICTIONARY_ID_LOADED, definitions.map(def => def.toJSON()));
+    }).catch(e => debug(e));
+  }).catch(e => debug(e));
+});
+
 
 // ipc.on(UiEvents.LOAD_ALL_DICTIONARIES, function(event, data, userId) {
 //   debug(UiEvents.LOAD_ALL_DICTIONARIES, userId);

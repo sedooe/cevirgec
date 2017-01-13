@@ -26,6 +26,9 @@ export function dictionaries(state: Object = {}, action: Object) {
     }
     case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
       return action.dictionariesObject;
+    case actions.DEFINITIONS_BY_DICTIONARY_ID_LOADED: //action.data: definitions array
+      const dictionaryId = action.data[0].dictionaryId;
+      return {...state, [dictionaryId]: {...state[dictionaryId], definitions: action.data } };
     default:
       return state;
   }
@@ -39,6 +42,7 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.REQUEST_CHANGE_ACTIVENESS_OF_DICTIONARY:
     case actions.REQUEST_LOAD_DICTIONARIES:
     case actions.REQUEST_LOAD_ONLINE_SOURCES_OF_ACTIVE_DICTIONARIES:
+    case actions.REQUEST_LOAD_DEFINITIONS_BY_DICTIONARY_ID:
       return true;
     case actions.DICTIONARY_CREATED:
     case actions.DICTIONARY_DELETED:
@@ -46,6 +50,7 @@ export function isFetching(state: boolean = false, action: Object) {
     case actions.DICTIONARY_ACTIVENESS_CHANGED:
     case actions.DICTIONARIES_LOADED:
     case actions.DICTIONARIES_AND_ACTIVE_DICTIONARIES_LOADED:
+    case actions.DEFINITIONS_BY_DICTIONARY_ID_LOADED:
       return false;
     default:
       return state;
