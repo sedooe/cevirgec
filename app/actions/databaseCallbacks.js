@@ -21,6 +21,7 @@ const dbCallbacks = [
   dictionaryActions.DICTIONARY_EDITED,
   dictionaryActions.DICTIONARY_ACTIVENESS_CHANGED,
   dictionaryActions.DICTIONARY_DELETED,
+  dictionaryActions.DEFINITIONS_BY_DICTIONARY_ID_LOADED,
   userActions.REGISTER_SUCCESS_LOCALDB,
   onlineSourceActions.ONLINE_SOURCES_LOADED,
   onlineSourceActions.ONLINE_SOURCE_CREATED,

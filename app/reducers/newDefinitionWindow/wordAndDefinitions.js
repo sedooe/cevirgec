@@ -64,7 +64,6 @@ export function wordAndDefinitions(state: Object = initialState, action: Object)
 
 export function isFetching(state: boolean = false, action: Object) {
   switch (action.type) {
-    case actions.REQUEST_SAVE_DEFINITION:
     case actions.REQUEST_FIND_DEFINITIONS_OF_WORD:
     case actions.REQUEST_DELETE_DEFINITION:
     case actions.REQUEST_EDIT_DEFINITION:
