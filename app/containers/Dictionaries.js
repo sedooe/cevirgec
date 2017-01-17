@@ -109,12 +109,11 @@ class Dictionaries extends Component {
           />
 
           {this.state.definitionListModalOpen ?
-            <DefinitionListModal 
+            <DefinitionListModal
               open={this.state.definitionListModalOpen}
               loadDefinitions={this.props.actions.loadDefinitionsByDictionaryId}
-              definitions={this.props.dictionaries.definitions || []}                      
               onHide={this.hideDefinitionListModal}
-              dictionary={this.state.currentDictionary}
+              dictionary={this.props.dictionaries[this.state.currentDictionary.id]}
             />
             : null
           }
