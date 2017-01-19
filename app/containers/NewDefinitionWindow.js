@@ -17,12 +17,40 @@ import * as DictionaryActions from '../actions/dictionary';
 import * as WordAndDefinitionActions from '../actions/wordAndDefinitions';
 import * as OnlineSourceActions from '../actions/onlineSource';
 
-const definitionSavedMessageStyle = {
+const savedMessageContainerStyle = {
   position: 'fixed',
-  zIndex: 1,
+  zIndex: 3,
   margin: 'auto',
-  width: '400px'
-};
+  width: '100%',
+  top: 0,
+  left: 0,
+  height: '100%',
+  background: 'rgba(0,0,0,.8)',
+  color: 'white'
+}
+
+const savedMessageInnerStyle = {
+  color: 'white',
+  fontSize: 40,
+  width: 390,
+  margin: 'auto',
+  height: '100%'
+}
+
+const savedMessageTimeout = 1000;
+
+const SavedMessage = ({show}) => {
+  return (
+    show ? 
+      <div style={savedMessageContainerStyle}>
+        <div className='ui' style={savedMessageInnerStyle}>
+          <Icon name='check' size='massive' />
+          <div style={{textAlign: 'center', marginLeft: -60}}>Saved!</div>
+        </div>
+      </div>
+     : null
+  )
+}
 
 class NewDefinitionWindow extends Component {
 
@@ -39,7 +67,7 @@ class NewDefinitionWindow extends Component {
     if (this.props.showDefinitionSavedMessage) {
       setTimeout(() => {
         this.props.hideDefinitionSaveMessage();
-      }, 3000);
+      }, savedMessageTimeout);
     }
   }
 
@@ -93,6 +121,9 @@ class NewDefinitionWindow extends Component {
 
     return (
       <main className='full-height no-bottom-padding'>
+
+        <SavedMessage show={this.props.showDefinitionSavedMessage} />
+
         <Grid className='full-height'>
           <Grid.Column width={6} className='no-bottom-padding'>
             <ActiveDictionarySelector
@@ -103,15 +134,6 @@ class NewDefinitionWindow extends Component {
               onClearAll={this.props.activeDictionariesClearAll}
               onActiveDictionariesChange={this.onActiveDictionariesChange}
             />
-
-            {this.props.showDefinitionSavedMessage ?
-              <Message
-                success
-                style={definitionSavedMessageStyle}
-                header="Your definition(s) saved!"
-              />
-              : null
-            }
 
             <Input fluid
               defaultValue={this.props.currentWord}

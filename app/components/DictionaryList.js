@@ -28,7 +28,7 @@ const DictionaryList = (props: Props) => {
             <List.Item key={`dictionary-${key}`}>
               <List.Content floated="right">
                 <Popup trigger={<Button icon="add" />} content={tr('Add a new word to this dictionary')} />
-                <Popup trigger={<Button icon="print" />} content={tr('Print')} />
+                {/* <Popup trigger={<Button icon="print" />} content={tr('Print')} /> */}
                 <Popup trigger={<Button icon="unhide" onClick={propFunctionProxy.bind(null, props.onView, dictionary)} />} content={tr('View dictionary content')} />
                 <Popup trigger={<Button icon="edit" onClick={propFunctionProxy.bind(null, props.onEdit, dictionary)} />} content={tr('Edit')} />
                 <Popup trigger={<Button icon="trash" onClick={propFunctionProxy.bind(null, props.onDelete, dictionary)} />} content={tr('Delete')} />

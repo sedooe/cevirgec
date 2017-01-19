@@ -136,7 +136,7 @@ class Dashboard extends Component {
                 </Card>
               </Grid.Column>
 
-              <Grid.Column textAlign="center">
+              {/* <Grid.Column textAlign="center">
                 <Card>
                   <Link to="/market" className="content">
                     <Icon name="shop" />
@@ -147,7 +147,7 @@ class Dashboard extends Component {
                     </Card.Header>
                   </Card.Content>
                 </Card>
-              </Grid.Column>
+              </Grid.Column>*/}
 
               <Grid.Column textAlign="center">
                 <Card>
